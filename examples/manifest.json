@@ -1,0 +1,12 @@
+{
+	"categories": {
+		"demos": "Demos"
+	},
+	"examples": [
+		{
+			"title": "Simple",
+			"entry": "simple",
+			"category": "demos"
+		}
+	]
+}

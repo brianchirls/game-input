@@ -1,0 +1,16 @@
+{
+	"name": "game-input-examples",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "UNLICENSED",
+	"dependencies": {
+		"open-iconic": "^1.1.1",
+		"redom": "^3.27.1",
+		"screenfull": "^5.0.2"
+	}
+}
