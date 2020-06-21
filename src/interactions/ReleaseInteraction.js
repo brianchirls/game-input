@@ -1,5 +1,5 @@
 import Interaction from './Interaction';
-export function ReleaseInteraction(pressPoint = 0.5) {
+export default function ReleaseInteraction(pressPoint = 0.5) {
 	Interaction.call(this);
 	this.pressPoint = pressPoint;
 
