@@ -260,6 +260,10 @@ export default function Action(options = {}) {
 	if (options.interactions) {
 		interactions.push.apply(interactions, options.interactions);
 	}
+
+	if (!options.enabled === false) {
+		this.enabled = false;
+	}
 }
 
 Action.prototype = Object.create(eev.prototype);
