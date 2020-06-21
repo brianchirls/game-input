@@ -26,6 +26,9 @@
 	},
 	"author": "Brian Chirls <brian@chirls.com>",
 	"license": "UNLICENSED",
+	"dependencies": {
+		"eev": "^0.1.5"
+	},
 	"devDependencies": {
 		"@babel/cli": "^7.10.3",
 		"@babel/core": "^7.10.3",
@@ -46,7 +49,6 @@
 		"cross-env": "^7.0.2",
 		"css-loader": "^3.5.3",
 		"datavized-code-style": "github:datavized/code-style",
-		"eev": "^0.1.5",
 		"eslint": "^7.3.0",
 		"eslint-config-crockford": "^2.0.0",
 		"eslint-loader": "^4.0.2",
