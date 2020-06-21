@@ -1,0 +1,47 @@
+<%
+const manifest = require('./manifest.json');
+%>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, shrink-to-fit=no" />
+		<meta name="theme-color" content="#0091D2">
+		<!-- <base href="./"/> -->
+		<title><%= htmlWebpackPlugin.options.title %></title>
+	</head>
+	<body>
+		<div class="main">
+			<section id="sidebar">
+				<header>
+					<h1>Game AI Examples</h1>
+					<div id="menu-button">
+						<%= require('open-iconic/svg/menu.svg').default %>
+					</div>
+				</header>
+				<div class="sidebar-wrapper">
+					<div class="sidebar-scroller">
+						<nav class="sidebar-nav">
+							<% Object.keys(manifest.categories).forEach(key => { %>
+								<span class="category open" data-category="<%- key %>"><%= manifest.categories[key] %></span>
+								<ul data-category="<%- key %>">
+									<% manifest.examples
+										.filter(({category}) => category === key)
+										.sort((a, b) => {
+											return a.title < b.title ? -1 : 1;
+										})
+										.forEach(({entry, title}) => { %>
+											<li data-src="<%- entry %>"><a href="../examples/<%- entry %>.html" target="viewer"><%= title %></a></li>
+										<% }) %>
+								</ul>
+							<% }); %>
+						</nav>
+					</div>
+				</div>
+			</section>
+			<article class="example-container">
+				<iframe id="viewer" name="viewer" allow="fullscreen" allowfullscreen allowvr></iframe>
+			</article>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, shrink-to-fit=no" />
+		<meta name="theme-color" content="#0091D2">
+		<!-- <base href="./"/> -->
+		<title><%= htmlWebpackPlugin.options.title %></title>
+	</head>
+	<body>
+		<noscript>
+			You need to enable JavaScript to run this app.
+		</noscript>
+		<% for (const url of htmlWebpackPlugin.options.scripts || []) { %>
+		<script src="<%- url %>"></script>
+		<% } %>
+	</body>
+</html>

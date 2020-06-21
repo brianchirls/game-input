@@ -1,0 +1,180 @@
+@import '~purecss/build/base.css';
+
+:root {
+	--border-style: 1px solid #e8e8e8;
+	--header-height: 48px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+a,
+a:visited {
+	text-decoration: none;
+	color: #222;
+}
+
+li:hover {
+	color: #228;
+}
+
+header {
+	top: 0;
+	z-index: 1;
+	position: sticky;
+	padding: 0 0 0 16px;
+	height: var(--header-height);
+	border-bottom: var(--border-style);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+h1 {
+	font-size: 18px;
+	flex: 1;
+}
+
+#menu-button {
+	width: 48px;
+	height: 48px;
+	display: none;
+	cursor: pointer;
+}
+
+#menu-button > svg {
+	width: 16px;
+	height: 16px;
+	margin: 16px;
+}
+
+.main {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: row;
+}
+
+.sidebar-wrapper {
+	position: sticky;
+	height: 100vh;
+}
+
+.sidebar-scroller {
+	height: 100%;
+	overflow: auto;
+	/* todo: right border goes here */
+}
+
+.sidebar-nav {
+	display: flex;
+	flex-direction: column;
+	padding: 16px;
+}
+
+.sidebar-nav .category {
+	display: block;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 8px 0 0;
+	cursor: pointer;
+}
+
+.sidebar-nav ul {
+	list-style: none;
+	display: none;
+	/* padding: 4px 0 4px; */
+	padding: 0;
+	margin: 16px 0;
+}
+
+/*
+todo:
+- rotate arrow to indicate expanded/contracted section
+- animate section expansion
+- keep sidebar width consistent
+*/
+
+.sidebar-nav .category.open + ul {
+	display: block;
+}
+
+.sidebar-nav li {
+	padding: 2px 0;
+}
+
+.sidebar-nav li.selected > a {
+	color: #22a;
+}
+
+.example-container {
+	flex: 1;
+	position: relative;
+	background-color: #222;
+}
+
+#viewer {
+	position: absolute;
+	border: none;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+/* mobile */
+
+@media all and (max-width: 640px) {
+	.main {
+		flex-direction: column;
+	}
+
+	header: {
+		z-index: 100;
+	}
+
+	#menu-button {
+		display: block;
+	}
+
+	.sidebar-wrapper {
+		position: absolute;
+		right: 0;
+		top: var(--header-height);
+		bottom: 0;
+		background: white;
+		/* box-shadow: 0 0 8px rgba(0,0,0,.1); */
+		width: calc(100vw - 60px);
+		height: calc(100vh - var(--header-height));
+		max-width: 360px;
+		z-index: 10;
+		transition: 0.25s transform;
+		will-change: transform;
+		overflow-x: hidden;
+		margin-right: -380px;
+		line-height: 2rem;
+	}
+
+	#sidebar.open > .sidebar-wrapper {
+		transform: translate3d(-380px, 0, 0);
+	}
+}
