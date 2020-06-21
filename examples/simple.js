@@ -4,7 +4,7 @@ import DPadComposite from '../src/controls/DPadComposite';
 import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
 import PressInteraction from '../src/interactions/PressInteraction';
-import { ReleaseInteraction } from '../src/interactions/ReleaseInteraction';
+import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
 
 const gamepad = new Gamepad();
 const leftStick = gamepad.getControl('leftStick');
