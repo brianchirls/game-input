@@ -1,4 +1,5 @@
 import ButtonInputControl from '../../controls/ButtonInputControl';
+import boolAsNum from '../../util/boolAsNum';
 
 export default function Keyboard() {
 	const keysDown = new Set();
@@ -25,8 +26,6 @@ export default function Keyboard() {
 	function readArrayKey(keys) {
 		return keys.some(readSingleKey);
 	}
-
-	const boolAsNum = fn => () => fn() ? 1 : 0;
 
 	this.getControl = (name, options = {}) => {
 		const {
@@ -55,6 +54,7 @@ export default function Keyboard() {
 	};
 
 	this.destroy = () => {
+		keysDown.clear();
 		window.removeEventListener('keydown', onKeyDown);
 		window.removeEventListener('keyup', onKeyUp);
 	};

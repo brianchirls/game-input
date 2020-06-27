@@ -20,7 +20,7 @@ const readers = new Map([
 ]);
 
 export default function Gamepad(index = 0, {
-	updateFrequency = 1000 / 120
+	updatePeriod = 1000 / 120
 } = {}) {
 	eev.call(this);
 
@@ -42,7 +42,7 @@ export default function Gamepad(index = 0, {
 	function update() {
 		const device = navigator.getGamepads()[index];
 		const timestamp = device && device.timestamp || performance.now();
-		if (device && timestamp - lastDeviceUpdate >= updateFrequency) {
+		if (device && timestamp - lastDeviceUpdate >= updatePeriod) {
 			lastDevice = device;
 			lastDeviceUpdate = timestamp;
 		}
