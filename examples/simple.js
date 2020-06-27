@@ -1,5 +1,6 @@
 import Gamepad from '../src/devices/gamepad';
 import Keyboard from '../src/devices/keyboard';
+import Pointer from '../src/devices/pointer';
 import DPadComposite from '../src/controls/DPadComposite';
 import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
@@ -19,16 +20,34 @@ const kbdWASD = new DPadComposite({
 	right: kbd.getControl('D')
 });
 
+const pointer = new Pointer();
+
 const rotateArrowKeys = new AxisComposite({
 	negative: kbd.getControl('arrowleft'),
 	positive: kbd.getControl('arrowright')
 });
 
 const moveAction = new Action({
-	bindings: [leftStick, kbdWASD]
+	bindings: [
+		leftStick,
+		kbdWASD,
+		{
+			control: pointer.getControl('delta'),
+			processors: [
+				vec => [
+					vec[0] / 8,
+					-vec[1] / 8
+				]
+			]
+		}
+	]
 });
 const rotateAction = new Action({
-	bindings: [rightStickHoriz, rotateArrowKeys]
+	bindings: [
+		rightStickHoriz,
+		rotateArrowKeys,
+		pointer.getControl('wheel')
+	]
 });
 
 const buttonAction = new Action({
