@@ -149,7 +149,9 @@ export default function Action(options = {}) {
 		for (let i = 0; i < bindings.length; i++) {
 			const binding = bindings[i];
 			const { control } = binding;
-			const controlValue = control.read();
+			const controlValue = binding.processors ?
+				runProcessors(binding.processors, control.read()) :
+				control.read();
 			const magnitude = control.magnitude(controlValue);
 			if (magnitude > best) {
 				value = controlValue;
