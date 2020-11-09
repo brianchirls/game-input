@@ -89,9 +89,9 @@ function update(t = performance.now()) {
 	const [dx, dy] = moveAction.value;
 	const dr = rotateAction.value;
 
-	const meh = speed * delta;
-	x += dx * meh;
-	y -= dy * meh;
+	const motionScale = speed * delta;
+	x += dx * motionScale;
+	y -= dy * motionScale;
 
 	r += dr * rotSpeed * delta;
 
