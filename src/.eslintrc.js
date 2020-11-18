@@ -1,5 +1,7 @@
+/* eslint-env commonjs, node */
 module.exports = {
 	env: {
-		browser: true
+		'shared-node-browser': true,
+		commonjs: false
 	}
 };

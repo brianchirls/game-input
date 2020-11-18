@@ -4,6 +4,13 @@ import InputControl from './controls/InputControl';
 import Interaction from './interactions/Interaction';
 
 /*
+todo: use something like hrtime or performance.now in node.js
+*/
+const now = typeof performance === undefined ?
+	() => performance.now() : // eslint-disable-line no-undef
+	() => Date.now();
+
+/*
 todo: give everything ids so we can reference them later.
 probably.
 */
@@ -159,7 +166,7 @@ export default function Action(options = {}) {
 				if (magnitude > 0) {
 					activeBinding = binding;
 					if (!activeTime) {
-						activeTime = performance.now();
+						activeTime = now();
 					}
 				}
 			}
