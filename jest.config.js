@@ -3,15 +3,17 @@
 
 module.exports = {
 	testEnvironment: 'node',
+	coverageDirectory: 'reports/coverage',
 	projects: [
 		{
 			displayName: 'test',
 			clearMocks: true,
-			coverageDirectory: 'reports/coverage',
 			// An array of regexp pattern strings used to skip coverage collection
 			coveragePathIgnorePatterns: [
 				'/node_modules/',
-				'/config/'
+				'/config/',
+				'/reports/',
+				'/build/'
 			],
 			testMatch: [
 				'<rootDir>/tests/**/[^\\.]*.[jt]s',
@@ -23,9 +25,9 @@ module.exports = {
 			displayName: 'lint',
 			runner: 'jest-runner-eslint',
 			testMatch: [
-				'<rootDir>/src/**/*.js',
-				'<rootDir>/tests/**/*.js',
-				// '<rootDir>/examples/**/*.js',
+				'<rootDir>/src/**/*.js?(x)',
+				'<rootDir>/tests/**/*.js?(x)',
+				'<rootDir>/tools/**/*.js',
 				'<rootDir>/config/**/*.js'
 			]
 		}
