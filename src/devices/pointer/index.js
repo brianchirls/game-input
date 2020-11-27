@@ -106,9 +106,11 @@ todo:
 
 export default function Pointer({
 	updatePeriod = 1000 / 60,
+	element = document.body,
 	touch = true,
 	pen = true,
-	mouse = true
+	mouse = true,
+	touchActionStyle = true
 } = {}) {
 	let previousEvent = null;
 	let lastEvent = null;
@@ -158,6 +160,11 @@ export default function Pointer({
 
 	function readButton(name) {
 		return buttonsDown.has(name.toLowerCase());
+	}
+
+	const styleElement = touchActionStyle && element.style ? element : document.body;
+	if (touchActionStyle) {
+		styleElement.style.touchAction = 'none';
 	}
 
 	this.getControl = (name, options = {}) => {
@@ -212,6 +219,11 @@ export default function Pointer({
 	};
 
 	this.destroy = () => {
+		if (touchActionStyle) {
+			// todo: only if it wasn't set before
+			styleElement.style.touchAction = '';
+		}
+
 		buttonsDown.clear();
 		window.removeEventListener('pointerdown', saveEvent);
 		window.removeEventListener('pointerup', saveEvent);
