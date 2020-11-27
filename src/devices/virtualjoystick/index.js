@@ -103,6 +103,7 @@ export default function VirtualJoystick({
 
 	this.destroy = () => {
 		if (touchActionStyle) {
+			// todo: only if it wasn't set before
 			styleElement.style.touchAction = '';
 		}
 
