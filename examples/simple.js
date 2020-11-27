@@ -7,7 +7,7 @@ import Action from '../src/Action';
 import PressInteraction from '../src/interactions/PressInteraction';
 import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
 import VirtualJoystick from '../src/devices/virtualjoystick';
-import DOMRenderer from '../src/devices/virtualjoystick/DOMRenderer';
+import domRenderer from '../src/devices/virtualjoystick/domRenderer';
 
 const gamepad = new Gamepad();
 const leftStick = gamepad.getControl('leftStick');
@@ -115,9 +115,7 @@ function update(t = performance.now()) {
 	requestAnimationFrame(update);
 }
 
-/* eslint-disable no-new */
-new DOMRenderer(leftTouchJoystick);
-new DOMRenderer(rightTouchJoystick);
-/* eslint-enable no-new */
+domRenderer(leftTouchJoystick);
+domRenderer(rightTouchJoystick);
 
 update();

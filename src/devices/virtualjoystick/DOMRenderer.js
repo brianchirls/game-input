@@ -1,4 +1,4 @@
-export default function DOMRenderer(control, options = {}) {
+export default function domRenderer(control, options = {}) {
 	const { device } = control;
 	const {
 		innerRadius = Math.max(24, device.radius / 4),
@@ -59,15 +59,17 @@ export default function DOMRenderer(control, options = {}) {
 		rafId = requestAnimationFrame(render);
 	}
 
+	parentElement.appendChild(outer);
+
 	rafId = requestAnimationFrame(render);
 
-	this.destroy = () => {
-		cancelAnimationFrame(rafId);
+	return {
+		destroy: () => {
+			cancelAnimationFrame(rafId);
 
-		if (outer.parentNode) {
-			outer.parentNode.removeChild(outer);
+			if (outer.parentNode) {
+				outer.parentNode.removeChild(outer);
+			}
 		}
 	};
-
-	parentElement.appendChild(outer);
 }
