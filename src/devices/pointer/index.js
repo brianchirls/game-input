@@ -105,16 +105,25 @@ todo:
 */
 
 export default function Pointer({
-	updatePeriod = 1000 / 60
+	updatePeriod = 1000 / 60,
+	touch = true,
+	pen = true,
+	mouse = true
 } = {}) {
 	let previousEvent = null;
 	let lastEvent = null;
 	let lastWheelEvent = null;
 
+	const allowedPointerTypes = {
+		pen,
+		mouse,
+		touch
+	};
+
 	const buttonsDown = new Set();
 
 	const saveEvent = evt => {
-		if (evt.isPrimary) {
+		if (evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
 			previousEvent = lastEvent;
 			lastEvent = evt;
 
@@ -210,19 +219,13 @@ export default function Pointer({
 		window.removeEventListener('wheel', onWheel);
 	};
 
-	// assume pointer is always connected?
-	// ...not necessarily
-	Object.defineProperty(this, 'connected', {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: true
-	});
-
 	Object.defineProperties(this, {
 		pointerType: {
 			get: () => lastEvent && lastEvent.pointerType || ''
 		},
+
+		// assume pointer is always connected?
+		// ...not necessarily
 		connected: {
 			enumerable: false,
 			configurable: false,
