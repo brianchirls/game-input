@@ -6,6 +6,8 @@ import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
 import PressInteraction from '../src/interactions/PressInteraction';
 import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
+import VirtualJoystick from '../src/devices/virtualjoystick';
+import DOMRenderer from '../src/devices/virtualjoystick/DOMRenderer';
 
 const gamepad = new Gamepad();
 const leftStick = gamepad.getControl('leftStick');
@@ -20,17 +22,29 @@ const kbdWASD = new DPadComposite({
 	right: kbd.getControl('D')
 });
 
-const pointer = new Pointer();
+const pointer = new Pointer({
+	touch: false
+});
 
 const rotateArrowKeys = new AxisComposite({
 	negative: kbd.getControl('arrowleft'),
 	positive: kbd.getControl('arrowright')
 });
 
+const leftTouchJoystick = new VirtualJoystick({
+	filter: evt => evt.pageX < Math.max(200, window.innerWidth * 0.4)
+}).getControl();
+
+
+const rightTouchJoystick = new VirtualJoystick({
+	filter: evt => evt.pageX > window.innerWidth - Math.max(200, window.innerWidth * 0.4)
+}).getControl();
+
 const moveAction = new Action({
 	bindings: [
 		leftStick,
 		kbdWASD,
+		leftTouchJoystick,
 		{
 			control: pointer.getControl('delta'),
 			processors: [
@@ -46,6 +60,7 @@ const rotateAction = new Action({
 	bindings: [
 		rightStickHoriz,
 		rotateArrowKeys,
+		rightTouchJoystick.find('x'),
 		pointer.getControl('wheel')
 	]
 });
@@ -99,5 +114,10 @@ function update(t = performance.now()) {
 	thing.style.transform = `translate(${x}px, ${y}px) rotate(${r}deg)`;
 	requestAnimationFrame(update);
 }
+
+/* eslint-disable no-new */
+new DOMRenderer(leftTouchJoystick);
+new DOMRenderer(rightTouchJoystick);
+/* eslint-enable no-new */
 
 update();
