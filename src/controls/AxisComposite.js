@@ -1,5 +1,4 @@
 import AxisInputControl from './AxisInputControl';
-import axisDeadZone from '../processors/axisDeadZone';
 
 export default class AxisComposite extends AxisInputControl {
 	constructor({
@@ -12,12 +11,7 @@ export default class AxisComposite extends AxisInputControl {
 			const pos = positive.read();
 			return (pos - neg) / 2;
 		};
-		super(read, Object.assign(
-			{
-				processors: [axisDeadZone]
-			},
-			opts
-		));
+		super(read, opts);
 
 		this.children.set('negative', negative);
 		this.children.set('positive', positive);
