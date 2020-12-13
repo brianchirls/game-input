@@ -1,4 +1,4 @@
-export default function domRenderer(control, options = {}) {
+export default function domView(control, options = {}) {
 	const { device } = control;
 	const {
 		innerRadius = Math.max(24, device.radius / 4),
