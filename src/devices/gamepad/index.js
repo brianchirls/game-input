@@ -5,7 +5,7 @@ import {
 import ButtonInputControl from '../../controls/ButtonInputControl';
 import StickInputControl from '../../controls/StickInputControl';
 import AxisInputControl from '../../controls/AxisInputControl';
-import eev from 'eev';
+import eventEmitter from '../../util/eventEmitter';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
@@ -22,7 +22,7 @@ const readers = new Map([
 export default function Gamepad(index = 0, {
 	updatePeriod = 1000 / 120
 } = {}) {
-	eev.call(this);
+	const clearEvents = eventEmitter(this);
 
 	const controlDefs = new Map();
 	const controlIndices = new Map();
@@ -110,7 +110,7 @@ export default function Gamepad(index = 0, {
 	this.controls = () => controlDefs.keys();
 
 	this.destroy = () => {
-		// todo: clean out event listeners
+		clearEvents();
 		window.removeEventListener('gamepadconnected', onConnected);
 		window.removeEventListener('gamepaddisconnected', onDisconnected);
 	};
@@ -134,5 +134,3 @@ export default function Gamepad(index = 0, {
 	window.addEventListener('gamepadconnected', onConnected);
 	window.addEventListener('gamepaddisconnected', onDisconnected);
 }
-
-Gamepad.prototype = Object.create(eev.prototype);

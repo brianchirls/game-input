@@ -1,7 +1,7 @@
-import eev from 'eev';
 import runProcessors from './util/runProcessors';
 import InputControl from './controls/InputControl';
 import Interaction from './interactions/Interaction';
+import eventEmitter from './util/eventEmitter';
 
 /*
 todo: use something like hrtime or performance.now in node.js
@@ -17,8 +17,8 @@ probably.
 const defaultInteraction = new Interaction();
 
 export default function Action(options = {}) {
-	eev.call(this);
 	const me = this;
+	const clearEvents = eventEmitter(this);
 
 	this.name = options.name || '';
 
@@ -230,6 +230,7 @@ export default function Action(options = {}) {
 		clearInteractions();
 		transitionState('inactive');
 		state = 'destroyed';
+		clearEvents();
 	};
 
 	Object.defineProperties(this, {
@@ -274,5 +275,3 @@ export default function Action(options = {}) {
 		this.enabled = false;
 	}
 }
-
-Action.prototype = Object.create(eev.prototype);
