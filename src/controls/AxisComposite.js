@@ -9,7 +9,7 @@ export default class AxisComposite extends AxisInputControl {
 		const read = () => {
 			const neg = negative.read();
 			const pos = positive.read();
-			return (pos - neg) / 2;
+			return pos - neg;
 		};
 		super(read, opts);
 
