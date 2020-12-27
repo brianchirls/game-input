@@ -1,11 +1,11 @@
 // everything for now
 
-export { default as Action} from './Action';
+export { default as Action } from './Action';
 
 // devices
-export { default as Gamepad } from './devices/gamepad';
-export { default as Keyboard } from './devices/keyboard';
-export { default as Pointer } from './devices/pointer';
+// export { default as Gamepad } from './devices/gamepad';
+// export { default as Keyboard } from './devices/keyboard';
+// export { default as Pointer } from './devices/pointer';
 
 // controls
 export { default as InputControl } from './controls/InputControl';
