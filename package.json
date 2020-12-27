@@ -28,7 +28,7 @@
 	"author": "Brian Chirls <brian@chirls.com>",
 	"license": "UNLICENSED",
 	"dependencies": {
-		"eev": "^0.1.5"
+		"mitt": "^2.1.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.12.1",
