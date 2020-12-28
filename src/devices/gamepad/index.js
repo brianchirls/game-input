@@ -20,7 +20,8 @@ const readers = new Map([
 ]);
 
 export default function Gamepad(index = 0, {
-	updatePeriod = 1000 / 120
+	updatePeriod = 1000 / 120,
+	enabled = true
 } = {}) {
 	const clearEvents = eventEmitter(this);
 
@@ -40,17 +41,18 @@ export default function Gamepad(index = 0, {
 	});
 
 	function update() {
-		const device = navigator.getGamepads()[index];
-		const timestamp = device && device.timestamp || performance.now();
-		if (device && timestamp - lastDeviceUpdate >= updatePeriod) {
-			lastDevice = device;
-			lastDeviceUpdate = timestamp;
+		if (enabled) {
+			const device = navigator.getGamepads()[index];
+			const timestamp = device && device.timestamp || performance.now();
+			if (device && timestamp - lastDeviceUpdate >= updatePeriod) {
+				lastDevice = device;
+				lastDeviceUpdate = timestamp;
+			}
 		}
 	}
 
-	const onConnected = evt => {
-		const gp = evt.gamepad;
-		if (gp.index === index) {
+	function connectGamePad(gp) {
+		if (gp) {
 			update();
 
 			// set any additional buttons or axes
@@ -65,6 +67,23 @@ export default function Gamepad(index = 0, {
 				controlDefs.set(name, AxisInputControl);
 				controlIndices.set(name, i);
 			}
+		}
+	}
+
+	function disconnectGamepad() {
+		// remove any extra controls
+		controlDefs.forEach((def, key) => {
+			if (!standardControlNames.has(key)) {
+				controlDefs.delete(key);
+				controlIndices.delete(key);
+			}
+		});
+	}
+
+	const onConnected = evt => {
+		const gp = evt.gamepad;
+		if (gp.index === index) {
+			connectGamePad(gp);
 
 			this.emit('connected');
 		}
@@ -73,13 +92,7 @@ export default function Gamepad(index = 0, {
 	const onDisconnected = evt => {
 		const gp = evt.gamepad;
 		if (gp.index === index) {
-			// remove any extra controls
-			controlDefs.forEach((def, key) => {
-				if (!standardControlNames.has(key)) {
-					controlDefs.delete(key);
-					controlIndices.delete(key);
-				}
-			});
+			disconnectGamepad();
 
 			this.emit('disconnected');
 		}
@@ -127,6 +140,12 @@ export default function Gamepad(index = 0, {
 		},
 		timestamp: {
 			get: () => lastDeviceUpdate
+		},
+		enabled: {
+			get: () => enabled,
+			set(val) {
+				enabled = !!val;
+			}
 		}
 	});
 

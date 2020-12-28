@@ -110,7 +110,8 @@ export default function Pointer({
 	touch = true,
 	pen = true,
 	mouse = true,
-	touchActionStyle = true
+	touchActionStyle = true,
+	enabled = true
 } = {}) {
 	let previousEvent = null;
 	let lastEvent = null;
@@ -125,7 +126,7 @@ export default function Pointer({
 	const buttonsDown = new Set();
 
 	const saveEvent = evt => {
-		if (evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
+		if (enabled && evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
 			previousEvent = lastEvent;
 			lastEvent = evt;
 
@@ -165,6 +166,28 @@ export default function Pointer({
 	const styleElement = touchActionStyle && element.style ? element : document.body;
 	if (touchActionStyle) {
 		styleElement.style.touchAction = 'none';
+	}
+
+	function enable() {
+		enabled = true;
+		window.addEventListener('pointerdown', saveEvent);
+		window.addEventListener('pointerup', saveEvent);
+		window.addEventListener('pointermove', saveEvent);
+		window.addEventListener('wheel', onWheel);
+	}
+
+	function disable() {
+		enabled = false;
+		if (touchActionStyle) {
+			// todo: only if it wasn't set before
+			styleElement.style.touchAction = '';
+		}
+
+		buttonsDown.clear();
+		window.removeEventListener('pointerdown', saveEvent);
+		window.removeEventListener('pointerup', saveEvent);
+		window.removeEventListener('pointermove', saveEvent);
+		window.removeEventListener('wheel', onWheel);
 	}
 
 	this.getControl = (name, options = {}) => {
@@ -219,16 +242,7 @@ export default function Pointer({
 	};
 
 	this.destroy = () => {
-		if (touchActionStyle) {
-			// todo: only if it wasn't set before
-			styleElement.style.touchAction = '';
-		}
-
-		buttonsDown.clear();
-		window.removeEventListener('pointerdown', saveEvent);
-		window.removeEventListener('pointerup', saveEvent);
-		window.removeEventListener('pointermove', saveEvent);
-		window.removeEventListener('wheel', onWheel);
+		disable();
 	};
 
 	Object.defineProperties(this, {
@@ -244,13 +258,26 @@ export default function Pointer({
 			writable: false,
 			value: true
 		},
+
 		timestamp: {
 			get: () => lastEvent && lastEvent.timeStamp || 0
+		},
+
+		enabled: {
+			get: () => enabled,
+			set(val) {
+				if (!!val !== !!enabled) {
+					if (val) {
+						enable();
+					} else {
+						disable();
+					}
+				}
+			}
 		}
 	});
 
-	window.addEventListener('pointerdown', saveEvent);
-	window.addEventListener('pointerup', saveEvent);
-	window.addEventListener('pointermove', saveEvent);
-	window.addEventListener('wheel', onWheel);
+	if (enabled) {
+		enable();
+	}
 }

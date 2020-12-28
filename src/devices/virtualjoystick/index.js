@@ -12,7 +12,8 @@ export default function VirtualJoystick({
 	pen = true,
 	mouse = false,
 	filter = null,
-	touchActionStyle = true
+	touchActionStyle = true,
+	enabled = true
 } = {}) {
 
 	let startEvent = null;
@@ -80,8 +81,33 @@ export default function VirtualJoystick({
 	}
 
 	const styleElement = touchActionStyle && element.style ? element : document.body;
-	if (touchActionStyle) {
-		styleElement.style.touchAction = 'none';
+
+	function enable() {
+		enabled = true;
+		if (supported) {
+
+			if (touchActionStyle) {
+				styleElement.style.touchAction = 'none';
+			}
+
+			element.addEventListener('pointerdown', pointerDown);
+			element.addEventListener('pointermove', pointerMove);
+			element.addEventListener('pointerup', pointerUp);
+			element.addEventListener('pointercancel', pointerUp);
+		}
+	}
+
+	function disable() {
+		enabled = false;
+		if (touchActionStyle) {
+			// todo: only if it wasn't set before
+			styleElement.style.touchAction = '';
+		}
+
+		element.removeEventListener('pointerdown', pointerDown);
+		element.removeEventListener('pointermove', pointerMove);
+		element.removeEventListener('pointerup', pointerUp);
+		element.removeEventListener('pointercancel', pointerUp);
 	}
 
 	this.getControl = (/*name,*/ options = {}) => {
@@ -102,15 +128,7 @@ export default function VirtualJoystick({
 	};
 
 	this.destroy = () => {
-		if (touchActionStyle) {
-			// todo: only if it wasn't set before
-			styleElement.style.touchAction = '';
-		}
-
-		element.removeEventListener('pointerdown', pointerDown);
-		element.removeEventListener('pointermove', pointerMove);
-		element.removeEventListener('pointerup', pointerUp);
-		element.removeEventListener('pointercancel', pointerUp);
+		disable();
 	};
 
 	Object.defineProperties(this, {
@@ -155,13 +173,23 @@ export default function VirtualJoystick({
 			set: val => {
 				radius = val;
 			}
+		},
+
+		enabled: {
+			get: () => enabled,
+			set(val) {
+				if (!!val !== !!enabled) {
+					if (val) {
+						enable();
+					} else {
+						disable();
+					}
+				}
+			}
 		}
 	});
 
-	if (supported) {
-		element.addEventListener('pointerdown', pointerDown);
-		element.addEventListener('pointermove', pointerMove);
-		element.addEventListener('pointerup', pointerUp);
-		element.addEventListener('pointercancel', pointerUp);
+	if (enabled) {
+		enable();
 	}
 }

@@ -1,7 +1,9 @@
 import ButtonInputControl from '../../controls/ButtonInputControl';
 import boolAsNum from '../../util/boolAsNum';
 
-export default function Keyboard() {
+export default function Keyboard({
+	enabled = true
+} = {}) {
 	const keysDown = new Set();
 
 	const onKeyDown = evt => {
@@ -25,6 +27,19 @@ export default function Keyboard() {
 
 	function readArrayKey(keys) {
 		return keys.some(readSingleKey);
+	}
+
+	function enable() {
+		enabled = true;
+		window.addEventListener('keydown', onKeyDown);
+		window.addEventListener('keyup', onKeyUp);
+	}
+
+	function disable() {
+		enabled = false;
+		keysDown.clear();
+		window.removeEventListener('keydown', onKeyDown);
+		window.removeEventListener('keyup', onKeyUp);
 	}
 
 	this.getControl = (name, options = {}) => {
@@ -54,19 +69,32 @@ export default function Keyboard() {
 	};
 
 	this.destroy = () => {
-		keysDown.clear();
-		window.removeEventListener('keydown', onKeyDown);
-		window.removeEventListener('keyup', onKeyUp);
+		disable();
 	};
 
 	// assume keyboard is always connected
-	Object.defineProperty(this, 'connected', {
-		enumerable: false,
-		configurable: false,
-		writable: false,
-		value: true
+	Object.defineProperties(this, {
+		connected: {
+			enumerable: false,
+			configurable: false,
+			writable: false,
+			value: true
+		},
+		enabled: {
+			get: () => enabled,
+			set(val) {
+				if (!!val !== !!enabled) {
+					if (val) {
+						enable();
+					} else {
+						disable();
+					}
+				}
+			}
+		}
 	});
 
-	window.addEventListener('keydown', onKeyDown);
-	window.addEventListener('keyup', onKeyUp);
+	if (enabled) {
+		enable();
+	}
 }
