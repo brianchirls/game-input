@@ -8,13 +8,19 @@ export default class InputControl {
 	parent = null;
 	children = new Map();
 	device = null;
+	enabled = true;
 	processors = [];
 
-	constructor(read, options) {
+	constructor(readRaw, options) {
 		copyOptions(this, options);
-		this.read = this.processors.length ?
-			() => runProcessors(this.processors, read()) :
-			read || this.read;
+		const read = this.processors.length ?
+			() => runProcessors(this.processors, readRaw()) :
+			readRaw || this.read;
+		this.read = () => {
+			return this.enabled ?
+				read() :
+				Object.getPrototypeOf(this).constructor.defaultValue;
+		};
 	}
 
 	find(path) {
@@ -35,7 +41,7 @@ export default class InputControl {
 	}
 
 	read() {
-		return this.prototype.defaultValue;
+		return Object.getPrototypeOf(this).constructor.defaultValue;
 	}
 
 	magnitude(val = this.read()) {
