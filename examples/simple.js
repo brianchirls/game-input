@@ -9,12 +9,25 @@ import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
 import VirtualJoystick from '../src/devices/virtualjoystick';
 import domView from '../src/devices/virtualjoystick/domView';
 
+// Devices
 const gamepad = new Gamepad();
+const kbd = new Keyboard();
+const pointer = new Pointer({
+	touch: false,
+	enabled: false
+});
+const leftTouch = new VirtualJoystick({
+	filter: evt => evt.pageX < Math.max(200, window.innerWidth * 0.4)
+});
+const rightTouch = new VirtualJoystick({
+	filter: evt => evt.pageX > window.innerWidth - Math.max(200, window.innerWidth * 0.4)
+});
+
+// Controls
 const leftStick = gamepad.getControl('leftStick');
 // const downButton = leftStick.find('down');
 const rightStickHoriz = gamepad.getControl('rightStick').find('x');
 
-const kbd = new Keyboard();
 const kbdWASD = new DPadComposite({
 	up: kbd.getControl('W'),
 	left: kbd.getControl('A'),
@@ -22,24 +35,15 @@ const kbdWASD = new DPadComposite({
 	right: kbd.getControl('D')
 });
 
-const pointer = new Pointer({
-	touch: false
-});
-
 const rotateArrowKeys = new AxisComposite({
 	negative: kbd.getControl('arrowleft'),
 	positive: kbd.getControl('arrowright')
 });
 
-const leftTouchJoystick = new VirtualJoystick({
-	filter: evt => evt.pageX < Math.max(200, window.innerWidth * 0.4)
-}).getControl();
+const leftTouchJoystick = leftTouch.getControl();
+const rightTouchJoystick = rightTouch.getControl();
 
-
-const rightTouchJoystick = new VirtualJoystick({
-	filter: evt => evt.pageX > window.innerWidth - Math.max(200, window.innerWidth * 0.4)
-}).getControl();
-
+// Actions
 const moveAction = new Action({
 	bindings: [
 		leftStick,
@@ -119,3 +123,55 @@ domView(leftTouchJoystick);
 domView(rightTouchJoystick);
 
 update();
+
+// Toggle devices
+const devices = [
+	['Gamepad', gamepad],
+	['Keyboard', kbd],
+	['Pointer', pointer]
+];
+
+if (leftTouch.connected) {
+	devices.push([
+		'Virtual Joystick',
+		{
+			get enabled() {
+				return leftTouch.enabled;
+			},
+			set enabled(val) {
+				leftTouch.enabled = val;
+				rightTouch.enabled = val;
+			}
+		}
+	]);
+}
+
+const controls = document.createElement('div');
+Object.assign(controls.style, {
+	position: 'fixed',
+	top: '20px',
+	right: '20px',
+	border: 'white solid 1px',
+	backgroundColor: 'rgba(0, 0, 0, 0.6)',
+	color: '#ffffff',
+	display: 'flex',
+	flexDirection: 'column',
+	padding: '20px'
+});
+document.body.appendChild(controls);
+devices.forEach(([name, device]) => {
+	const label = document.createElement('label');
+	const input = document.createElement('input');
+	Object.assign(input, {
+		type: 'checkbox',
+		checked: device.enabled,
+		onclick() {
+			device.enabled = !device.enabled;
+		}
+	});
+
+	label.appendChild(input);
+	label.appendChild(document.createTextNode(' ' + name));
+
+	controls.appendChild(label);
+});
