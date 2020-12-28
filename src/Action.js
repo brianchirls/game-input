@@ -156,17 +156,19 @@ export default function Action(options = {}) {
 		for (let i = 0; i < bindings.length; i++) {
 			const binding = bindings[i];
 			const { control } = binding;
-			const controlValue = binding.processors ?
-				runProcessors(binding.processors, control.read()) :
-				control.read();
-			const magnitude = control.magnitude(controlValue);
-			if (magnitude > best) {
-				value = controlValue;
-				best = magnitude;
-				if (magnitude > 0) {
-					activeBinding = binding;
-					if (!activeTime) {
-						activeTime = now();
+			if (control.enabled) {
+				const controlValue = binding.processors ?
+					runProcessors(binding.processors, control.read()) :
+					control.read();
+				const magnitude = control.magnitude(controlValue);
+				if (magnitude > best) {
+					value = controlValue;
+					best = magnitude;
+					if (magnitude > 0) {
+						activeBinding = binding;
+						if (!activeTime) {
+							activeTime = now();
+						}
 					}
 				}
 			}
