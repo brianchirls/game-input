@@ -78,9 +78,13 @@ const controlDefs = {
 	},
 	screenDelta: {
 		constructor: Vector2InputControl,
-		reader: (evt, previousEvent, defaultValue) => previousEvent ?
-			[evt.screenX - previousEvent.screenX, evt.screenY - previousEvent.screenY] :
-			defaultValue
+		reader: 'movementX' in MouseEvent.prototype ?
+			(evt, previousEvent, defaultValue) => evt ?
+				[evt.movementX, evt.movementY] :
+				defaultValue :
+			(evt, previousEvent, defaultValue) => previousEvent ?
+				[evt.screenX - previousEvent.screenX, evt.screenY - previousEvent.screenY] :
+				defaultValue
 	},
 	pressure: {
 		constructor: AxisInputControl,
@@ -178,6 +182,10 @@ export default function Pointer({
 
 	function disable() {
 		enabled = false;
+		previousEvent = null;
+		lastEvent = null;
+		lastWheelEvent = null;
+
 		if (touchActionStyle) {
 			// todo: only if it wasn't set before
 			styleElement.style.touchAction = '';
