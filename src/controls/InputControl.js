@@ -13,6 +13,7 @@ export default class InputControl {
 
 	constructor(readRaw, options) {
 		copyOptions(this, options);
+
 		const read = this.processors.length ?
 			() => runProcessors(this.processors, readRaw()) :
 			readRaw || this.read;
@@ -21,6 +22,11 @@ export default class InputControl {
 				read() :
 				Object.getPrototypeOf(this).constructor.defaultValue;
 		};
+
+		if (options && typeof options.active === 'function') {
+			const active = options.active;
+			this.active = () => active(this);
+		}
 	}
 
 	find(path) {
@@ -46,5 +52,9 @@ export default class InputControl {
 
 	magnitude(val = this.read()) {
 		return Math.abs(val);
+	}
+
+	active() {
+		return this.magnitude() > 0;
 	}
 }

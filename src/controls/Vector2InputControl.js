@@ -23,4 +23,9 @@ export default class Vector2InputControl extends InputControl {
 	magnitude(vec = this.read()) {
 		return Math.hypot(vec[0], vec[1]);
 	}
+
+	active() {
+		const vec = this.read();
+		return vec[0] !== 0 || vec[1] !== 0;
+	}
 }

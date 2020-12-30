@@ -35,7 +35,7 @@ export default function domView(control, options = {}) {
 	function render() {
 		const [x, y] = control.read();
 
-		if (control.mode === 'static' || x || y) {
+		if (control.mode === 'static' || control.active()) {
 			const outerSize = device.radius * 2;
 			const ox = device.x - device.radius;
 			const oy = device.y - device.radius;

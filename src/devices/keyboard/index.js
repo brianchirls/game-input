@@ -1,6 +1,15 @@
 import ButtonInputControl from '../../controls/ButtonInputControl';
 import boolAsNum from '../../util/boolAsNum';
 
+/*
+todo:
+need to handle different keyboard layouts
+e.g. in France and Belgium, WASD => ZQSD
+optionally use .code instead of .key?
+
+https://www.w3.org/TR/uievents-code/#code-value-tables
+*/
+
 export default function Keyboard({
 	enabled = true
 } = {}) {

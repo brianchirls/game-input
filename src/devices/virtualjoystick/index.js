@@ -123,7 +123,10 @@ export default function VirtualJoystick({
 		return new StickInputControl(read, Object.assign(
 			{},
 			options,
-			{ device: this }
+			{
+				device: this,
+				active: () => !!startEvent
+			}
 		));
 	};
 
