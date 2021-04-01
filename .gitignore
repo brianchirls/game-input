@@ -22,6 +22,7 @@ node_modules
 /notes.md
 /screenshots
 /experiments
+.vscode
 
 npm-debug.log*
 yarn-debug.log*

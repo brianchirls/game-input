@@ -6,6 +6,7 @@ config
 /examples/util/all-examples.js
 build/examples
 tests
+**/*.test.js
 node_modules
 babel.config.js
 gh-pages*
@@ -19,3 +20,4 @@ gh-pages*
 .appveyor.yml
 .travis.yml
 .circleci/config.yml
+.vscode
