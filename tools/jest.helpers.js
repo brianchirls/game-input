@@ -1,5 +1,5 @@
-import { EPSILON } from 'gl-matrix/cjs/common';
-// import expect from 'expect'
+// import { EPSILON } from 'gl-matrix/cjs/common';
+const EPSILON = 0.00001;
 const expect = global.expect;
 
 expect.extend({
