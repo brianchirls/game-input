@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const { getExamples, examplesDirectory } = require('./util/getExamples');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
