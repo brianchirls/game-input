@@ -1,10 +1,6 @@
 const babelConfig = require('./babel');
 const browsers = [
-	'>0.05%',
-	'last 4 versions',
-	'Firefox ESR',
-	'ie >= 11',
-	'not dead'
+	'defaults'
 ];
 
 /*
