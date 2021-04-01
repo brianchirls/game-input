@@ -71,7 +71,7 @@
 		"postcss-loader": "^4.1.0",
 		"purecss": "^2.0.3",
 		"raw-loader": "^4.0.2",
-		"react-dev-utils": "^10.2.1",
+		"react-dev-utils": "^11.0.4",
 		"stylelint": "^13.8.0",
 		"stylelint-config-standard": "^20.0.0",
 		"stylelint-webpack-plugin": "^2.1.1",
