@@ -56,10 +56,7 @@ module.exports = (env, options) => ({
 				test: /\.css$/i,
 				use: [
 					{
-						loader: MiniCssExtractPlugin.loader,
-						options: {
-							hmr: options.mode === 'development'
-						}
+						loader: MiniCssExtractPlugin.loader
 					},
 					{
 						loader: require.resolve('css-loader'),
