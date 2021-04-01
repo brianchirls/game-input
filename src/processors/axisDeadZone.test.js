@@ -5,4 +5,7 @@ describe('axisDeadZone', () => {
 	it('low value', () => expect(axisDeadZone(0.1, 0.2, 0.9)).toEqual(0));
 	it('high value', () => expect(axisDeadZone(0.9, 0.1, 0.8)).toEqual(1));
 	it('interpolated value', () => expect(axisDeadZone(0.8, 0.2, 1)).toBeRoughly(0.75));
+
+	it('should work without min and max', () => expect(axisDeadZone(0.525)).toBeRoughly(0.5));
+
 });
