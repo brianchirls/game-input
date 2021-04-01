@@ -90,7 +90,7 @@ module.exports = (env, options) => merge(common(env, options), {
 		new BundleAnalyzerPlugin({
 			openAnalyzer: false,
 			analyzerMode: 'static',
-			reportFilename: '../report.html'
+			reportFilename: '../../reports/bundle.html'
 		})
 	]),
 	// externals: {
