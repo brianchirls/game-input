@@ -8,6 +8,8 @@ const projectDirectory = path.resolve(__dirname, '..');
 const { getExamples, examplesDirectory } = require('./util/getExamples');
 const { extendDefaultPlugins: svgoExtendDefaultPlugins } = require('svgo');
 
+process.traceDeprecation = true;
+
 module.exports = (env, options) => ({
 	context: projectDirectory,
 	entry: () => {
@@ -128,21 +130,10 @@ module.exports = (env, options) => ({
 		})
 	],
 	optimization: {
-		splitChunks: 'serveIndex' in options ? {} : {
-			name: options.mode !== 'production',
-			cacheGroups: {
-				common: {
-					minChunks: 3,
-					name: 'common',
-					chunks: 'initial',
-					filename: '[name]-[chunkhash].chunk.js'
-				},
-				cannon: {
-					name: 'cannon',
-					test: /[\\/]node_modules[\\/]cannon[\\/]/,
-					filename: '[name]-[chunkhash].chunk.js'
-				}
-			}
+		splitChunks: {
+			// include all types of chunks
+			chunks: 'all',
+			usedExports: false
 		}
 	}
 });

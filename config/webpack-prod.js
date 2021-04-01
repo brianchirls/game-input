@@ -6,9 +6,8 @@ const { getExamples, examplesDirectory } = require('./util/getExamples');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const LoadExternalScriptsPlugin = require('./util/LoadExternalScriptsPlugin');
 
 const common = require('./webpack-common');
 
@@ -34,7 +33,6 @@ const PLUGINS = [
 	new webpack.DefinePlugin({
 		DEBUG: false
 	}),
-	new OptimizeCssAssetsPlugin({}),
 	new MiniCssExtractPlugin({
 		// Options similar to the same options in webpackOptions.output
 		// both options are optional
@@ -83,10 +81,6 @@ module.exports = (env, options) => merge(common(env, options), {
 		});
 	}), [
 
-		// new LoadExternalScriptsPlugin({
-		// 	three: `https://unpkg.com/three@^0.${require('three').REVISION}/build/three.min.js`
-		// }),
-
 		new BundleAnalyzerPlugin({
 			openAnalyzer: false,
 			analyzerMode: 'static',
@@ -96,5 +90,17 @@ module.exports = (env, options) => merge(common(env, options), {
 	// externals: {
 	// 	three: 'THREE'
 	// },
-	devtool: 'source-map'
+	devtool: 'source-map',
+	optimization: {
+		minimize: true,
+		minimizer: [
+			`...`,
+			new CssMinimizerPlugin()
+		],
+
+		// https://github.com/webpack-contrib/webpack-bundle-analyzer/issues/409#issuecomment-762156443
+		runtimeChunk: {
+			name: 'js/runtime'
+		}
+	}
 });
