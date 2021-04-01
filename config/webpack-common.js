@@ -6,6 +6,7 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 
 const projectDirectory = path.resolve(__dirname, '..');
 const { getExamples, examplesDirectory } = require('./util/getExamples');
+const { extendDefaultPlugins: svgoExtendDefaultPlugins } = require('svgo');
 
 module.exports = (env, options) => ({
 	context: projectDirectory,
@@ -92,9 +93,12 @@ module.exports = (env, options) => ({
 					{
 						loader: 'svgo-loader',
 						options: {
-							plugins: [
-								{ removeViewBox: false }
-							]
+							plugins: svgoExtendDefaultPlugins([
+								{
+									name: 'removeViewBox',
+									active: false
+								}
+							])
 						}
 					}
 				]
