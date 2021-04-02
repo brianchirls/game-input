@@ -3,9 +3,15 @@ import copyOptions from '../util/copyOptions';
 
 export default class ButtonInputControl extends AxisInputControl {
 	pressPoint = 0.5;
-	constructor(read, opts) {
-		super(read, opts);
-		copyOptions(this, opts);
+
+	constructor(read, options) {
+		if (read && typeof read === 'object' && !options) {
+			options = read;
+			read = null;
+		}
+
+		super(read, options);
+		copyOptions(this, options);
 	}
 
 	pressed(value = this.magnitude()) {

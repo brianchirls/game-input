@@ -21,6 +21,30 @@ describe('InputControl', () => {
 			expect(inputControl.processors).toEqual([]);
 		});
 
+		it('should set options from first argument', () => {
+			const parent = new InputControl();
+			const options = {
+				name: 'some name',
+				parent,
+				device: {},
+				enabled: false
+			};
+			const inputControl = new InputControl(options);
+			expect(inputControl).toMatchObject(options);
+		});
+
+		it('should set options from second argument', () => {
+			const parent = new InputControl();
+			const options = {
+				name: 'some name',
+				parent,
+				device: {},
+				enabled: false
+			};
+			const inputControl = new InputControl(options);
+			expect(inputControl).toMatchObject(options);
+		});
+
 		it('should set processors from array', () => {
 			const processors = [
 				() => 1,

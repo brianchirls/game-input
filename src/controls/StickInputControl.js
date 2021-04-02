@@ -27,6 +27,11 @@ const childbuttons = [
 
 export default class StickInputControl extends Vector2InputControl {
 	constructor(read, options) {
+		if (read && typeof read === 'object' && !options) {
+			options = read;
+			read = null;
+		}
+
 		super(read, Object.assign(
 			{
 				processors: [stickDeadZone]
