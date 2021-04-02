@@ -9,8 +9,8 @@ export default class DPadInputControl extends Vector2InputControl {
 		...opts
 	}) {
 		const read = () => {
-			const x = right.read() - left.read();
-			const y = up.read() - down.read();
+			const x = this.children.get('right').read() - this.children.get('left').read();
+			const y = this.children.get('up').read() - this.children.get('down').read();
 			return [x, y];
 		};
 		super(read, opts);
