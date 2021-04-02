@@ -5,6 +5,11 @@ export default class Vector2InputControl extends InputControl {
 	static defaultValue = [0, 0];
 
 	constructor(read, options) {
+		if (read && typeof read === 'object' && !options) {
+			options = read;
+			read = null;
+		}
+
 		super(read, options);
 
 		this.vector2 = this.read;
