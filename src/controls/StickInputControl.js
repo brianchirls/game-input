@@ -5,15 +5,14 @@ import stickDeadZone from '../processors/stickDeadZone';
 function getChildValue(read, axis, neg) {
 	const vec = read();
 	const rawAxisValue = vec[axis];
-	const mag = Math.abs(neg ? -rawAxisValue : rawAxisValue);
-	return Math.max(0, mag);
+	return Math.max(0, neg ? -rawAxisValue : rawAxisValue);
 }
 
 function makeChild(parent, name, axis, negative, options) {
 	const opts = Object.assign({}, options && options[name], {
 		parent
 	});
-	parent[name] = new ButtonInputControl(() => getChildValue(axis, negative), opts);
+	parent[name] = new ButtonInputControl(() => getChildValue(parent.read, axis, negative), opts);
 
 	parent.children.set(name, parent[name]);
 }
