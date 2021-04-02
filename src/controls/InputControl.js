@@ -12,19 +12,43 @@ export default class InputControl {
 	processors = [];
 
 	constructor(readRaw, options) {
-		copyOptions(this, options);
+		if (readRaw && typeof readRaw === 'object' && !options) {
+			options = readRaw;
+			readRaw = null;
+		}
 
-		const read = this.processors.length ?
-			() => runProcessors(this.processors, readRaw()) :
-			readRaw || this.read;
+		const {
+			processors,
+			children,
+			active,
+			...opts
+		} = options || {};
+
+		copyOptions(this, opts);
+
+		if (processors) {
+			for (const p of processors) {
+				this.processors.push(p);
+			}
+		}
+
+		if (children) {
+			const iterable = children[Symbol.iterator] ? children : Object.entries(children);
+			for (const [key, value] of iterable) {
+				this.children.set(key, value);
+			}
+		}
+
+		const readUnprocessed = readRaw || this.read.bind(this);
+		const read = () => runProcessors(this.processors, readUnprocessed());
+
 		this.read = () => {
 			return this.enabled ?
 				read() :
 				Object.getPrototypeOf(this).constructor.defaultValue;
 		};
 
-		if (options && typeof options.active === 'function') {
-			const active = options.active;
+		if (typeof active === 'function') {
 			this.active = () => active(this);
 		}
 	}
@@ -39,7 +63,7 @@ export default class InputControl {
 			const k = path.substring(0, i);
 			const child = this.children.get(k);
 			if (child) {
-				return child.find(path.substring(k + 1));
+				return child.find(path.substring(i + 1));
 			}
 		}
 
