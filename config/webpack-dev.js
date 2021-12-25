@@ -61,15 +61,14 @@ module.exports = (env, options) => merge(common(env, options), {
 		// allowedHosts: [
 		// 	'.github.com'
 		// ],
-		contentBase: [
-			// path.join(__dirname, '../examples'),
-			path.resolve(__dirname, '../build/site')
-		],
+		static: {
+			directory: path.resolve(__dirname, '../build/site')
+		},
 		host,
-		port,
-		hot: true,
-		inline: true,
-		noInfo: false
+		port
+	},
+	infrastructureLogging: {
+		level: 'warn'
 	},
 	output: {
 		path: path.resolve(__dirname, '../build/site'),
