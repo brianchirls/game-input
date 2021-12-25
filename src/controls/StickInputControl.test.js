@@ -15,10 +15,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 
 	it('should have right button pressed if x > 0', () => {
@@ -26,10 +26,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(true);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(true);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 
 	it('should have left button pressed if x < 0', () => {
@@ -37,10 +37,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(true);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(true);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 
 	it('should have up button pressed if y > 0', () => {
@@ -48,10 +48,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(true);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(true);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 
 	it('should have down button pressed if y < 0', () => {
@@ -59,10 +59,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(true);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(true);
 	});
 
 	it('should have up and right button pressed if x and y > 0', () => {
@@ -70,10 +70,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(true);
-		expect(buttons.up.pressed()).toEqual(true);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(true);
+		expect(buttons.up.pressed()).toBe(true);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 
 	it('should have down and right button pressed if x > 0 and y < 0', () => {
@@ -81,10 +81,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(false);
-		expect(buttons.right.pressed()).toEqual(true);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(true);
+		expect(buttons.left.pressed()).toBe(false);
+		expect(buttons.right.pressed()).toBe(true);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(true);
 	});
 
 	it('should have down and left button pressed if x < 0 and y < 0', () => {
@@ -92,10 +92,10 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(true);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(false);
-		expect(buttons.down.pressed()).toEqual(true);
+		expect(buttons.left.pressed()).toBe(true);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(false);
+		expect(buttons.down.pressed()).toBe(true);
 	});
 
 	it('should have up and left button pressed if x < 0 and y > 0', () => {
@@ -103,9 +103,9 @@ describe('StickInputControl', () => {
 		const vector2InputControl = new StickInputControl(read);
 		const buttons = getButtons(vector2InputControl);
 
-		expect(buttons.left.pressed()).toEqual(true);
-		expect(buttons.right.pressed()).toEqual(false);
-		expect(buttons.up.pressed()).toEqual(true);
-		expect(buttons.down.pressed()).toEqual(false);
+		expect(buttons.left.pressed()).toBe(true);
+		expect(buttons.right.pressed()).toBe(false);
+		expect(buttons.up.pressed()).toBe(true);
+		expect(buttons.down.pressed()).toBe(false);
 	});
 });

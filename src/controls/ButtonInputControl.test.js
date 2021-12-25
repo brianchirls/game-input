@@ -2,7 +2,7 @@ import ButtonInputControl from './ButtonInputControl';
 
 describe('ButtonInputControl', () => {
 	it('should be a function', () => {
-		expect(typeof ButtonInputControl).toEqual('function');
+		expect(typeof ButtonInputControl).toBe('function');
 	});
 
 	it('should set options from first argument', () => {
@@ -22,7 +22,7 @@ describe('ButtonInputControl', () => {
 
 		const read = () => pressPoint;
 		const inputControl = new ButtonInputControl(read, options);
-		expect(inputControl.pressed()).toEqual(true);
+		expect(inputControl.pressed()).toBe(true);
 	});
 
 	it('should not be pressed if value is below pressPoint', () => {
@@ -33,7 +33,7 @@ describe('ButtonInputControl', () => {
 
 		const read = () => 0.59;
 		const inputControl = new ButtonInputControl(read, options);
-		expect(inputControl.pressed()).toEqual(false);
+		expect(inputControl.pressed()).toBe(false);
 	});
 
 	it('should not be pressed if not enabled', () => {
@@ -45,6 +45,6 @@ describe('ButtonInputControl', () => {
 		const read = () => 1;
 		const inputControl = new ButtonInputControl(read, options);
 		inputControl.enabled = false;
-		expect(inputControl.pressed()).toEqual(false);
+		expect(inputControl.pressed()).toBe(false);
 	});
 });
