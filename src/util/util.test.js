@@ -6,32 +6,32 @@ describe('util', () => {
 	describe('boolAsNum', () => {
 		it('should convert true to 1', () => {
 			const one = boolAsNum(() => true);
-			expect(one()).toEqual(1);
+			expect(one()).toBe(1);
 		});
 
 		it('should convert false to 0', () => {
 			const zero = boolAsNum(() => false);
-			expect(zero()).toEqual(0);
+			expect(zero()).toBe(0);
 		});
 
 		it('should convert truthy string to 1', () => {
 			const one = boolAsNum(() => 'something');
-			expect(one()).toEqual(1);
+			expect(one()).toBe(1);
 		});
 
 		it('should convert empty string to 0', () => {
 			const zero = boolAsNum(() => '');
-			expect(zero()).toEqual(0);
+			expect(zero()).toBe(0);
 		});
 
 		it('should convert non-zero number to 1', () => {
 			const one = boolAsNum(() => -0.001);
-			expect(one()).toEqual(1);
+			expect(one()).toBe(1);
 		});
 
 		it('should convert zero to 0', () => {
 			const zero = boolAsNum(() => 0);
-			expect(zero()).toEqual(0);
+			expect(zero()).toBe(0);
 		});
 	});
 
@@ -131,18 +131,18 @@ describe('util', () => {
 				.map(letter => prev => prev + letter);
 
 			const reduced = runProcessors(processors, 'A');
-			expect(reduced).toEqual('ABCDEFG');
+			expect(reduced).toBe('ABCDEFG');
 		});
 
 		it('should call processors with only input argument', () => {
 			runProcessors([
 				(prev, ...args) => {
-					expect(prev).toEqual('A');
+					expect(prev).toBe('A');
 					expect(args).toEqual([]);
 					return 'B';
 				},
 				(prev, ...args) => {
-					expect(prev).toEqual('B');
+					expect(prev).toBe('B');
 					expect(args).toEqual([]);
 				}
 			], 'A');

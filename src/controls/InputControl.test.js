@@ -3,20 +3,20 @@ import InputControl from './InputControl';
 describe('InputControl', () => {
 	describe('constructor', () => {
 		it('should be a function', () => {
-			expect(typeof InputControl).toEqual('function');
+			expect(typeof InputControl).toBe('function');
 		});
 
 		it('should have a static default value', () => {
-			expect(InputControl.defaultValue).toEqual(0);
+			expect(InputControl.defaultValue).toBe(0);
 		});
 
 		it('should return default values with no options', () => {
 			const inputControl = new InputControl();
 
-			expect(inputControl.name).toEqual('');
+			expect(inputControl.name).toBe('');
 			expect(inputControl.parent).toBeNull();
 			expect(inputControl.device).toBeNull();
-			expect(inputControl.enabled).toEqual(true);
+			expect(inputControl.enabled).toBe(true);
 			expect(inputControl.children).toEqual(new Map());
 			expect(inputControl.processors).toEqual([]);
 		});
@@ -84,7 +84,7 @@ describe('InputControl', () => {
 			expect(inputControl.children.get('foo')).toBe(children.foo);
 			expect(inputControl.children.get('bar')).toBe(children.bar);
 
-			expect(inputControl.children.size).toEqual(2);
+			expect(inputControl.children.size).toBe(2);
 		});
 
 		it('should set children from array', () => {
@@ -169,13 +169,13 @@ describe('InputControl', () => {
 	describe('read', () => {
 		it('should return default value with no read function', () => {
 			const inputControl = new InputControl();
-			expect(inputControl.read()).toEqual(0);
+			expect(inputControl.read()).toBe(0);
 		});
 
 		it('should return result of read function', () => {
 			const read = jest.fn(() => 12345);
 			const inputControl = new InputControl(read);
-			expect(inputControl.read()).toEqual(12345);
+			expect(inputControl.read()).toBe(12345);
 			expect(read).toHaveBeenCalled();
 		});
 
@@ -184,7 +184,7 @@ describe('InputControl', () => {
 			const inputControl = new InputControl(read);
 			inputControl.enabled = false;
 
-			expect(inputControl.read()).toEqual(0);
+			expect(inputControl.read()).toBe(0);
 			expect(read).not.toHaveBeenCalled();
 		});
 	});
@@ -193,14 +193,14 @@ describe('InputControl', () => {
 		it('should return magnitude of read function result', () => {
 			const read = jest.fn(() => -12345);
 			const inputControl = new InputControl(read);
-			expect(inputControl.magnitude()).toEqual(12345);
+			expect(inputControl.magnitude()).toBe(12345);
 			expect(read).toHaveBeenCalled();
 		});
 
 		it('should return magnitude of argument', () => {
 			const read = jest.fn(() => -12345);
 			const inputControl = new InputControl(read);
-			expect(inputControl.magnitude(-100)).toEqual(100);
+			expect(inputControl.magnitude(-100)).toBe(100);
 			expect(read).not.toHaveBeenCalled();
 		});
 	});
@@ -209,14 +209,14 @@ describe('InputControl', () => {
 		it('should return true if magnitude is greater than zero', () => {
 			const read = jest.fn(() => -12345);
 			const inputControl = new InputControl(read);
-			expect(inputControl.active()).toEqual(true);
+			expect(inputControl.active()).toBe(true);
 			expect(read).toHaveBeenCalled();
 		});
 
 		it('should return false if magnitude is zero', () => {
 			const read = jest.fn(() => 0);
 			const inputControl = new InputControl(read);
-			expect(inputControl.active()).toEqual(false);
+			expect(inputControl.active()).toBe(false);
 			expect(read).toHaveBeenCalled();
 		});
 
@@ -229,15 +229,15 @@ describe('InputControl', () => {
 
 			// high value
 			value = 1;
-			expect(inputControl.active()).toEqual(true);
+			expect(inputControl.active()).toBe(true);
 
 			// edge value
 			value = 0.7;
-			expect(inputControl.active()).toEqual(true);
+			expect(inputControl.active()).toBe(true);
 
 			// low
 			value = 0.6;
-			expect(inputControl.active()).toEqual(false);
+			expect(inputControl.active()).toBe(false);
 
 			expect(read).toHaveBeenCalledTimes(3);
 			expect(active).toHaveBeenCalledTimes(3);

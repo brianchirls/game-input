@@ -4,7 +4,7 @@ import Vector2InputControl from './Vector2InputControl';
 describe('Vector2InputControl', () => {
 	describe('constructor', () => {
 		it('should be a function', () => {
-			expect(typeof Vector2InputControl).toEqual('function');
+			expect(typeof Vector2InputControl).toBe('function');
 		});
 
 		it('should have a static default value', () => {
@@ -31,24 +31,24 @@ describe('Vector2InputControl', () => {
 	it('should be active if only x is > 0', () => {
 		const read = () => [0.01, 0];
 		const vector2InputControl = new Vector2InputControl(read);
-		expect(vector2InputControl.active()).toEqual(true);
+		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be active if only y is > 0', () => {
 		const read = () => [0, 0.01];
 		const vector2InputControl = new Vector2InputControl(read);
-		expect(vector2InputControl.active()).toEqual(true);
+		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be active if both x and y are > 0', () => {
 		const read = () => [0.01, 0.01];
 		const vector2InputControl = new Vector2InputControl(read);
-		expect(vector2InputControl.active()).toEqual(true);
+		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be not active if both x and y are 0', () => {
 		const read = () => [0, 0];
 		const vector2InputControl = new Vector2InputControl(read);
-		expect(vector2InputControl.active()).toEqual(false);
+		expect(vector2InputControl.active()).toBe(false);
 	});
 });
