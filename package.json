@@ -55,7 +55,7 @@
 	"author": "Brian Chirls <brian@chirls.com>",
 	"license": "UNLICENSED",
 	"dependencies": {
-		"mitt": "^2.1.0"
+		"mitt": "^3.0.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.12.10",
