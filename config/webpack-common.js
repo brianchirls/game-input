@@ -3,6 +3,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const projectDirectory = path.resolve(__dirname, '..');
 const { getExamples, examplesDirectory } = require('./util/getExamples');
@@ -34,17 +35,6 @@ module.exports = (env, options) => ({
 	},
 	module: {
 		rules: [
-			{
-				test: /\.js$/i,
-				exclude: /node_modules/,
-				enforce: 'pre',
-				loader: 'eslint-loader',
-				options: {
-					formatter: eslintFormatter,
-					// failOnHint: env === 'production',
-					emitWarning: true
-				}
-			},
 			{
 				test: /\.js$/i,
 				exclude: /node_modules/,
@@ -130,6 +120,15 @@ module.exports = (env, options) => ({
 			configFile: path.resolve(projectDirectory, 'stylelint.config.js'),
 			failOnError: false,
 			emitErrors: false
+		}),
+		new ESLintPlugin({
+			formatter: eslintFormatter,
+			// failOnHint: env === 'production',
+			emitWarning: true,
+			extensions: [`js`],
+			exclude: [
+				`/node_modules/`
+			]
 		})
 	],
 	optimization: {
