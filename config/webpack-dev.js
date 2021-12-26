@@ -4,7 +4,6 @@ const { merge } = require('webpack-merge');
 const { getExamples, examplesDirectory } = require('./util/getExamples');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -16,7 +15,6 @@ const PLUGINS = [
 	new webpack.DefinePlugin({
 		DEBUG: true
 	}),
-	new WatchMissingNodeModulesPlugin(path.resolve(__dirname, '../node_modules')),
 	new webpack.HotModuleReplacementPlugin(),
 	new MiniCssExtractPlugin({
 		// Options similar to the same options in webpackOptions.output
