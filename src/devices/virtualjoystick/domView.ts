@@ -1,4 +1,6 @@
-export default function domView(control, options = {}) {
+import { StickInputControl } from '../..';
+
+export default function domView(control: StickInputControl, options: { innerRadius?: number; parentElement?: HTMLElement; } = {}) {
 	const { device } = control;
 	const {
 		innerRadius = Math.max(24, device.radius / 4),
@@ -35,7 +37,7 @@ export default function domView(control, options = {}) {
 	function render() {
 		const [x, y] = control.read();
 
-		if (control.mode === 'static' || control.active()) {
+		if (control.device?.mode === 'static' || control.active()) {
 			const outerSize = device.radius * 2;
 			const ox = device.x - device.radius;
 			const oy = device.y - device.radius;
@@ -43,17 +45,17 @@ export default function domView(control, options = {}) {
 			outer.style.left = ox + 'px';
 			outer.style.top = oy + 'px';
 			outer.style.width = outer.style.height = outerSize + 'px';
-			outer.style.opacity = 1;
+			outer.style.opacity = '1';
 
 			const innerSize = innerRadius * 2;
 
 			inner.style.left = device.x + x * device.radius - innerRadius + 'px';
 			inner.style.top = device.y - y * device.radius - innerRadius + 'px';
 			inner.style.width = inner.style.height = innerSize + 'px';
-			inner.style.opacity = 1;
+			inner.style.opacity = '1';
 		} else {
-			outer.style.opacity = 0;
-			inner.style.opacity = 0;
+			outer.style.opacity = '0';
+			inner.style.opacity = '0';
 		}
 
 		rafId = requestAnimationFrame(render);

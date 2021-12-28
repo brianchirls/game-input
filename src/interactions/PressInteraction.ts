@@ -2,7 +2,7 @@ import Interaction from './Interaction';
 export default class PressInteraction extends Interaction {
 	pressPoint = 0.5;
 
-	constructor(pressPoint) {
+	constructor(pressPoint?: number) {
 		super();
 
 		if (pressPoint >= 0) {

@@ -34,7 +34,7 @@ buttonDefs.forEach(def => {
 	}
 });
 
-function getButtonName(evt, buttonIndex = evt.button) {
+function getButtonName(evt: PointerEvent, buttonIndex = evt.button) {
 	if (buttonIndex >= 0 && buttonIndex < buttonDefs.length && evt.isPrimary) {
 		const def = buttonDefs[buttonIndex];
 		return def[evt.pointerType] || '';
@@ -46,15 +46,15 @@ function getButtonName(evt, buttonIndex = evt.button) {
 const controlDefs = {
 	position: {
 		constructor: Vector2InputControl,
-		reader: evt => [evt.x, evt.y]
+		reader: evt => [evt.x, evt.y] as [number, number]
 	},
 	pagePosition: {
 		constructor: Vector2InputControl,
-		reader: evt => [evt.pageX, evt.pageY]
+		reader: evt => [evt.pageX, evt.pageY] as [number, number]
 	},
 	screenPosition: {
 		constructor: Vector2InputControl,
-		reader: evt => [evt.screenX, evt.screenY]
+		reader: evt => [evt.screenX, evt.screenY] as [number, number]
 	},
 	tilt: {
 		constructor: Vector2InputControl,
@@ -90,6 +90,11 @@ const controlDefs = {
 		constructor: AxisInputControl,
 		reader: evt => evt.pressure || 0
 	}
+} as {
+	[k: string]: {
+		constructor: InstanceType<any>,
+		reader: (evt: PointerEvent, previousEvent?: PointerEvent, defaultValue?: [number, number]) => [number, number] | number
+	}
 };
 
 /*
@@ -117,9 +122,9 @@ export default function Pointer({
 	touchActionStyle = true,
 	enabled = true
 } = {}) {
-	let previousEvent = null;
-	let lastEvent = null;
-	let lastWheelEvent = null;
+	let previousEvent: PointerEvent = null;
+	let lastEvent: PointerEvent = null;
+	let lastWheelEvent: WheelEvent = null;
 
 	const allowedPointerTypes = {
 		pen,
@@ -129,7 +134,7 @@ export default function Pointer({
 
 	const buttonsDown = new Set();
 
-	const saveEvent = evt => {
+	const saveEvent = (evt: PointerEvent) => {
 		if (enabled && evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
 			previousEvent = lastEvent;
 			lastEvent = evt;
@@ -149,7 +154,7 @@ export default function Pointer({
 		}
 	};
 
-	const onWheel = evt => {
+	const onWheel = (evt: WheelEvent) => {
 		lastWheelEvent = evt;
 	};
 
@@ -163,7 +168,7 @@ export default function Pointer({
 		}
 	}
 
-	function readButton(name) {
+	function readButton(name: string) {
 		return buttonsDown.has(name.toLowerCase());
 	}
 
@@ -198,7 +203,7 @@ export default function Pointer({
 		window.removeEventListener('wheel', onWheel);
 	}
 
-	this.getControl = (name, options = {}) => {
+	this.getControl = (name: string, options = {}) => {
 		const controlSpec = controlDefs[name];
 		if (controlSpec) {
 			const {

@@ -18,7 +18,7 @@ module.exports = {
 	// We release a ES version
 	// It's something that matches the latest official supported features of JavaScript.
 	// Nothing more (stage-1, etc), nothing less (require, etc).
-	presets: BABEL_ENV === 'es' ? [] : [
+	presets: BABEL_ENV === 'es' ? ['@babel/preset-typescript'] : [
 		[
 			'@babel/env',
 			{
@@ -29,7 +29,8 @@ module.exports = {
 				useBuiltIns: false,
 				modules: ['esm', 'production-umd'].includes(BABEL_ENV) ? false : 'commonjs'
 			}
-		]
+		],
+		'@babel/preset-typescript'
 	],
 
 	plugins: [

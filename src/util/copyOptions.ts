@@ -1,4 +1,4 @@
-export default function copyOptions(dest, src) {
+export default function copyOptions(dest: { [x: string]: any; }, src: { [x: string]: any; }) {
 	if (!src) {
 		return;
 	}

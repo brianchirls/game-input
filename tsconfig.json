@@ -1,0 +1,32 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"outDir": "build/types",
+		"sourceMap": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"downlevelIteration": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "node",		
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"lib": [
+			"es2018",
+			"dom",
+			"esnext",
+			"es2017.sharedmemory"
+		]
+	},
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"src/**/tests",
+		"src/**/*.test.ts",
+		"src/**/*.test.js"
+	]
+}

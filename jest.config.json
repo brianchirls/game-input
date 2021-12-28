@@ -1,0 +1,52 @@
+{
+	"coverageDirectory": "reports/coverage",
+	"projects": [
+		{
+			"displayName": "test",
+			"clearMocks": true,
+			"roots": [
+				"<rootDir>/src"
+			],
+			"collectCoverageFrom": [
+				"src/**/*.{js,ts}",
+				"!src/index.{js,ts}",
+				"!src/browser.{js,ts}",
+				"!**/tests/**"
+			],
+			"testMatch": [
+				"<rootDir>/src/**/__tests__/**/*.{js,ts}",
+				"<rootDir>/src/**/*.{spec,test}.{js,ts}"
+			],
+			"transformIgnorePatterns": [
+				"[/\\\\]node_modules[/\\\\].+\\.(js|ts)$",
+				"^.+\\.module\\.(css|sass|scss)$"
+			],
+			"modulePaths": [
+				"<rootDir>/src/"
+			],
+			"moduleNameMapper": {
+				"\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/scripts/testMock.js",
+				"\\.(css|less)$": "<rootDir>/scripts/testMock.js"
+			},
+			"moduleFileExtensions": [
+				"web.js",
+				"js",
+				"web.ts",
+				"ts",
+				"json",
+				"node"
+			],
+			"setupFilesAfterEnv": ["<rootDir>/tools/jest.helpers.js"]
+		},
+		{
+			"displayName": "lint",
+			"runner": "jest-runner-eslint",
+			"testMatch": [
+				"<rootDir>/src/**/*.{js,ts}?",
+				"<rootDir>/tests/**/*.{js,ts}",
+				"<rootDir>/tools/**/*.{js,ts}",
+				"<rootDir>/config/**/*.{js,ts}"
+			]
+		}
+	]
+}

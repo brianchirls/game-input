@@ -1,20 +1,32 @@
-import runProcessors from '../util/runProcessors';
+import runProcessors, { Processor } from '../util/runProcessors';
 import copyOptions from '../util/copyOptions';
 
-export default class InputControl {
-	static defaultValue = 0;
+export interface InputControlOptions<T> {
+	name?: string;
+	parent?: InputControl;
+	enabled?: boolean;
+	device?: any;
+
+	processors?: Processor<T>[];
+	children?: Iterable<InputControl> | ArrayLike<InputControl>;
+	active?: (ic: InputControl<T>) => boolean;
+}
+
+export default class InputControl<T = any> {
+	static defaultValue: any = 0;
 
 	name = '';
-	parent = null;
-	children = new Map();
-	device = null;
+	parent: InputControl = null;
 	enabled = true;
-	processors = [];
+	children = new Map<string, InputControl>();
+	device: any = null;
+	processors = [] as Processor<T>[];
 
-	constructor(readRaw, options) {
+	// constructor(readRaw?: () => T, options: InputControlOptions<T> = {}) {
+	constructor(readRaw?: (() => T) | InputControlOptions<T>, options?: InputControlOptions<T>) {
 		if (readRaw && typeof readRaw === 'object' && !options) {
 			options = readRaw;
-			readRaw = null;
+			readRaw = undefined;
 		}
 
 		const {
@@ -33,8 +45,10 @@ export default class InputControl {
 		}
 
 		if (children) {
-			const iterable = children[Symbol.iterator] ? children : Object.entries(children);
-			for (const [key, value] of iterable) {
+			const iterable = children[Symbol.iterator] ?
+				children :
+				Object.entries(children);
+			for (const [key, value] of <Iterable<InputControl>>iterable) {
 				this.children.set(key, value);
 			}
 		}
@@ -53,7 +67,7 @@ export default class InputControl {
 		}
 	}
 
-	find(path) {
+	find(path?: string): InputControl | null {
 		if (!path) {
 			return this;
 		}

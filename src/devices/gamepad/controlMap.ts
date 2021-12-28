@@ -17,7 +17,7 @@ const buttonIndexes = {
 	select: 8,
 	home: 16
 };
-const buttons = [];
+const buttons = [] as string[];
 Object.keys(buttonIndexes).forEach(key => {
 	buttons[buttonIndexes[key]] = key;
 });
