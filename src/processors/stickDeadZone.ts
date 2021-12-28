@@ -1,6 +1,6 @@
 import axisDeadZone from './axisDeadZone';
 
-export default function stickDeadZone(value, min, max) {
+export default function stickDeadZone(value: [number, number], min: number, max: number) {
 	const [x, y] = value;
 	const magnitude = Math.hypot(x, y);
 	const newMagnitude = axisDeadZone(magnitude, min, max);

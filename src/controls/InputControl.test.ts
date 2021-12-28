@@ -91,7 +91,7 @@ describe('InputControl', () => {
 			const children = [
 				['foo', new InputControl()],
 				['bar', new InputControl()]
-			];
+			] as [string, InputControl][];
 			const inputControl = new InputControl({
 				children
 			});

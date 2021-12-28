@@ -10,8 +10,8 @@
 		"url": "https://github.com/brianchirls/game-input/issues"
 	},
 	"homepage": "https://github.com/brianchirls/game-input#readme",
-	"main": "build/pkg/index.js",
-	"module": "src/index.js",
+	"main": "build/cjs/index.js",
+	"module": "build/esm/index.js",
 	"unpkg": "build/pkg/game-input.min.js",
 	"exports": {
 		"./*": {
@@ -20,9 +20,14 @@
 			"default": "./build/esm/*.js"
 		}
 	},
+	"types": "./index.d.ts",
 	"files": [
-		"build",
-		"src/**/*.js"
+		"build/cjs",
+		"build/es",
+		"build/esm",
+		"build/types",
+		"src/**/*.js",
+		"src/**/*.ts"
 	],
 	"keywords": [
 		"game",
@@ -39,13 +44,14 @@
 		"lint:fix": "eslint --fix ./; stylelint 'examples/**/*.css' 'tools/**/*.css' --fix; true",
 		"prepush": "npm test",
 		"start": "cross-env NODE_ENV=development webpack serve --config ./config/webpack-dev.js --mode development --progress",
-		"build:cjs": "rm -rf build/cjs/ && cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ./babel.config.js ./src --out-dir ./build/cjs --ignore \"**/*.test.js\"",
-		"build:es": "rm -rf build/es/ && cross-env NODE_ENV=production BABEL_ENV=es babel --config-file ./babel.config.js ./src --out-dir ./build/es --ignore \"**/*.test.js\"",
-		"build:esm": "rm -rf build/esm/ && cross-env NODE_ENV=production BABEL_ENV=esm babel --config-file ./babel.config.js ./src --out-dir ./build/esm --ignore \"**/*.test.js\"",
+		"build:cjs": "rm -rf build/cjs/ && cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ./babel.config.js ./src --out-dir ./build/cjs --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
+		"build:es": "rm -rf build/es/ && cross-env NODE_ENV=production BABEL_ENV=es babel --config-file ./babel.config.js ./src --out-dir ./build/es --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
+		"build:esm": "rm -rf build/esm/ && cross-env NODE_ENV=production BABEL_ENV=esm babel --config-file ./babel.config.js ./src --out-dir ./build/esm --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
 		"build:site:dev": "cross-env NODE_ENV=development rm -rf build/site/ && webpack --config ./config/webpack-dev.js --mode development",
 		"build:site": "cross-env NODE_ENV=production rm -rf build/site/ && webpack --config ./config/webpack-prod.js --mode production",
 		"build:lib": "npm run build:cjs && npm run build:esm && npm run build:es",
-		"build": "npm run build:lib && npm run build:site",
+		"build:types": "tsc --emitDeclarationOnly",
+		"build": "npm run build:types && npm run build:lib && npm run build:site",
 		"deploy": "gh-pages -d ./build/site",
 		"test": "cross-env NODE_ENV=test jest --verbose --coverage && npx package-check",
 		"test:debug": "cross-env NODE_ENV=test node --inspect node_modules/.bin/jest --runInBand",
@@ -66,9 +72,15 @@
 		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
 		"@babel/plugin-transform-object-assign": "^7.12.1",
 		"@babel/plugin-transform-runtime": "^7.12.10",
+		"@babel/plugin-transform-typescript": "^7.16.1",
 		"@babel/polyfill": "^7.12.1",
 		"@babel/preset-env": "^7.12.11",
+		"@babel/preset-typescript": "^7.16.5",
 		"@skypack/package-check": "^0.2.2",
+		"@types/jest": "^27.0.3",
+		"@types/webpack-env": "^1.16.3",
+		"@typescript-eslint/eslint-plugin": "^5.8.1",
+		"@typescript-eslint/parser": "^5.8.1",
 		"autoprefixer": "^10.2.5",
 		"babel-eslint": "^10.1.0",
 		"babel-jest": "^27.0.6",
@@ -105,6 +117,7 @@
 		"stylelint-webpack-plugin": "^3.1.0",
 		"svgo": "^2.3.0",
 		"svgo-loader": "^3.0.0",
+		"typescript": "^4.5.4",
 		"url-loader": "^4.1.1",
 		"webpack": "^5.28.0",
 		"webpack-bundle-analyzer": "^4.4.0",

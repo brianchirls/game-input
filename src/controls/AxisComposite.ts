@@ -1,11 +1,18 @@
 import AxisInputControl from './AxisInputControl';
+import { InputControlOptions } from './InputControl';
+
+export interface AxisCompositeOptions extends InputControlOptions<number> {
+	negative: AxisInputControl;
+	positive: AxisInputControl;
+}
 
 export default class AxisComposite extends AxisInputControl {
-	constructor({
-		negative,
-		positive,
-		...opts
-	}) {
+	constructor(options: AxisCompositeOptions) {
+		const {
+			negative,
+			positive,
+			...opts
+		} = options;
 		const read = () => {
 			const neg = this.children.get('negative').read();
 			const pos = this.children.get('positive').read();

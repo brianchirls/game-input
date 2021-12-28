@@ -1,14 +1,14 @@
-import Vector2InputControl from './Vector2InputControl';
-import ButtonInputControl from './ButtonInputControl';
+import Vector2InputControl, { Vector2InputControlOptions } from './Vector2InputControl';
+import ButtonInputControl, { ButtonInputControlOptions } from './ButtonInputControl';
 import stickDeadZone from '../processors/stickDeadZone';
 
-function getChildValue(read, axis, neg) {
+function getChildValue(read: () => number[], axis: number, neg: boolean) {
 	const vec = read();
 	const rawAxisValue = vec[axis];
 	return Math.max(0, neg ? -rawAxisValue : rawAxisValue);
 }
 
-function makeChild(parent, name, axis, negative, options) {
+function makeChild(parent: StickInputControl, name: string, axis: number, negative: boolean, options: ButtonInputControlOptions) {
 	const opts = Object.assign({}, options && options[name], {
 		parent
 	});
@@ -22,10 +22,10 @@ const childbuttons = [
 	['right', 0, false],
 	['down', 1, true],
 	['up', 1, false]
-];
+] as [string, number, boolean][];
 
 export default class StickInputControl extends Vector2InputControl {
-	constructor(read, options) {
+	constructor(read: (() => [number, number]) | Vector2InputControlOptions, options?: Vector2InputControlOptions) {
 		if (read && typeof read === 'object' && !options) {
 			options = read;
 			read = null;

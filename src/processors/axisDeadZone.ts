@@ -1,4 +1,4 @@
-export default function axisDeadZone(value, min = 0.125, max = 0.925) {
+export default function axisDeadZone(value: number, min = 0.125, max = 0.925) {
 	const absValue = Math.abs(value);
 	if (absValue < min) {
 		return 0;

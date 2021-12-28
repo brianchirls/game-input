@@ -8,6 +8,7 @@ import PressInteraction from '../src/interactions/PressInteraction';
 import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
 import VirtualJoystick from '../src/devices/virtualjoystick';
 import domView from '../src/devices/virtualjoystick/domView';
+import { AxisInputControl, StickInputControl } from '../src';
 
 // Devices
 const gamepad = new Gamepad();
@@ -24,9 +25,9 @@ const rightTouch = new VirtualJoystick({
 });
 
 // Controls
-const leftStick = gamepad.getControl('leftStick');
+const leftStick = gamepad.getControl('leftStick') as StickInputControl;
 // const downButton = leftStick.find('down');
-const rightStickHoriz = gamepad.getControl('rightStick').find('x');
+const rightStickHoriz = gamepad.getControl('rightStick').find('x') as AxisInputControl;
 
 const kbdWASD = new DPadComposite({
 	up: kbd.getControl('W'),
@@ -44,7 +45,7 @@ const leftTouchJoystick = leftTouch.getControl();
 const rightTouchJoystick = rightTouch.getControl();
 
 // Actions
-const moveAction = new Action({
+const moveAction = new Action<[number, number]>({
 	bindings: [
 		leftStick,
 		kbdWASD,
@@ -52,15 +53,15 @@ const moveAction = new Action({
 		{
 			control: pointer.getControl('delta'),
 			processors: [
-				vec => [
+				(vec: [number, number]) => [
 					vec[0] / 8,
 					-vec[1] / 8
-				]
+				] as [number, number]
 			]
 		}
 	]
 });
-const rotateAction = new Action({
+const rotateAction = new Action<number>({
 	bindings: [
 		rightStickHoriz,
 		rotateArrowKeys,

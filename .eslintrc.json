@@ -1,5 +1,5 @@
 {
-	"parser": "@babel/eslint-parser",
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": 2020,
 		"sourceType": "module",
@@ -14,15 +14,21 @@
 		"es2020": true
 	},
 	"plugins": [
-		"import",
-		"@babel"
+		"@typescript-eslint"
 	],
 	"extends": [
 		"eslint:recommended",
-		"eslint-config-crockford"
+		"eslint-config-crockford",
+		"plugin:@typescript-eslint/recommended"
 	],
 	"rules": {
-		"@babel/no-invalid-this": 1,
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-extra-parens": 1,
+		"@typescript-eslint/no-unused-vars": 2,
+		"@typescript-eslint/no-use-before-define": [ 2, { "functions": false } ],
+		"@typescript-eslint/no-var-requires": "off",
 		"array-bracket-spacing": ["error", "never"],
 		"block-scoped-var": 2,
 		"camelcase": 2,
@@ -47,7 +53,7 @@
 		"no-extra-parens": 1,
 		"no-global-assign": 2,
 		"no-implicit-globals": 2,
-		"no-invalid-this": 0,
+		"no-invalid-this": 2,
 		"no-irregular-whitespace": 2,
 		"no-iterator": 2,
 		"no-loop-func": 2,
@@ -58,7 +64,7 @@
 		"no-undef": 2,
 		"no-unexpected-multiline": "warn",
 		"no-unused-vars": 2,
-		"no-use-before-define": [ 2, { "functions": false } ],
+		"no-use-before-define": "off",
 		"no-var": 2,
 		"object-curly-newline": ["error", {
 			"multiline": true,
@@ -81,8 +87,9 @@
 	},
 	"overrides": [
 		{
-			"files": ["**/*.test.js", "**/jest.*.js"],
+			"files": ["**/*.test.{js,ts}", "**/jest.*.{js,ts}"],
 			"plugins": [
+				"@typescript-eslint",
 				"jest"
 			],
 			"extends": [
