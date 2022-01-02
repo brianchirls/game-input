@@ -39,9 +39,6 @@ const PLUGINS = [
 		filename: '[name]-[chunkhash].css',
 		chunkFilename: '[name]-[id]-[chunkhash].chunk.css'
 	}),
-	// new webpack.ProvidePlugin({
-	// 	THREE: 'three'
-	// }),
 	new HtmlWebpackPlugin({
 		inject: true,
 		cache: true,
@@ -65,7 +62,7 @@ module.exports = (env, options) => merge(common(env, options), {
 		},
 		publicPath: '/game-input/'
 	},
-	plugins: PLUGINS.concat(getExamples(options.mode).map(name => {
+	plugins: PLUGINS.concat(getExamples(options.mode).map(({ name }) => {
 		const def = examplesManifest.examples.find(d => d.entry === name);
 		const title = def && def.title || name;
 		const catName = def && def.catName || '';
