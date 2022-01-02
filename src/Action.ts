@@ -1,5 +1,5 @@
 import runProcessors from './util/runProcessors';
-import InputControl from './controls/InputControl';
+import { InputControlBase } from './controls/InputControl';
 import Interaction from './interactions/Interaction';
 import EventEmitter from './util/EventEmitter';
 
@@ -134,14 +134,14 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 		todo: we need better CRUD methods for bindings, processors and interactions
 		*/
 		this.bind = (control, options) => {
-			if (!options && !(control instanceof InputControl)) {
+			if (!options && !(control instanceof InputControlBase)) {
 				options = control;
 			}
 			if (options && options.control) {
 				control = options.control;
 			}
 
-			if (!(control instanceof InputControl)) {
+			if (!(control instanceof InputControlBase)) {
 				// could we do this by duck-typing?
 				throw new Error('Binding requires an InputControl');
 			}

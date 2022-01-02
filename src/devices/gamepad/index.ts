@@ -6,16 +6,15 @@ import ButtonInputControl from '../../controls/ButtonInputControl';
 import StickInputControl from '../../controls/StickInputControl';
 import AxisInputControl from '../../controls/AxisInputControl';
 import EventEmitter from '../../util/EventEmitter';
+import { InputControlBase } from '../../controls/InputControl';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
 
-// todo: make this actual use InputControl
+// todo: make this actually use InputControlBase
 type InputControlConstructor = InstanceType<any>;
-// type AnyInputControl = InstanceType<typeof ButtonInputControl | typeof StickInputControl | typeof AxisInputControl>;
-type AnyInputControl = ButtonInputControl | StickInputControl | AxisInputControl;
 // type InputControlConstructor = {
-// 	new (): AnyInputControl
+// 	new (): InputControlBase
 // };
 
 const readers = new Map<InputControlConstructor, (device: any, index: number) => any>([
@@ -32,7 +31,7 @@ interface GamepadEvents {
 }
 
 export default class Gamepad extends EventEmitter<GamepadEvents> {
-	getControl: (name: string, options?: any) => AnyInputControl;
+	getControl: (name: string, options?: any) => InputControlBase;
 	controls: () => IterableIterator<string>;
 
 	constructor(index = 0, {

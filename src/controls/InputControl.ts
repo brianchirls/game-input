@@ -1,29 +1,38 @@
 import runProcessors, { Processor } from '../util/runProcessors';
 import copyOptions from '../util/copyOptions';
 
-export interface InputControlOptions<T> {
-	name?: string;
-	parent?: InputControl;
-	enabled?: boolean;
-	device?: any;
-
-	processors?: Processor<T>[];
-	children?: Iterable<InputControl> | ArrayLike<InputControl>;
-	active?: (ic: InputControl<T>) => boolean;
-}
-
-export default class InputControl<T = any> {
+export abstract class InputControlBase<T = any> {
 	static defaultValue: any = 0;
 
 	name = '';
-	parent: InputControl = null;
+	parent: InputControlBase = null;
 	enabled = true;
 	children = new Map<string, InputControl>();
 	device: any = null;
 	processors = [] as Processor<T>[];
 
-	// constructor(readRaw?: () => T, options: InputControlOptions<T> = {}) {
+	abstract read(): T;
+	abstract find(path?: string): InputControlBase | null;
+	abstract magnitude(val?: T): number;
+	abstract active(): boolean;
+}
+
+export interface InputControlOptions<T> {
+	name?: string;
+	parent?: InputControlBase;
+	enabled?: boolean;
+	device?: any;
+
+	processors?: Processor<T>[];
+	children?: Iterable<InputControl> | ArrayLike<InputControl>;
+	active?: (ic: InputControlBase<T>) => boolean;
+}
+
+export default class InputControl<T = any> extends InputControlBase<T> {
+
 	constructor(readRaw?: (() => T) | InputControlOptions<T>, options?: InputControlOptions<T>) {
+		super();
+
 		if (readRaw && typeof readRaw === 'object' && !options) {
 			options = readRaw;
 			readRaw = undefined;
@@ -67,7 +76,7 @@ export default class InputControl<T = any> {
 		}
 	}
 
-	find(path?: string): InputControl | null {
+	find(path?: string): InputControlBase | null {
 		if (!path) {
 			return this;
 		}
