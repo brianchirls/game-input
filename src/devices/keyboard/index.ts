@@ -10,8 +10,12 @@ optionally use .code instead of .key?
 https://www.w3.org/TR/uievents-code/#code-value-tables
 */
 
+interface GetControlOptions {
+	filter?: string | string[] | ((keys: Set<string>) => boolean)
+}
+
 export default class Keyboard {
-	getControl: (name: string, options?: { filter: string | string[] | ((keys: Set<string>) => boolean); }) => ButtonInputControl;
+	getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
 	destroy: () => void;
 	constructor({
 		enabled = true
@@ -54,7 +58,7 @@ export default class Keyboard {
 			window.removeEventListener('keyup', onKeyUp);
 		}
 
-		this.getControl = (name: string, options: { filter: string | string[] | ((keys: Set<string>) => boolean) }) => {
+		this.getControl = (name: string, options = {}) => {
 			const {
 				filter = name,
 				...opts
