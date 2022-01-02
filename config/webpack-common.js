@@ -19,8 +19,8 @@ module.exports = (env, options) => ({
 			'all-examples': path.resolve(examplesDirectory, 'util/all-examples.js')
 		};
 		const examples = getExamples(options.mode);
-		examples.forEach(name => {
-			entries['examples/' + name] = path.resolve(examplesDirectory, name + '.js');
+		examples.forEach(({ file, name }) => {
+			entries['examples/' + name] = path.resolve(examplesDirectory, file);
 		});
 		return entries;
 	},
@@ -36,7 +36,7 @@ module.exports = (env, options) => ({
 	module: {
 		rules: [
 			{
-				test: /\.js$/i,
+				test: /\.(m|j|t)s$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
 				options: {
@@ -45,7 +45,7 @@ module.exports = (env, options) => ({
 			},
 
 			{
-				test: /\.css$/i,
+				test: /\.(sa|sc|c)ss$/,
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader
@@ -53,7 +53,8 @@ module.exports = (env, options) => ({
 					{
 						loader: require.resolve('css-loader'),
 						options: {
-							importLoaders: 1
+							importLoaders: 1,
+							sourceMap: true
 						}
 					},
 					{
@@ -112,6 +113,9 @@ module.exports = (env, options) => ({
 			}
 
 		]
+	},
+	resolve: {
+		extensions: ['.ts', '.js', '.json']
 	},
 	plugins: [
 		new StyleLintPlugin({

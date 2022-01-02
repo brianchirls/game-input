@@ -21,9 +21,6 @@ const PLUGINS = [
 		filename: '[name].css',
 		chunkFilename: '[id].css'
 	}),
-	// new webpack.ProvidePlugin({
-	// 	THREE: 'three'
-	// }),
 	new HtmlWebpackPlugin({
 		inject: true,
 		cache: true,
@@ -45,9 +42,9 @@ module.exports = (env, options) => merge(common(env, options), {
 		};
 
 		const examples = getExamples(options.mode);
-		examples.forEach(name => {
+		examples.forEach(({ file, name }) => {
 			e[`examples/${name}`] = [
-				path.resolve(examplesDirectory, name + '.js'),
+				path.resolve(examplesDirectory, file),
 				devServerUrl
 			];
 		});
@@ -71,7 +68,7 @@ module.exports = (env, options) => merge(common(env, options), {
 		path: path.resolve(__dirname, '../build/site'),
 		publicPath: '/'
 	},
-	plugins: PLUGINS.concat(getExamples(options.mode).map(name => {
+	plugins: PLUGINS.concat(getExamples(options.mode).map(({ name }) => {
 		const def = examplesManifest.examples.find(d => d.entry === name);
 		const title = def && def.title || name;
 		const catId = def && def.category || '';
