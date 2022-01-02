@@ -12,6 +12,7 @@
 	"homepage": "https://github.com/brianchirls/game-input#readme",
 	"main": "build/cjs/index.js",
 	"module": "build/esm/index.js",
+	"browser": "build/esm/browser.js",
 	"unpkg": "build/pkg/game-input.min.js",
 	"exports": {
 		"./*": {
