@@ -1,28 +1,39 @@
+import { Action } from '..';
 import Interaction from './Interaction';
-export default function ReleaseInteraction(pressPoint = 0.5) {
-	Interaction.call(this);
-	this.pressPoint = pressPoint;
 
-	let pressed = false;
+export default class ReleaseInteraction extends Interaction<any> {
+	pressPoint = 0.5;
 
-	this.update = binding => {
-		const wasPressed = pressed;
-		pressed = binding.control.magnitude() > this.pressPoint;
+	constructor(action: Action<any>, pressPoint?: number) {
+		super(action);
 
-		if (pressed) {
-			return 'active';
+		if (pressPoint >= 0) {
+			this.pressPoint = pressPoint;
 		}
 
-		if (wasPressed) {
-			return 'complete';
-		}
+		let pressed = false;
+		let timeout = 0;
 
-		return '';
-	};
+		this.evaluate = () => {
+			clearTimeout(timeout);
 
-	this.reset = () => {
-		pressed = false;
-	};
+			const wasPressed = pressed;
+			pressed = (this.action.activeControl?.magnitude() || 0) >= this.pressPoint;
+
+			if (pressed) {
+				return 0.5;
+			}
+
+			/*
+			Reset to ready immediately after completed
+			Warning: this happens asynchronously.
+			*/
+			if (wasPressed) {
+				timeout = <number><unknown>setTimeout(this.update, 0);
+				return 1;
+			}
+
+			return 0;
+		};
+	}
 }
-
-ReleaseInteraction.prototype = Object.create(Interaction.prototype);

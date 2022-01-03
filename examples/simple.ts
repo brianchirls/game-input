@@ -71,15 +71,14 @@ const rotateAction = new Action<number>({
 });
 
 const buttonAction = new Action({
-	bindings: [kbd.getControl(' ')],
-	interactions: [
-		new PressInteraction(),
-		new ReleaseInteraction()
-	]
+	bindings: [kbd.getControl(' ')]
 });
-// buttonAction.on('press', () => console.log('spacebar down'));
-// buttonAction.on('release', () => console.log('spacebar up'));
-buttonAction.on('completed', binding => console.log('interaction', binding));
+
+const pressButton = new PressInteraction(buttonAction);
+pressButton.on('*', evtName => console.log('press interaction', evtName, pressButton.state));
+
+const releaseButton = new ReleaseInteraction(buttonAction);
+releaseButton.on('*', evtName => console.log('release interaction', evtName, releaseButton.state));
 
 const thing = document.createElement('div');
 Object.assign(thing.style, {
