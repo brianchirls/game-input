@@ -66,15 +66,31 @@ const controlDefs = {
 	},
 	delta: {
 		constructor: Vector2InputControl,
-		reader: (evt, previousEvent, defaultValue) => previousEvent ?
-			[evt.x - previousEvent.x, evt.y - previousEvent.y] :
-			defaultValue
+		reader: (evt, previousEvent, defaultValue) => {
+			if (!previousEvent) {
+				return defaultValue;
+			}
+
+			const dt = (evt.timeStamp - previousEvent.timeStamp) * 0.1 || 1;
+			return [
+				(evt.x - previousEvent.x) / dt,
+				(evt.y - previousEvent.y) / dt
+			];
+		}
 	},
 	pageDelta: {
 		constructor: Vector2InputControl,
-		reader: (evt, previousEvent, defaultValue) => previousEvent ?
-			[evt.pageX - previousEvent.pageX, evt.pageY - previousEvent.pageY] :
-			defaultValue
+		reader: (evt, previousEvent, defaultValue) => {
+			if (!previousEvent) {
+				return defaultValue;
+			}
+
+			const dt = evt.timeStamp - previousEvent.timeStamp || 1;
+			return [
+				(evt.pageX - previousEvent.pageX) / dt,
+				(evt.pageY - previousEvent.pageY) / dt
+			];
+		}
 	},
 	screenDelta: {
 		constructor: Vector2InputControl,
@@ -82,9 +98,17 @@ const controlDefs = {
 			(evt, previousEvent, defaultValue) => evt ?
 				[evt.movementX, evt.movementY] :
 				defaultValue :
-			(evt, previousEvent, defaultValue) => previousEvent ?
-				[evt.screenX - previousEvent.screenX, evt.screenY - previousEvent.screenY] :
-				defaultValue
+			(evt, previousEvent, defaultValue) => {
+				if (!previousEvent) {
+					return defaultValue;
+				}
+
+				const dt = evt.timeStamp - previousEvent.timeStamp || 1;
+				return [
+					(evt.screenX - previousEvent.screenX) / dt,
+					(evt.screenY - previousEvent.screenY) / dt
+				];
+			}
 	},
 	pressure: {
 		constructor: AxisInputControl,
@@ -136,7 +160,9 @@ export default function Pointer({
 
 	const saveEvent = (evt: PointerEvent) => {
 		if (enabled && evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
-			previousEvent = lastEvent;
+			if (lastEvent && (!previousEvent || lastEvent.timeStamp - previousEvent.timeStamp >= updatePeriod)) {
+				previousEvent = lastEvent;
+			}
 			lastEvent = evt;
 
 			for (let i = 0; i < buttonDefs.length; i++) {
@@ -154,19 +180,13 @@ export default function Pointer({
 		}
 	};
 
+	const onPointerOut = () => {
+		lastEvent = previousEvent = null;
+	};
+
 	const onWheel = (evt: WheelEvent) => {
 		lastWheelEvent = evt;
 	};
-
-	function update() {
-		if (lastEvent && performance.now() - lastEvent.timeStamp > updatePeriod) {
-			previousEvent = lastEvent;
-		}
-
-		if (lastWheelEvent && performance.now() - lastWheelEvent.timeStamp > updatePeriod) {
-			lastWheelEvent = null;
-		}
-	}
 
 	function readButton(name: string) {
 		return buttonsDown.has(name.toLowerCase());
@@ -182,6 +202,7 @@ export default function Pointer({
 		window.addEventListener('pointerdown', saveEvent);
 		window.addEventListener('pointerup', saveEvent);
 		window.addEventListener('pointermove', saveEvent);
+		window.addEventListener('pointerout', onPointerOut);
 		window.addEventListener('wheel', onWheel);
 	}
 
@@ -200,6 +221,7 @@ export default function Pointer({
 		window.removeEventListener('pointerdown', saveEvent);
 		window.removeEventListener('pointerup', saveEvent);
 		window.removeEventListener('pointermove', saveEvent);
+		window.removeEventListener('pointerout', onPointerOut);
 		window.removeEventListener('wheel', onWheel);
 	}
 
@@ -211,12 +233,9 @@ export default function Pointer({
 				reader
 			} = controlSpec;
 
-			const read = () => {
-				update();
-				return lastEvent ?
-					reader(lastEvent, previousEvent, ControlConstructor.defaultValue) :
-					ControlConstructor.defaultValue;
-			};
+			const read = () => lastEvent ?
+				reader(lastEvent, previousEvent, ControlConstructor.defaultValue) :
+				ControlConstructor.defaultValue;
 
 			return new ControlConstructor(read, Object.assign({
 				name
@@ -238,7 +257,9 @@ export default function Pointer({
 		if (name === 'wheel') {
 			return new Vector2InputControl(
 				() => {
-					update();
+					if (lastWheelEvent && performance.now() - lastWheelEvent.timeStamp > updatePeriod) {
+						lastWheelEvent = null;
+					}
 					return lastWheelEvent ?
 						[lastWheelEvent.deltaX, lastWheelEvent.deltaY] :
 						Vector2InputControl.defaultValue;
