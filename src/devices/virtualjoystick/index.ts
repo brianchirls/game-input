@@ -1,4 +1,4 @@
-import StickInputControl from '../../controls/StickInputControl';
+import StickInputControl, { StickInputControlOptions } from '../../controls/StickInputControl';
 import { Vector2InputControlOptions } from '../../controls/Vector2InputControl';
 
 type VirtualJoystickMode = 'dynamic' | 'static';
@@ -146,7 +146,7 @@ export default class VirtualJoystick {
 			element.removeEventListener('pointercancel', pointerUp);
 		}
 
-		this.getControl = (/*name,*/ options?: Vector2InputControlOptions) => {
+		this.getControl = (/*name,*/ options?: StickInputControlOptions) => {
 			// if (typeof options === 'string') {
 			// 	throw new Error('VirtualJoystick accepts options object');
 			// }
