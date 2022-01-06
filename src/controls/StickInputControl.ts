@@ -24,8 +24,10 @@ const childbuttons = [
 	['up', 1, false]
 ] as [string, number, boolean][];
 
+export type StickInputControlOptions = Vector2InputControlOptions & ButtonInputControlOptions;
+
 export default class StickInputControl extends Vector2InputControl {
-	constructor(read: (() => [number, number]) | Vector2InputControlOptions, options?: Vector2InputControlOptions) {
+	constructor(read: (() => [number, number]) | StickInputControlOptions, options?: StickInputControlOptions) {
 		if (read && typeof read === 'object' && !options) {
 			options = read;
 			read = null;
