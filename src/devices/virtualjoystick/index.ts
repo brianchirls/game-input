@@ -1,9 +1,27 @@
 import StickInputControl from '../../controls/StickInputControl';
 import { Vector2InputControlOptions } from '../../controls/Vector2InputControl';
 
+type VirtualJoystickMode = 'dynamic' | 'static';
+
+interface VirtualJoystickOptions {
+	element: HTMLElement;
+	radius: number;
+	x: number;
+	y: number;
+	mode: VirtualJoystickMode;
+	lockX: boolean;
+	lockY: boolean;
+	touch: boolean;
+	pen: boolean;
+	mouse: boolean;
+	filter: (evt: PointerEvent) => boolean;
+	touchActionStyle: boolean;
+	enabled: boolean;
+}
+
 export default class VirtualJoystick {
 	readonly pointerType: string;
-	readonly mode: string;
+	readonly mode: VirtualJoystickMode;
 	readonly connected: boolean;
 	readonly timestamp: number;
 	readonly element: HTMLElement;
@@ -15,21 +33,24 @@ export default class VirtualJoystick {
 	getControl: (options?: Vector2InputControlOptions) => StickInputControl;
 	destroy: () => void;
 
-	constructor({
-		element = document.body,
-		radius = 60,
-		x = 0,
-		y = 0,
-		mode = 'dynamic',
-		lockX = false,
-		lockY = false,
-		touch = true,
-		pen = true,
-		mouse = false,
-		filter = null as (evt: PointerEvent) => boolean,
-		touchActionStyle = true,
-		enabled = true
-	} = {}) {
+	constructor(options: Partial<VirtualJoystickOptions> = {}) {
+		const {
+			element = document.body,
+			mode = 'dynamic',
+			lockX = false,
+			lockY = false,
+			touch = true,
+			pen = true,
+			mouse = false,
+			filter = null,
+			touchActionStyle = true
+		} = options;
+		let {
+			radius = 60,
+			x = 0,
+			y = 0,
+			enabled = true
+		} = options;
 
 		let startEvent: PointerEvent = null;
 		let lastEvent: PointerEvent = null;
