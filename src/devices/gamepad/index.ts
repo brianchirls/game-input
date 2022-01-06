@@ -16,15 +16,16 @@ type InputControlConstructor = InstanceType<any>;
 // type InputControlConstructor = {
 // 	new (): InputControlBase
 // };
+type DeviceReader = (device: any, index: number) => any
 
-const readers = new Map<InputControlConstructor, (device: any, index: number) => any>[
+const readers = new Map<InputControlConstructor, DeviceReader>([
 	[ButtonInputControl, (device, buttonIndex) => device.buttons[buttonIndex].value],
 	[StickInputControl, (device, leftAxisIndex) => [
 		device.axes[leftAxisIndex],
 		-device.axes[leftAxisIndex + 1]
 	]],
 	[AxisInputControl, (device, axisIndex) => device.axes[axisIndex]]
-];
+]);
 
 interface GamepadEvents {
 	[x: string]: { [k: string]: any };
