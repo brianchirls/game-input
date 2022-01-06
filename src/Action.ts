@@ -93,7 +93,6 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 			}
 
 			const previousValue = value;
-			const previousBinding = activeBinding;
 			activeBinding = null;
 
 			let best = -Infinity;
@@ -170,7 +169,7 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 		}
 
 		if (options.processors) {
-			processors.push.apply(processors, options.processors);
+			processors.push(...options.processors);
 		}
 
 		if (!options.enabled === false) {
