@@ -1,4 +1,4 @@
-import runProcessors from './util/runProcessors';
+import runProcessors, { Processor } from './util/runProcessors';
 import { InputControlBase } from './controls/InputControl';
 import EventEmitter from './util/EventEmitter';
 
@@ -13,9 +13,19 @@ interface ActionEvents<T> {
 	[x: string]: { action: Action<T>, [k: string]: any };
 }
 
-interface ActionOptions {
-	bindings?: any;
-	processors?: any;
+interface ActionBindOptions<ValueType> {
+	control?: InputControlBase;
+	processors?: Processor<ValueType>[];
+}
+
+interface ActionBinding<ValueType> {
+	control: InputControlBase;
+	processors?: Processor<ValueType>[];
+}
+
+interface ActionOptions<ValueType> {
+	bindings?: (InputControlBase | ActionBindOptions<ValueType>)[];
+	processors?: Processor<ValueType>[];
 	name?: string;
 	enabled?: boolean;
 }
@@ -27,25 +37,25 @@ probably.
 export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueType>> {
 	name: string;
 	enabled: boolean;
-	bindings: any[];
-	processors: any[];
+	bindings: ActionBinding<ValueType>[];
+	processors: Processor<ValueType>[];
 	readonly value: ValueType;
 	readonly activeControl: InputControlBase<ValueType>;
-	bind: (control: any, options: any) => number;
+	bind: (control: InputControlBase | ActionBindOptions<ValueType>, options?: ActionBindOptions<ValueType>) => number;
 	unbind: (index: number) => void;
 	update: () => void;
 
-	constructor(options: ActionOptions = {} as ActionOptions) {
+	constructor(options: ActionOptions<ValueType> = {}) {
 		super();
 
 		this.name = options.name || '';
 
-		const bindings = [];
-		const processors = [];
+		const bindings: ActionBinding<ValueType>[] = [];
+		const processors: Processor<ValueType>[] = [];
 
 		let destroyed = false;
 		let enabled = true;
-		let activeBinding = null;
+		let activeBinding: ActionBinding<ValueType> = null;
 		let activeTime = 0;
 		let value: ValueType;
 
@@ -76,9 +86,10 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 			return bindings.length - 1;
 		};
 
-		this.unbind = (index: number) => {
+		this.unbind = index => {
 			if (index < bindings.length && index >= 0) {
-				const binding = bindings.splice(index, 1);
+				const binding = bindings[index];
+				bindings.splice(index, 1);
 				if (binding === activeBinding) {
 					// todo: reset state
 				}
