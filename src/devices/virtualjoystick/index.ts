@@ -1,9 +1,9 @@
 import StickInputControl, { StickInputControlOptions } from '../../controls/StickInputControl';
-import { PollingDevice } from '../Device';
+import { Device, DeviceOptions } from '../Device';
 
 type VirtualJoystickMode = 'dynamic' | 'static';
 
-interface VirtualJoystickOptions {
+interface VirtualJoystickOptions extends DeviceOptions {
 	element: HTMLElement;
 	radius: number;
 	x: number;
@@ -19,7 +19,7 @@ interface VirtualJoystickOptions {
 	enabled: boolean;
 }
 
-export default class VirtualJoystick implements PollingDevice {
+export default class VirtualJoystick implements Device {
 	getControl: (name: string, options?: StickInputControlOptions) => StickInputControl;
 	destroy: () => void;
 	x: number;
