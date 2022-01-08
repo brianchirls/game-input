@@ -129,7 +129,7 @@ const devices = [
 	['Gamepad', gamepad],
 	['Keyboard', kbd],
 	['Pointer', pointer]
-];
+] as [string, { enabled: boolean; }][];
 
 if (leftTouch.connected) {
 	devices.push([
