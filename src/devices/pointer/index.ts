@@ -2,6 +2,8 @@ import ButtonInputControl from '../../controls/ButtonInputControl';
 import AxisInputControl from '../../controls/AxisInputControl';
 import Vector2InputControl from '../../controls/Vector2InputControl';
 import boolAsNum from '../../util/boolAsNum';
+import { PollingDevice, PollingDeviceOptions } from '../Device';
+import { InputControlBase } from '../../controls/InputControl';
 
 const buttonDefs = [
 	{
@@ -137,196 +139,203 @@ todo:
   or I guess that could be done by a Processor
 */
 
-interface PointerDeviceOptions {
-	updatePeriod: number;
+interface PointerDeviceOptions extends PollingDeviceOptions {
 	element: HTMLElement;
 	touch: boolean;
 	pen: boolean;
 	mouse: boolean;
 	touchActionStyle: boolean;
-	enabled: boolean;
 }
 
-export default function Pointer(options: Partial<PointerDeviceOptions> = {}) {
-	const {
-		updatePeriod = 1000 / 60,
-		element = document.body,
-		touch = true,
-		pen = true,
-		mouse = true,
-		touchActionStyle = true
-	} = options;
+export default class Pointer implements PollingDevice {
+	getControl: (name: string, options?: any) => InputControlBase;
+	destroy: () => void;
+	enabled: boolean;
+	readonly connected: boolean;
+	readonly timestamp: number;
+	readonly pointerType: 'pen' | 'mouse' | 'touch' | '';
 
-	let {
-		enabled = true
-	} = options;
+	constructor(options: Partial<PointerDeviceOptions> = {}) {
+		const {
+			updatePeriod = 1000 / 60,
+			element = document.body,
+			touch = true,
+			pen = true,
+			mouse = true,
+			touchActionStyle = true
+		} = options;
 
-	let previousEvent: PointerEvent = null;
-	let lastEvent: PointerEvent = null;
-	let lastWheelEvent: WheelEvent = null;
+		let {
+			enabled = true
+		} = options;
 
-	const allowedPointerTypes = {
-		pen,
-		mouse,
-		touch
-	};
+		let previousEvent: PointerEvent = null;
+		let lastEvent: PointerEvent = null;
+		let lastWheelEvent: WheelEvent = null;
 
-	const buttonsDown = new Set();
+		const allowedPointerTypes = {
+			pen,
+			mouse,
+			touch
+		};
 
-	const saveEvent = (evt: PointerEvent) => {
-		if (enabled && evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
-			if (lastEvent && (!previousEvent || lastEvent.timeStamp - previousEvent.timeStamp >= updatePeriod)) {
-				previousEvent = lastEvent;
-			}
-			lastEvent = evt;
+		const buttonsDown = new Set();
 
-			for (let i = 0; i < buttonDefs.length; i++) {
+		const saveEvent = (evt: PointerEvent) => {
+			if (enabled && evt.isPrimary && allowedPointerTypes[evt.pointerType]) {
+				if (lastEvent && (!previousEvent || lastEvent.timeStamp - previousEvent.timeStamp >= updatePeriod)) {
+					previousEvent = lastEvent;
+				}
+				lastEvent = evt;
+
+				for (let i = 0; i < buttonDefs.length; i++) {
 				/* eslint-disable no-bitwise */
-				const mask = 1 << i;
-				const buttonDown = evt.buttons & mask;
-				/* eslint-enable no-bitwise */
-				const name = getButtonName(evt, i);
-				if (buttonDown) {
-					buttonsDown.add(name);
-				} else {
-					buttonsDown.delete(name);
+					const mask = 1 << i;
+					const buttonDown = evt.buttons & mask;
+					/* eslint-enable no-bitwise */
+					const name = getButtonName(evt, i);
+					if (buttonDown) {
+						buttonsDown.add(name);
+					} else {
+						buttonsDown.delete(name);
+					}
 				}
 			}
+		};
+
+		const onPointerOut = () => {
+			lastEvent = previousEvent = null;
+		};
+
+		const onWheel = (evt: WheelEvent) => {
+			lastWheelEvent = evt;
+		};
+
+		function readButton(name: string) {
+			return buttonsDown.has(name.toLowerCase());
 		}
-	};
 
-	const onPointerOut = () => {
-		lastEvent = previousEvent = null;
-	};
-
-	const onWheel = (evt: WheelEvent) => {
-		lastWheelEvent = evt;
-	};
-
-	function readButton(name: string) {
-		return buttonsDown.has(name.toLowerCase());
-	}
-
-	const styleElement = touchActionStyle && element.style ? element : document.body;
-	if (touchActionStyle) {
-		styleElement.style.touchAction = 'none';
-	}
-
-	function enable() {
-		enabled = true;
-		window.addEventListener('pointerdown', saveEvent);
-		window.addEventListener('pointerup', saveEvent);
-		window.addEventListener('pointermove', saveEvent);
-		window.addEventListener('pointerout', onPointerOut);
-		window.addEventListener('wheel', onWheel);
-	}
-
-	function disable() {
-		enabled = false;
-		previousEvent = null;
-		lastEvent = null;
-		lastWheelEvent = null;
-
+		const styleElement = touchActionStyle && element.style ? element : document.body;
 		if (touchActionStyle) {
+			styleElement.style.touchAction = 'none';
+		}
+
+		function enable() {
+			enabled = true;
+			window.addEventListener('pointerdown', saveEvent);
+			window.addEventListener('pointerup', saveEvent);
+			window.addEventListener('pointermove', saveEvent);
+			window.addEventListener('pointerout', onPointerOut);
+			window.addEventListener('wheel', onWheel);
+		}
+
+		function disable() {
+			enabled = false;
+			previousEvent = null;
+			lastEvent = null;
+			lastWheelEvent = null;
+
+			if (touchActionStyle) {
 			// todo: only if it wasn't set before
-			styleElement.style.touchAction = '';
+				styleElement.style.touchAction = '';
+			}
+
+			buttonsDown.clear();
+			window.removeEventListener('pointerdown', saveEvent);
+			window.removeEventListener('pointerup', saveEvent);
+			window.removeEventListener('pointermove', saveEvent);
+			window.removeEventListener('pointerout', onPointerOut);
+			window.removeEventListener('wheel', onWheel);
 		}
 
-		buttonsDown.clear();
-		window.removeEventListener('pointerdown', saveEvent);
-		window.removeEventListener('pointerup', saveEvent);
-		window.removeEventListener('pointermove', saveEvent);
-		window.removeEventListener('pointerout', onPointerOut);
-		window.removeEventListener('wheel', onWheel);
-	}
+		this.getControl = (name: string, options = {}) => {
+			const controlSpec = controlDefs[name];
+			if (controlSpec) {
+				const {
+					constructor: ControlConstructor,
+					reader
+				} = controlSpec;
 
-	this.getControl = (name: string, options = {}) => {
-		const controlSpec = controlDefs[name];
-		if (controlSpec) {
-			const {
-				constructor: ControlConstructor,
-				reader
-			} = controlSpec;
+				const read = () => lastEvent ?
+					reader(lastEvent, previousEvent, ControlConstructor.defaultValue) :
+					ControlConstructor.defaultValue;
 
-			const read = () => lastEvent ?
-				reader(lastEvent, previousEvent, ControlConstructor.defaultValue) :
-				ControlConstructor.defaultValue;
-
-			return new ControlConstructor(read, Object.assign({
-				name
-			}, options, {
-				device: this
-			}));
-		}
-
-		if (buttonNames.has(name)) {
-			return new ButtonInputControl(boolAsNum(() => readButton(name)), Object.assign({
-				name
-			}, options));
-		}
-
-		/*
-		According to the spec, delta values can vary by deltaMode, but
-		it seems that all browsers currently report values in pixels
-		*/
-		if (name === 'wheel') {
-			return new Vector2InputControl(
-				() => {
-					if (lastWheelEvent && performance.now() - lastWheelEvent.timeStamp > updatePeriod) {
-						lastWheelEvent = null;
-					}
-					return lastWheelEvent ?
-						[lastWheelEvent.deltaX, lastWheelEvent.deltaY] :
-						Vector2InputControl.defaultValue;
-				},
-				Object.assign({
+				return new ControlConstructor(read, Object.assign({
 					name
 				}, options, {
 					device: this
-				})
-			);
-		}
+				}));
+			}
 
-		throw new Error('Control not found');
-	};
+			if (buttonNames.has(name)) {
+				return new ButtonInputControl(boolAsNum(() => readButton(name)), Object.assign({
+					name
+				}, options));
+			}
 
-	this.destroy = () => {
-		disable();
-	};
+			/*
+		According to the spec, delta values can vary by deltaMode, but
+		it seems that all browsers currently report values in pixels
+		*/
+			if (name === 'wheel') {
+				return new Vector2InputControl(
+					() => {
+						if (lastWheelEvent && performance.now() - lastWheelEvent.timeStamp > updatePeriod) {
+							lastWheelEvent = null;
+						}
+						return lastWheelEvent ?
+							[lastWheelEvent.deltaX, lastWheelEvent.deltaY] :
+							Vector2InputControl.defaultValue;
+					},
+					Object.assign({
+						name
+					}, options, {
+						device: this
+					})
+				);
+			}
 
-	Object.defineProperties(this, {
-		pointerType: {
-			get: () => lastEvent && lastEvent.pointerType || ''
-		},
+			throw new Error('Control not found');
+		};
 
-		// assume pointer is always connected?
-		// ...not necessarily
-		connected: {
-			enumerable: false,
-			configurable: false,
-			writable: false,
-			value: true
-		},
+		this.destroy = () => {
+			disable();
+		};
 
-		timestamp: {
-			get: () => lastEvent && lastEvent.timeStamp || 0
-		},
+		Object.defineProperties(this, {
+			pointerType: {
+				get: () => lastEvent && lastEvent.pointerType || ''
+			},
 
-		enabled: {
-			get: () => enabled,
-			set(val) {
-				if (!!val !== !!enabled) {
-					if (val) {
-						enable();
-					} else {
-						disable();
+			// assume pointer is always connected?
+			// ...not necessarily
+			connected: {
+				enumerable: false,
+				configurable: false,
+				writable: false,
+				value: true
+			},
+
+			timestamp: {
+				get: () => lastEvent && lastEvent.timeStamp || 0
+			},
+
+			enabled: {
+				get: () => enabled,
+				set(val) {
+					if (!!val !== !!enabled) {
+						if (val) {
+							enable();
+						} else {
+							disable();
+						}
 					}
 				}
 			}
-		}
-	});
+		});
 
-	if (enabled) {
-		enable();
+		if (enabled) {
+			enable();
+		}
 	}
 }

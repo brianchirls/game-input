@@ -1,5 +1,6 @@
 import ButtonInputControl from '../../controls/ButtonInputControl';
 import boolAsNum from '../../util/boolAsNum';
+import { Device, DeviceOptions } from '../Device';
 
 /*
 todo:
@@ -14,12 +15,15 @@ interface GetControlOptions {
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
 }
 
-export default class Keyboard {
+export default class Keyboard implements Device {
 	getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
 	destroy: () => void;
+	enabled: boolean;
+	readonly connected: boolean;
+
 	constructor({
 		enabled = true
-	} = {}) {
+	} = {} as DeviceOptions) {
 		const keysDown = new Set<string>();
 
 		const onKeyDown = (evt: KeyboardEvent) => {

@@ -1,5 +1,5 @@
 import StickInputControl, { StickInputControlOptions } from '../../controls/StickInputControl';
-import { Vector2InputControlOptions } from '../../controls/Vector2InputControl';
+import { PollingDevice } from '../Device';
 
 type VirtualJoystickMode = 'dynamic' | 'static';
 
@@ -19,19 +19,18 @@ interface VirtualJoystickOptions {
 	enabled: boolean;
 }
 
-export default class VirtualJoystick {
+export default class VirtualJoystick implements PollingDevice {
+	getControl: (name: string, options?: StickInputControlOptions) => StickInputControl;
+	destroy: () => void;
+	x: number;
+	y: number;
+	radius: number;
+	enabled: boolean;
 	readonly pointerType: string;
 	readonly mode: VirtualJoystickMode;
 	readonly connected: boolean;
 	readonly timestamp: number;
 	readonly element: HTMLElement;
-	x: number;
-	y: number;
-	radius: number;
-	enabled: boolean;
-
-	getControl: (options?: Vector2InputControlOptions) => StickInputControl;
-	destroy: () => void;
 
 	constructor(options: Partial<VirtualJoystickOptions> = {}) {
 		const {
@@ -146,7 +145,7 @@ export default class VirtualJoystick {
 			element.removeEventListener('pointercancel', pointerUp);
 		}
 
-		this.getControl = (/*name,*/ options?: StickInputControlOptions) => {
+		this.getControl = (name, options?: StickInputControlOptions) => {
 			// if (typeof options === 'string') {
 			// 	throw new Error('VirtualJoystick accepts options object');
 			// }
