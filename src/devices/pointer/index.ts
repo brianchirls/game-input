@@ -137,15 +137,30 @@ todo:
   or I guess that could be done by a Processor
 */
 
-export default function Pointer({
-	updatePeriod = 1000 / 60,
-	element = document.body,
-	touch = true,
-	pen = true,
-	mouse = true,
-	touchActionStyle = true,
-	enabled = true
-} = {}) {
+interface PointerDeviceOptions {
+	updatePeriod: number;
+	element: HTMLElement;
+	touch: boolean;
+	pen: boolean;
+	mouse: boolean;
+	touchActionStyle: boolean;
+	enabled: boolean;
+}
+
+export default function Pointer(options: Partial<PointerDeviceOptions> = {}) {
+	const {
+		updatePeriod = 1000 / 60,
+		element = document.body,
+		touch = true,
+		pen = true,
+		mouse = true,
+		touchActionStyle = true
+	} = options;
+
+	let {
+		enabled = true
+	} = options;
+
 	let previousEvent: PointerEvent = null;
 	let lastEvent: PointerEvent = null;
 	let lastWheelEvent: WheelEvent = null;
