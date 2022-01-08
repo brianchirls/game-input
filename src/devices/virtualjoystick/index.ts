@@ -20,7 +20,7 @@ interface VirtualJoystickOptions extends DeviceOptions {
 }
 
 export default class VirtualJoystick implements Device {
-	getControl: (name: string, options?: StickInputControlOptions) => StickInputControl;
+	getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
 	destroy: () => void;
 	x: number;
 	y: number;
