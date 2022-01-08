@@ -7,6 +7,7 @@ import StickInputControl from '../../controls/StickInputControl';
 import AxisInputControl from '../../controls/AxisInputControl';
 import EventEmitter from '../../util/EventEmitter';
 import { InputControlBase } from '../../controls/InputControl';
+import { PollingDevice, PollingDeviceOptions } from '../Device';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
@@ -31,13 +32,28 @@ interface GamepadEvents {
 	[x: string]: { [k: string]: any };
 }
 
-export default class Gamepad extends EventEmitter<GamepadEvents> {
+interface GamepadOptions extends PollingDeviceOptions {
+	index: number;
+}
+
+export default class Gamepad extends EventEmitter<GamepadEvents> implements PollingDevice {
 	getControl: (name: string, options?: any) => InputControlBase;
 	controls: () => IterableIterator<string>;
+	enabled: boolean;
+	readonly connected: boolean;
+	readonly timestamp: number;
+	readonly device: globalThis.Gamepad;
+	readonly id: string;
 
-	constructor(index = 0, {
-		updatePeriod = 1000 / 120, enabled = true
-	} = {}) {
+	constructor(options: Partial<GamepadOptions> = {}) {
+		const {
+			updatePeriod = 1000 / 120,
+			index = 0
+		} = options;
+		let {
+			enabled = true
+		} = options;
+
 		super();
 
 		const controlDefs = new Map<string, InputControlConstructor>();
