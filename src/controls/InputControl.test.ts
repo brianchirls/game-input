@@ -10,7 +10,7 @@ describe('InputControl', () => {
 			expect(InputControl.defaultValue).toBe(0);
 		});
 
-		it('should return default values with no options', () => {
+		it('should have default property values with no options', () => {
 			const inputControl = new InputControl();
 
 			expect(inputControl.name).toBe('');
@@ -186,6 +186,19 @@ describe('InputControl', () => {
 
 			expect(inputControl.read()).toBe(0);
 			expect(read).not.toHaveBeenCalled();
+		});
+
+		it('should run processors in order', () => {
+			const p1 = val => val + 1;
+			const p2 = val => -val;
+			const read = () => 12345;
+			const inputControl = new InputControl(read, {
+				processors: [
+					p1,
+					p2
+				]
+			});
+			expect(inputControl.read()).toBe(-12346);
 		});
 	});
 
