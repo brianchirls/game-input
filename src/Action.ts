@@ -14,17 +14,19 @@ interface ActionEvents<T> {
 }
 
 interface ActionBindOptions<ValueType> {
-	control?: InputControlBase;
+	control?: InputControlBase<ValueType>;
 	processors?: Processor<ValueType>[];
 }
 
 interface ActionBinding<ValueType> {
-	control: InputControlBase;
+	control: InputControlBase<ValueType>;
 	processors?: Processor<ValueType>[];
 }
 
+type Bindings<ValueType> = (InputControlBase | ActionBindOptions<ValueType>)[];
+
 interface ActionOptions<ValueType> {
-	bindings?: (InputControlBase | ActionBindOptions<ValueType>)[];
+	bindings?: Bindings<ValueType>;
 	processors?: Processor<ValueType>[];
 	name?: string;
 	enabled?: boolean;
@@ -41,12 +43,18 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 	processors: Processor<ValueType>[];
 	readonly value: ValueType;
 	readonly activeControl: InputControlBase<ValueType>;
-	bind: (control: InputControlBase | ActionBindOptions<ValueType>, options?: ActionBindOptions<ValueType>) => number;
+	bind: (control: InputControlBase<ValueType> | ActionBindOptions<ValueType>, options?: ActionBindOptions<ValueType>) => number;
 	unbind: (index: number) => void;
 	update: () => void;
 
-	constructor(options: ActionOptions<ValueType> = {}) {
+	constructor(options: Bindings<ValueType> | ActionOptions<ValueType> = {}) {
 		super();
+
+		if (Array.isArray(options)) {
+			options = {
+				bindings: options
+			};
+		}
 
 		this.name = options.name || '';
 
@@ -56,7 +64,7 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 		let destroyed = false;
 		let enabled = true;
 		let activeBinding: ActionBinding<ValueType> = null;
-		let activeTime = 0;
+		let activeTime = 0; // todo: make this public or get rid of it
 		let value: ValueType;
 
 		this.bindings = bindings;
@@ -83,6 +91,12 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 				processors: options && options.processors
 			};
 			bindings.push(binding);
+
+			if (value === undefined) {
+				const constructor = Object.getPrototypeOf(control).constructor;
+				value = constructor.defaultValue;
+			}
+
 			return bindings.length - 1;
 		};
 
@@ -183,7 +197,7 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueTy
 			processors.push(...options.processors);
 		}
 
-		if (!options.enabled === false) {
+		if (options.enabled === false) {
 			this.enabled = false;
 		}
 	}
