@@ -9,8 +9,11 @@ const now = typeof performance === 'undefined' ?
 	() => performance.now() : // eslint-disable-line no-undef
 	() => Date.now();
 
-interface ActionEvents<T> {
-	[x: string]: { action: Action<T>, [k: string]: any };
+type ActionEvents = {
+	update: unknown;
+	change: unknown;
+	enable: unknown;
+	disable: unknown;
 }
 
 interface ActionBindOptions<ValueType> {
@@ -36,7 +39,7 @@ interface ActionOptions<ValueType> {
 todo: give everything ids so we can reference them later.
 probably.
 */
-export default class Action<ValueType> extends EventEmitter<ActionEvents<ValueType>> {
+export default class Action<ValueType> extends EventEmitter<ActionEvents> {
 	name: string;
 	enabled: boolean;
 	bindings: ActionBinding<ValueType>[];
