@@ -24,7 +24,7 @@ export interface InputControlOptions<T> {
 	device?: any;
 
 	processors?: Processor<T>[];
-	children?: Iterable<InputControl> | ArrayLike<InputControl>;
+	children?: Map<string, InputControl> | [string, InputControl][] | { [k: string]: InputControl };
 	active?: (ic: InputControlBase<T>) => boolean;
 }
 
@@ -54,10 +54,10 @@ export default class InputControl<T = any> extends InputControlBase<T> {
 		}
 
 		if (children) {
-			const iterable = children[Symbol.iterator] ?
+			const iterable = Array.isArray(children) || children instanceof Map ?
 				children :
 				Object.entries(children);
-			for (const [key, value] of <Iterable<InputControl>>iterable) {
+			for (const [key, value] of iterable) {
 				this.children.set(key, value);
 			}
 		}
