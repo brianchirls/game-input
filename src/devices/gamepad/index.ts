@@ -28,8 +28,9 @@ const readers = new Map<InputControlConstructor, DeviceReader>([
 	[AxisInputControl, (device, axisIndex) => device.axes[axisIndex]]
 ]);
 
-interface GamepadEvents {
-	[x: string]: { [k: string]: any };
+type GamepadEvents = {
+	connected: unknown;
+	disconnected: unknown;
 }
 
 interface GamepadOptions extends PollingDeviceOptions {

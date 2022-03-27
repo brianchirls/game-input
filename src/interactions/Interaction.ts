@@ -1,6 +1,19 @@
 import Action from '../Action';
 import EventEmitter from '../util/EventEmitter';
 
+type InteractionState = 'disabled' | 'ready' | 'started' | 'complete';
+
+type InteractionEvents = {
+	cancel: unknown;
+	disable: unknown;
+	ready: unknown;
+	enable: unknown;
+	start: unknown;
+	complete: unknown;
+}
+
+type InteractionEventKey = keyof InteractionEvents;
+
 // dest: source
 const stateTransitions = {
 	disabled: {
@@ -21,15 +34,11 @@ const stateTransitions = {
 		started: ['complete'],
 		'*': ['start', 'complete']
 	}
+} as {
+	[sourceState in InteractionState]: {
+		[destState in InteractionState | '*']: InteractionEventKey[]
+	}
 };
-
-type InteractionState = 'disabled' | 'ready' | 'started' | 'complete';
-
-interface InteractionEvents {
-	cancel: unknown;
-	disable: unknown;
-	[x: string]: unknown;
-}
 
 export default class Interaction<ActionType=any> extends EventEmitter<InteractionEvents> {
 	readonly enabled: boolean;
@@ -49,7 +58,7 @@ export default class Interaction<ActionType=any> extends EventEmitter<Interactio
 
 		let destroyed = false;
 		let enabled = true;
-		let state = 'ready';
+		let state: InteractionState = 'ready';
 		let value = 0;
 
 		const transition = (newState: InteractionState) => {
@@ -60,7 +69,7 @@ export default class Interaction<ActionType=any> extends EventEmitter<Interactio
 			const destState = stateTransitions[newState];
 			const events = destState[state] || destState['*'];
 			state = newState;
-			events.forEach((evt: string) => this.emit(evt));
+			events.forEach(evt => this.emit(evt));
 		};
 
 		const onChange = () => {
