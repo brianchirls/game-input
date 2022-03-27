@@ -5,7 +5,7 @@ import EventEmitter from './util/EventEmitter';
 /*
 todo: use something like hrtime or performance.now in node.js
 */
-const now = typeof performance === undefined ?
+const now = typeof performance === 'undefined' ?
 	() => performance.now() : // eslint-disable-line no-undef
 	() => Date.now();
 
