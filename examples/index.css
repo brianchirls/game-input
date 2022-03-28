@@ -148,7 +148,7 @@ todo:
 		flex-direction: column;
 	}
 
-	header: {
+	header {
 		z-index: 100;
 	}
 
