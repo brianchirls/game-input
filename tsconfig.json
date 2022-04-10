@@ -1,16 +1,32 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "node",
+
 		"noImplicitAny": true,
+		"strictNullChecks": false,
+		"strictFunctionTypes": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"noImplicitReturns": true,
+		"importHelpers": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"experimentalDecorators": true,
+
 		"outDir": "build/types",
 		"sourceMap": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
 		"suppressImplicitAnyIndexErrors": true,
 		"downlevelIteration": true,
-		"target": "esnext",
-		"module": "esnext",
-		"moduleResolution": "node",		
+		"types": [
+			"node",
+			"jest"
+		],
 		"typeRoots": [
 			"node_modules/@types"
 		],
@@ -22,9 +38,10 @@
 		]
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*.ts"
 	],
 	"exclude": [
+		"node_modules",
 		"src/**/tests",
 		"src/**/*.test.ts",
 		"src/**/*.test.js"
