@@ -7,7 +7,7 @@ export default class ReleaseInteraction extends Interaction<any> {
 	constructor(action: Action<any>, pressPoint?: number) {
 		super(action);
 
-		if (pressPoint >= 0) {
+		if (typeof pressPoint === 'number' && pressPoint >= 0) {
 			this.pressPoint = pressPoint;
 		}
 
