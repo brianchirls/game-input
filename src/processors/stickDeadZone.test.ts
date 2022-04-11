@@ -6,10 +6,10 @@ describe('stickDeadZone', () => {
 	);
 
 	it('high value', () =>
-		expect(stickDeadZone([3, 4], 0.1, 0.8)).toBeRoughly([0.6, 0.8])
+		expect(stickDeadZone([3, 4], 0.1, 0.8)).toBeDeepCloseTo([0.6, 0.8])
 	);
 
 	it('interpolated value', () =>
-		expect(stickDeadZone([0.8, 0.8], 0.2, 1)).toBeRoughly([Math.SQRT1_2, Math.SQRT1_2])
+		expect(stickDeadZone([0.8, 0.8], 0.2, 1)).toBeDeepCloseTo([Math.SQRT1_2, Math.SQRT1_2], 5)
 	);
 });
