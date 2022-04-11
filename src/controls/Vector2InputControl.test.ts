@@ -1,5 +1,7 @@
 import AxisInputControl from './AxisInputControl';
 import Vector2InputControl from './Vector2InputControl';
+import '../../tools/jest.helpers';
+import '../../types/index.d.ts';
 
 describe('Vector2InputControl', () => {
 	describe('constructor', () => {
@@ -23,31 +25,31 @@ describe('Vector2InputControl', () => {
 	});
 
 	it('should have single value magnitude', () => {
-		const read = () => [0.3, 0.4];
+		const read = () => <[number, number]>[0.3, 0.4];
 		const vector2InputControl = new Vector2InputControl(read);
 		expect(vector2InputControl.magnitude()).toBeRoughly(0.5);
 	});
 
 	it('should be active if only x is > 0', () => {
-		const read = () => [0.01, 0];
+		const read = () => <[number, number]>[0.01, 0];
 		const vector2InputControl = new Vector2InputControl(read);
 		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be active if only y is > 0', () => {
-		const read = () => [0, 0.01];
+		const read = () => <[number, number]>[0, 0.01];
 		const vector2InputControl = new Vector2InputControl(read);
 		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be active if both x and y are > 0', () => {
-		const read = () => [0.01, 0.01];
+		const read = () => <[number, number]>[0.01, 0.01];
 		const vector2InputControl = new Vector2InputControl(read);
 		expect(vector2InputControl.active()).toBe(true);
 	});
 
 	it('should be not active if both x and y are 0', () => {
-		const read = () => [0, 0];
+		const read = () => <[number, number]>[0, 0];
 		const vector2InputControl = new Vector2InputControl(read);
 		expect(vector2InputControl.active()).toBe(false);
 	});
