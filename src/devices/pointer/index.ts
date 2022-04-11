@@ -3,7 +3,6 @@ import AxisInputControl from '../../controls/AxisInputControl';
 import Vector2InputControl from '../../controls/Vector2InputControl';
 import boolAsNum from '../../util/boolAsNum';
 import { PollingDevice, PollingDeviceOptions } from '../Device';
-import { InputControlBase } from '../../controls/InputControl';
 
 const buttonDefs = [
 	{
@@ -147,15 +146,12 @@ interface PointerDeviceOptions extends PollingDeviceOptions {
 	touchActionStyle: boolean;
 }
 
-export default class Pointer implements PollingDevice {
-	getControl: (name: string, options?: any) => InputControlBase;
-	destroy: () => void;
-	enabled: boolean;
-	readonly connected: boolean;
-	readonly timestamp: number;
+export default class Pointer extends PollingDevice {
 	readonly pointerType: 'pen' | 'mouse' | 'touch' | '';
 
 	constructor(options: Partial<PointerDeviceOptions> = {}) {
+		super();
+
 		const {
 			updatePeriod = 1000 / 60,
 			element = document.body,
@@ -200,6 +196,8 @@ export default class Pointer implements PollingDevice {
 						buttonsDown.delete(name);
 					}
 				}
+
+				this.emit('change');
 			}
 		};
 
@@ -270,13 +268,15 @@ export default class Pointer implements PollingDevice {
 			if (buttonNames.has(name)) {
 				return new ButtonInputControl(boolAsNum(() => readButton(name)), Object.assign({
 					name
-				}, options));
+				}, options, {
+					device: this
+				}));
 			}
 
 			/*
-		According to the spec, delta values can vary by deltaMode, but
-		it seems that all browsers currently report values in pixels
-		*/
+			According to the spec, delta values can vary by deltaMode, but
+			it seems that all browsers currently report values in pixels
+			*/
 			if (name === 'wheel') {
 				return new Vector2InputControl(
 					() => {

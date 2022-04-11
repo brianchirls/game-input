@@ -19,6 +19,7 @@ type ActionEvents = {
 interface ActionBindOptions<ValueType> {
 	control?: InputControlBase<ValueType>;
 	processors?: Processor<ValueType>[];
+	autoUpdate?: boolean;
 }
 
 interface ActionBinding<ValueType> {
@@ -39,7 +40,7 @@ interface ActionOptions<ValueType> {
 todo: give everything ids so we can reference them later.
 probably.
 */
-export default class Action<ValueType> extends EventEmitter<ActionEvents> {
+export default class Action<ValueType = number> extends EventEmitter<ActionEvents> {
 	name: string;
 	enabled: boolean;
 	bindings: ActionBinding<ValueType>[];
@@ -100,6 +101,10 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents> {
 				value = constructor.defaultValue;
 			}
 
+			if (options?.autoUpdate !== false) {
+				control.on('change', this.update);
+			}
+
 			return bindings.length - 1;
 		};
 
@@ -107,11 +112,8 @@ export default class Action<ValueType> extends EventEmitter<ActionEvents> {
 			if (index < bindings.length && index >= 0) {
 				const binding = bindings[index];
 				bindings.splice(index, 1);
-				if (binding === activeBinding) {
-					// todo: reset state
-				}
 
-				// todo: clear binding from queue
+				binding.control.off('change', this.update);
 			}
 		};
 

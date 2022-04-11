@@ -5,9 +5,7 @@ import {
 import ButtonInputControl from '../../controls/ButtonInputControl';
 import StickInputControl from '../../controls/StickInputControl';
 import AxisInputControl from '../../controls/AxisInputControl';
-import EventEmitter from '../../util/EventEmitter';
-import { InputControlBase } from '../../controls/InputControl';
-import { PollingDevice, PollingDeviceOptions } from '../Device';
+import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
@@ -28,7 +26,7 @@ const readers = new Map<InputControlConstructor, DeviceReader>([
 	[AxisInputControl, (device, axisIndex) => device.axes[axisIndex]]
 ]);
 
-type GamepadEvents = {
+type GamepadEvents = DeviceEvents & {
 	connected: unknown;
 	disconnected: unknown;
 }
@@ -37,12 +35,9 @@ interface GamepadOptions extends PollingDeviceOptions {
 	index: number;
 }
 
-export default class Gamepad extends EventEmitter<GamepadEvents> implements PollingDevice {
-	getControl: (name: string, options?: any) => InputControlBase;
+export default class Gamepad extends PollingDevice<GamepadEvents> {
 	controls: () => IterableIterator<string>;
-	enabled: boolean;
-	readonly connected: boolean;
-	readonly timestamp: number;
+	update: () => void;
 	readonly device: globalThis.Gamepad;
 	readonly id: string;
 
@@ -72,16 +67,17 @@ export default class Gamepad extends EventEmitter<GamepadEvents> implements Poll
 			controlIndices.set(stickName, i * 2);
 		});
 
-		function update() {
+		const update = () => {
 			if (enabled) {
 				const device = navigator.getGamepads()[index];
 				const timestamp = device && device.timestamp || performance.now();
 				if (device && timestamp - lastDeviceUpdate >= updatePeriod) {
 					lastDevice = device;
 					lastDeviceUpdate = timestamp;
+					this.emit('change');
 				}
 			}
-		}
+		};
 
 		function connectGamePad(gp: globalThis.Gamepad) {
 			if (gp) {
@@ -153,6 +149,8 @@ export default class Gamepad extends EventEmitter<GamepadEvents> implements Poll
 		};
 
 		this.controls = () => controlDefs.keys();
+
+		this.update = update;
 
 		const destroyEventEmitter = this.destroy;
 		this.destroy = () => {

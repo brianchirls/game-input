@@ -19,20 +19,19 @@ interface VirtualJoystickOptions extends DeviceOptions {
 	enabled: boolean;
 }
 
-export default class VirtualJoystick implements Device {
-	getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
-	destroy: () => void;
+export default class VirtualJoystick extends Device {
+	declare getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
 	x: number;
 	y: number;
 	radius: number;
-	enabled: boolean;
 	readonly pointerType: string;
 	readonly mode: VirtualJoystickMode;
-	readonly connected: boolean;
 	readonly timestamp: number;
 	readonly element: HTMLElement;
 
 	constructor(options: Partial<VirtualJoystickOptions> = {}) {
+		super();
+
 		const {
 			element = document.body,
 			mode = 'dynamic',
@@ -93,7 +92,7 @@ export default class VirtualJoystick implements Device {
 			}
 		}
 
-		function pointerMove(evt: PointerEvent) {
+		const pointerMove = (evt: PointerEvent) => {
 			if (startEvent && startEvent.pointerId === evt.pointerId) {
 				lastEvent = evt;
 
@@ -105,8 +104,10 @@ export default class VirtualJoystick implements Device {
 				const divisor = Math.max(length, radius);
 				deltaX = dx / divisor;
 				deltaY = -dy / divisor;
+
+				this.emit('change');
 			}
-		}
+		};
 
 		function pointerUp(evt: PointerEvent) {
 			if (startEvent && startEvent.pointerId === evt.pointerId) {
