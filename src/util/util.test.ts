@@ -98,7 +98,7 @@ describe('util', () => {
 			copyOptions(dest, src);
 
 			expect(dest.foo).toEqual(src.foo);
-			expect(dest.baz).toBeUndefined();
+			expect((<any>dest).baz).toBeUndefined();
 		});
 
 		it('should not overwrite functions/methods', () => {
@@ -144,6 +144,7 @@ describe('util', () => {
 				(prev, ...args) => {
 					expect(prev).toBe('B');
 					expect(args).toEqual([]);
+					return 'C';
 				}
 			], 'A');
 		});
