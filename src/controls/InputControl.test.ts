@@ -26,7 +26,7 @@ describe('InputControl', () => {
 			const options = {
 				name: 'some name',
 				parent,
-				device: {},
+				device: null,
 				enabled: false
 			};
 			const inputControl = new InputControl(options);
@@ -38,7 +38,7 @@ describe('InputControl', () => {
 			const options = {
 				name: 'some name',
 				parent,
-				device: {},
+				device: null,
 				enabled: false
 			};
 			const inputControl = new InputControl(options);
@@ -189,8 +189,8 @@ describe('InputControl', () => {
 		});
 
 		it('should run processors in order', () => {
-			const p1 = val => val + 1;
-			const p2 = val => -val;
+			const p1 = (val: number) => val + 1;
+			const p2 = (val: number) => -val;
 			const read = () => 12345;
 			const inputControl = new InputControl(read, {
 				processors: [

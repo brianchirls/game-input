@@ -91,7 +91,7 @@ describe('Action', () => {
 		it('should accept only options argument', () => {
 			const action = new Action();
 			const control = new InputControl();
-			const processors = [val => val * 2];
+			const processors = [(val: number) => val * 2];
 			action.bind({
 				control,
 				processors
@@ -107,7 +107,7 @@ describe('Action', () => {
 		it('should accept both control and options arguments', () => {
 			const action = new Action();
 			const control = new InputControl();
-			const processors = [val => val * 2];
+			const processors = [(val: number) => val * 2];
 			action.bind(control, {
 				processors
 			});
@@ -124,7 +124,7 @@ describe('Action', () => {
 				new InputControl()
 			]);
 			const control = new InputControl();
-			const processors = [val => val * 2];
+			const processors = [(val: number) => val * 2];
 			const index = action.bind(control, {
 				processors
 			});
@@ -187,8 +187,8 @@ describe('Action', () => {
 		});
 
 		it('should run Action processors', () => {
-			const p1 = val => val + 1;
-			const p2 = val => -val;
+			const p1 = (val: number) => val + 1;
+			const p2 = (val: number) => -val;
 			const read = () => 12345;
 			const inputControl = new InputControl(read);
 			const action = new Action({
@@ -203,8 +203,8 @@ describe('Action', () => {
 		});
 
 		it('should run binding processors', () => {
-			const p1 = val => val + 1;
-			const p2 = val => -val;
+			const p1 = (val: number) => val + 1;
+			const p2 = (val: number) => -val;
 			const read = () => 12345;
 			const inputControl = new InputControl(read, {
 				processors: [
