@@ -22,5 +22,10 @@ export default class AxisComposite extends AxisInputControl {
 
 		this.children.set('negative', negative);
 		this.children.set('positive', positive);
+
+		const onChange = () => this.emit('change');
+		this.children.forEach(child => {
+			child.on('change', onChange);
+		});
 	}
 }

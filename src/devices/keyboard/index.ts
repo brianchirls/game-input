@@ -9,28 +9,37 @@ e.g. in France and Belgium, WASD => ZQSD
 optionally use .code instead of .key?
 
 https://www.w3.org/TR/uievents-code/#code-value-tables
+
+todo:
+Emit 'change' event only to controls relevant to changed key.
+Currently, we emit to every control, which is ineffecient.
 */
 
 interface GetControlOptions {
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
 }
 
-export default class Keyboard implements Device {
-	getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
-	destroy: () => void;
-	enabled: boolean;
-	readonly connected: boolean;
+export default class Keyboard extends Device {
+	declare getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
 
 	constructor({
 		enabled = true
 	} = {} as DeviceOptions) {
+		super();
+
 		const keysDown = new Set<string>();
 
 		const onKeyDown = (evt: KeyboardEvent) => {
 			keysDown.add(evt.key.toLowerCase());
+			if (enabled) {
+				this.emit('change');
+			}
 		};
 		const onKeyUp = (evt: KeyboardEvent) => {
 			keysDown.delete(evt.key.toLowerCase());
+			if (enabled) {
+				this.emit('change');
+			}
 		};
 
 		function readAnyKey() {
@@ -85,7 +94,9 @@ export default class Keyboard implements Device {
 					typeof filter === 'string' ?
 						`key:${filter}` :
 						String(name || filter)
-			}, opts));
+			}, opts, {
+				device: this
+			}));
 		};
 
 		this.destroy = () => {

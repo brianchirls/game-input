@@ -101,9 +101,7 @@ function update(t = performance.now()) {
 	const delta = t - last;
 	last = t;
 
-	moveAction.update();
-	rotateAction.update();
-	buttonAction.update();
+	gamepad.update();
 
 	const [dx, dy] = moveAction.value;
 	const dr = rotateAction.value;

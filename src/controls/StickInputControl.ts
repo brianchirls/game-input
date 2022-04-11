@@ -10,7 +10,8 @@ function getChildValue(read: () => number[], axis: number, neg: boolean) {
 
 function makeChild(parent: StickInputControl, name: string, axis: number, negative: boolean, options: ButtonInputControlOptions) {
 	const opts = Object.assign({}, options && options[name], {
-		parent
+		parent,
+		device: parent.device
 	});
 	parent[name] = new ButtonInputControl(() => getChildValue(parent.read, axis, negative), opts);
 
@@ -42,6 +43,11 @@ export default class StickInputControl extends Vector2InputControl {
 
 		childbuttons.forEach(([name, axis, negative]) => {
 			makeChild(this, name, axis, negative, options);
+		});
+
+		const onChange = () => this.emit('change');
+		this.children.forEach(child => {
+			child.on('change', onChange);
 		});
 	}
 }

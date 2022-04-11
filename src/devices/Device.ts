@@ -1,4 +1,5 @@
 import { InputControlBase } from '../controls/InputControl';
+import EventEmitter from '../util/EventEmitter';
 
 export interface DeviceOptions {
 	/**
@@ -10,7 +11,11 @@ export interface DeviceOptions {
 	enabled?: boolean;
 }
 
-export interface Device {
+export type DeviceEvents = {
+	change: unknown;
+};
+
+export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvents> extends EventEmitter<DeviceEventsType> {
 	/**
 	 * Create a new InputControl object attached to the device.
 	 */
@@ -19,7 +24,7 @@ export interface Device {
 	/**
 	 * Remove any event listeners and free up any resources.
 	 */
-	destroy: () => void;
+	declare destroy: () => void;
 
 	/**
 	 * Devices that are not enabled will not emit any events, and read operations
@@ -43,7 +48,7 @@ export interface PollingDeviceOptions extends DeviceOptions {
 	updatePeriod?: number;
 }
 
-export interface PollingDevice extends Device {
+export abstract class PollingDevice<DeviceEventsType extends DeviceEvents = DeviceEvents> extends Device<DeviceEventsType> {
 	/**
 	 * The time (DOMHighResTimeStamp) of the last input read from the device hardware,
 	 * in milliseconds, representing time since "time origin," or the beginning of

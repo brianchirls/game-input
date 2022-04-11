@@ -1,7 +1,11 @@
 import runProcessors, { Processor } from '../util/runProcessors';
 import copyOptions from '../util/copyOptions';
+import EventEmitter from '../util/EventEmitter';
 
-export abstract class InputControlBase<T = any> {
+type InputControlEvents = {
+	change: unknown
+};
+export abstract class InputControlBase<T = any> extends EventEmitter<InputControlEvents> {
 	static defaultValue: any = 0;
 
 	name = '';
@@ -28,7 +32,7 @@ export interface InputControlOptions<T> {
 	active?: (ic: InputControlBase<T>) => boolean;
 }
 
-export default class InputControl<T = any> extends InputControlBase<T> {
+export default class InputControl<T = number> extends InputControlBase<T> {
 
 	constructor(readRaw?: (() => T) | InputControlOptions<T>, options?: InputControlOptions<T>) {
 		super();
@@ -46,6 +50,14 @@ export default class InputControl<T = any> extends InputControlBase<T> {
 		} = options || {};
 
 		copyOptions(this, opts);
+
+		if (this.device) {
+			this.device.on('change', () => {
+				if (this.enabled) {
+					this.emit('change');
+				}
+			});
+		}
 
 		if (processors) {
 			for (const p of processors) {
@@ -74,6 +86,12 @@ export default class InputControl<T = any> extends InputControlBase<T> {
 		if (typeof active === 'function') {
 			this.active = () => active(this);
 		}
+
+		const destroy = this.destroy;
+		this.destroy = () => {
+			destroy();
+			this.children.forEach(child => child.destroy());
+		};
 	}
 
 	find(path?: string): InputControlBase | null {
@@ -93,12 +111,12 @@ export default class InputControl<T = any> extends InputControlBase<T> {
 		return this.children.get(path) || null;
 	}
 
-	read() {
+	read(): T {
 		return Object.getPrototypeOf(this).constructor.defaultValue;
 	}
 
 	magnitude(val = this.read()) {
-		return Math.abs(val);
+		return typeof val === 'number' ? Math.abs(val) : 0;
 	}
 
 	active() {

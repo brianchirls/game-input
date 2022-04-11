@@ -27,5 +27,10 @@ export default class DPadComposite extends Vector2InputControl {
 		this.children.set('right', right);
 		this.children.set('up', up);
 		this.children.set('down', down);
+
+		const onChange = () => this.emit('change');
+		this.children.forEach(child => {
+			child.on('change', onChange);
+		});
 	}
 }

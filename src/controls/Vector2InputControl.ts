@@ -30,7 +30,8 @@ export default class Vector2InputControl extends InputControl<[number, number]> 
 		this.x = new AxisInputControl(
 			() => this.read()[0],
 			Object.assign({}, xOptions, {
-				parent: this
+				parent: this,
+				device: options?.device
 			})
 		);
 
@@ -38,11 +39,17 @@ export default class Vector2InputControl extends InputControl<[number, number]> 
 		this.y = new AxisInputControl(
 			() => this.read()[1],
 			Object.assign({}, yOptions, {
-				parent: this
+				parent: this,
+				device: options?.device
 			})
 		);
 		this.children.set('x', this.x);
 		this.children.set('y', this.x);
+
+		const onChange = () => this.emit('change');
+		this.children.forEach(child => {
+			child.on('change', onChange);
+		});
 	}
 
 	magnitude(vec = this.read()) {
