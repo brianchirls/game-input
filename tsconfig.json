@@ -25,7 +25,8 @@
 		"downlevelIteration": true,
 		"types": [
 			"node",
-			"jest"
+			"jest",
+			"jest-matcher-deep-close-to"
 		],
 		"typeRoots": [
 			"node_modules/@types"
