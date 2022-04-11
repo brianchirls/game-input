@@ -18,7 +18,8 @@ module.exports = {
 	// We release a ES version
 	// It's something that matches the latest official supported features of JavaScript.
 	// Nothing more (stage-1, etc), nothing less (require, etc).
-	presets: BABEL_ENV === 'es' ? ['@babel/preset-typescript'] : [
+	presets: BABEL_ENV === 'es' || BABEL_ENV === 'test' ? ['@babel/preset-typescript', { allowDeclareFields: true }] : [
+		['@babel/preset-typescript', { allowDeclareFields: true }],
 		[
 			'@babel/env',
 			{
@@ -29,11 +30,11 @@ module.exports = {
 				useBuiltIns: false,
 				modules: ['esm', 'production-umd'].includes(BABEL_ENV) ? false : 'commonjs'
 			}
-		],
-		'@babel/preset-typescript'
+		]
 	],
 
 	plugins: [
+		['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
 		'@babel/plugin-proposal-class-properties',
 		['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
 		['@babel/plugin-transform-runtime', {
@@ -76,6 +77,7 @@ module.exports = {
 			sourceMaps: 'both',
 
 			plugins: [
+				['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
 				[
 					'babel-plugin-module-resolver',
 					{
