@@ -8,11 +8,11 @@ export interface Vector2InputControlOptions extends InputControlOptions<[number,
 
 export default class Vector2InputControl extends InputControl<[number, number]> {
 	static defaultValue = [0, 0] as [number, number];
-	vector2: () => () => [number, number];
+	vector2: () => [number, number];
 	x: AxisInputControl;
 	y: AxisInputControl;
 
-	constructor(read: (() => [number, number]) | Vector2InputControlOptions, options?: Vector2InputControlOptions) {
+	constructor(read?: (() => [number, number]) | Vector2InputControlOptions, options?: Vector2InputControlOptions) {
 		if (read && typeof read === 'object' && !options) {
 			options = read;
 			read = null;
