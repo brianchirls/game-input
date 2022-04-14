@@ -58,7 +58,7 @@ const examplesManifest = require('../examples/manifest.json');
 
 module.exports = (env, options) => merge(common(env, options), {
 	output: {
-		path: path.join(__dirname, '../build/site'),
+		path: path.join(__dirname, '../build'),
 		filename: (chunkData) => {
 			return chunkData.chunk.name === 'index' ? `${projectName}.min.js` : '[name]-[chunkhash].js';
 		},
@@ -83,7 +83,7 @@ module.exports = (env, options) => merge(common(env, options), {
 		new BundleAnalyzerPlugin({
 			openAnalyzer: false,
 			analyzerMode: 'static',
-			reportFilename: '../../reports/bundle.html'
+			reportFilename: '../reports/bundle.html'
 		})
 	]),
 	// externals: {

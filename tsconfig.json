@@ -17,10 +17,10 @@
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 
-		"outDir": "build/types",
+		"outDir": "dist/types",
 		"sourceMap": true,
 		"declaration": true,
-		"emitDeclarationOnly": true,
+		"emitDeclarationOnly": false,
 		"suppressImplicitAnyIndexErrors": true,
 		"downlevelIteration": true,
 		"types": [
