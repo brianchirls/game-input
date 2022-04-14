@@ -6,7 +6,7 @@ describe('stickDeadZone', () => {
 	);
 
 	it('high value', () =>
-		expect(stickDeadZone([3, 4], 0.1, 0.8)).toBeDeepCloseTo([0.6, 0.8])
+		expect(stickDeadZone([3, 4], 0.1, 0.8)).toBeDeepCloseTo([0.6, 0.8], 5)
 	);
 
 	it('interpolated value', () =>
