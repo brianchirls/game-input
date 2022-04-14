@@ -1,5 +1,5 @@
 {
-	"name": "game-input",
+	"name": "@brianchirls/game-input",
 	"version": "0.0.1",
 	"description": "",
 	"repository": {
@@ -10,23 +10,28 @@
 		"url": "https://github.com/brianchirls/game-input/issues"
 	},
 	"homepage": "https://github.com/brianchirls/game-input#readme",
-	"main": "build/cjs/index.js",
-	"module": "build/esm/index.js",
-	"browser": "build/esm/browser.js",
-	"unpkg": "build/pkg/game-input.min.js",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
+	"browser": "dist/esm/browser.js",
+	"unpkg": "dist/browser.js",
+	"types": "./types/browser.d.ts",
 	"exports": {
+		".": {
+			"node": "./dist/cjs/index.js",
+			"require": "./dist/cjs/browser.js",
+			"import": "./dist/esm/browser.js",
+			"default": "./dist/esm/browser.js",
+			"types": "./dist/types/browser.d.ts"
+		},
 		"./*": {
-			"require": "./build/cjs/*.js",
-			"import": "./build/esm/*.js",
-			"default": "./build/esm/*.js"
+			"require": "./dist/cjs/*",
+			"import": "./dist/esm/*",
+			"default": "./dist/esm/*",
+			"types": "./dist/esm/*"
 		}
 	},
-	"types": "./index.d.ts",
 	"files": [
-		"build/cjs",
-		"build/es",
-		"build/esm",
-		"build/types",
+		"dist/*",
 		"src/**/*.js",
 		"src/**/*.ts"
 	],
@@ -45,15 +50,17 @@
 		"lint:fix": "eslint --fix ./; stylelint 'examples/**/*.css' 'tools/**/*.css' --fix; true",
 		"prepush": "npm test",
 		"start": "cross-env NODE_ENV=development webpack serve --config ./config/webpack-dev.js --mode development --progress",
-		"build:cjs": "rm -rf build/cjs/ && cross-env NODE_ENV=production BABEL_ENV=cjs babel --config-file ./babel.config.js ./src --out-dir ./build/cjs --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
-		"build:es": "rm -rf build/es/ && cross-env NODE_ENV=production BABEL_ENV=es babel --config-file ./babel.config.js ./src --out-dir ./build/es --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
-		"build:esm": "rm -rf build/esm/ && cross-env NODE_ENV=production BABEL_ENV=esm babel --config-file ./babel.config.js ./src --out-dir ./build/esm --extensions \".ts,.js\" --ignore \"**/*.test.js\"",
-		"build:site:dev": "cross-env NODE_ENV=development rm -rf build/site/ && webpack --config ./config/webpack-dev.js --mode development",
-		"build:site": "cross-env NODE_ENV=production rm -rf build/site/ && webpack --config ./config/webpack-prod.js --mode production",
-		"build:lib": "npm run build:cjs && npm run build:esm && npm run build:es",
-		"build:types": "tsc --emitDeclarationOnly",
+
+		"build:cjs": "rm -rf dist/cjs/ && tsc --target ES6 --module commonjs --outDir ./dist/cjs --allowJs",
+		"build:esm": "rm -rf dist/cjs/ && tsc --target ES6 --module ES6 --outDir ./dist/esm --allowJs",
+		"build:bundle": "webpack --config ./config/webpack.lib.js",
+
+		"build:site:dev": "cross-env NODE_ENV=development rm -rf build/ && webpack --config ./config/webpack-dev.js --mode development",
+		"build:site": "cross-env NODE_ENV=production rm -rf build/ && webpack --config ./config/webpack-prod.js --mode production",
+		"build:types": "tsc --declaration --emitDeclarationOnly",
 		"build": "npm run build:types && npm run build:lib && npm run build:site",
-		"deploy": "gh-pages -d ./build/site",
+		"deploy": "gh-pages -d ./build",
+		"check-type": "tsc --noEmit",
 		"test": "cross-env NODE_ENV=test jest --verbose --coverage && npx package-check",
 		"test:debug": "cross-env NODE_ENV=test node --inspect node_modules/.bin/jest --runInBand",
 		"test:watch:debug": "cross-env NODE_ENV=test node --inspect node_modules/.bin/jest --runInBand --watch",
@@ -121,6 +128,7 @@
 		"svgo": "^2.3.0",
 		"svgo-loader": "^3.0.0",
 		"ts-jest": "^27.1.4",
+		"ts-loader": "^9.2.8",
 		"typescript": "^4.5.4",
 		"url-loader": "^4.1.1",
 		"webpack": "^5.28.0",

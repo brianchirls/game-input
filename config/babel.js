@@ -18,7 +18,7 @@ module.exports = {
 	// We release a ES version
 	// It's something that matches the latest official supported features of JavaScript.
 	// Nothing more (stage-1, etc), nothing less (require, etc).
-	presets: BABEL_ENV === 'es' || BABEL_ENV === 'test' ? ['@babel/preset-typescript', { allowDeclareFields: true }] : [
+	presets: BABEL_ENV === 'es' || BABEL_ENV === 'test' ? [['@babel/preset-typescript', { allowDeclareFields: true }]] : [
 		['@babel/preset-typescript', { allowDeclareFields: true }],
 		[
 			'@babel/env',

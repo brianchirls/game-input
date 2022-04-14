@@ -129,7 +129,7 @@ module.exports = (env, options) => ({
 			formatter: eslintFormatter,
 			// failOnHint: env === 'production',
 			emitWarning: true,
-			extensions: [`js`],
+			extensions: [`js`, `ts`],
 			exclude: [
 				`/node_modules/`
 			]
