@@ -1,19 +1,23 @@
-import ButtonInputControl from '../../controls/ButtonInputControl';
-import boolAsNum from '../../util/boolAsNum';
+import ButtonInputControl from '../controls/ButtonInputControl';
+import boolAsNum from '../util/boolAsNum';
 import { Device, DeviceOptions } from '../Device';
 
 /*
 todo:
-need to handle different keyboard layouts
-e.g. in France and Belgium, WASD => ZQSD
-optionally use .code instead of .key?
-
-https://www.w3.org/TR/uievents-code/#code-value-tables
-
-todo:
 Emit 'change' event only to controls relevant to changed key.
 Currently, we emit to every control, which is ineffecient.
 */
+
+interface KeyboardDeviceOptions extends DeviceOptions {
+	/**
+	 * Optionally use layout-independent Key Code instead of
+	 * key value string. (default: `false`)
+	 *
+	 * Key Codes:
+	 * https://www.w3.org/TR/uievents-code/#code-value-tables
+	 */
+	keyCode: boolean;
+}
 
 interface GetControlOptions {
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
@@ -23,20 +27,23 @@ export default class Keyboard extends Device {
 	declare getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
 
 	constructor({
-		enabled = true
-	} = {} as DeviceOptions) {
+		enabled = true,
+		keyCode = false
+	} = {} as KeyboardDeviceOptions) {
 		super();
 
 		const keysDown = new Set<string>();
 
 		const onKeyDown = (evt: KeyboardEvent) => {
-			keysDown.add(evt.key.toLowerCase());
+			const key = (keyCode ? evt.code : evt.key).toLowerCase();
+			keysDown.add(key);
 			if (enabled) {
 				this.emit('change');
 			}
 		};
 		const onKeyUp = (evt: KeyboardEvent) => {
-			keysDown.delete(evt.key.toLowerCase());
+			const key = (keyCode ? evt.code : evt.key).toLowerCase();
+			keysDown.delete(key);
 			if (enabled) {
 				this.emit('change');
 			}
