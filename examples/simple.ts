@@ -12,7 +12,9 @@ import { AxisInputControl, StickInputControl } from '../src';
 
 // Devices
 const gamepad = new Gamepad();
-const kbd = new Keyboard();
+const kbd = new Keyboard({
+	keyCode: true
+});
 const pointer = new Pointer({
 	touch: false,
 	enabled: false
@@ -30,15 +32,15 @@ const leftStick = gamepad.getControl('leftStick') as StickInputControl;
 const rightStickHoriz = gamepad.getControl('rightStick').find('x') as AxisInputControl;
 
 const kbdWASD = new DPadComposite({
-	up: kbd.getControl('W'),
-	left: kbd.getControl('A'),
-	down: kbd.getControl('S'),
-	right: kbd.getControl('D')
+	up: kbd.getControl('KeyW'),
+	left: kbd.getControl('KeyA'),
+	down: kbd.getControl('KeyS'),
+	right: kbd.getControl('KeyD')
 });
 
 const rotateArrowKeys = new AxisComposite({
-	negative: kbd.getControl('arrowleft'),
-	positive: kbd.getControl('arrowright')
+	negative: kbd.getControl('ArrowLeft'),
+	positive: kbd.getControl('ArrowRight')
 });
 
 const leftTouchJoystick = leftTouch.getControl();

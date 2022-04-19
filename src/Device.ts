@@ -1,5 +1,5 @@
-import { InputControlBase } from '../controls/InputControl';
-import EventEmitter from '../util/EventEmitter';
+import InputControl from './controls/InputControl';
+import EventEmitter from './util/EventEmitter';
 
 export interface DeviceOptions {
 	/**
@@ -19,7 +19,7 @@ export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvent
 	/**
 	 * Create a new InputControl object attached to the device.
 	 */
-	getControl: (name: string, options?: any) => InputControlBase;
+	getControl: (name: string, options?: any) => InputControl<any>;
 
 	/**
 	 * Remove any event listeners and free up any resources.
