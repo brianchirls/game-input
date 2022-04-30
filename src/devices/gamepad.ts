@@ -1,10 +1,10 @@
 import {
 	buttons,
 	sticks
-} from './controlMap';
-import ButtonInputControl from '../../controls/ButtonInputControl';
-import StickInputControl from '../../controls/StickInputControl';
-import AxisInputControl from '../../controls/AxisInputControl';
+} from './gamepad/controlMap';
+import ButtonInputControl from '../controls/ButtonInputControl';
+import StickInputControl from '../controls/StickInputControl';
+import AxisInputControl from '../controls/AxisInputControl';
 import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
 
 const standardControlNames = new Set(buttons);
