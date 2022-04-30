@@ -1,5 +1,5 @@
 import Action from './Action';
-import InputControl, { InputControlBase } from './controls/InputControl';
+import InputControl from './controls/InputControl';
 import Vector2InputControl from './controls/Vector2InputControl';
 
 describe('Action', () => {
@@ -135,7 +135,7 @@ describe('Action', () => {
 			const action = new Action();
 			expect(() => {
 				action.bind({
-					control: <InputControlBase><unknown>{
+					control: <InputControl><unknown>{
 						foo: 'bar'
 					}
 				});
