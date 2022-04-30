@@ -10,10 +10,10 @@ import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
 
-// todo: make this actually use InputControlBase
+// todo: make this actually use InputControl
 type InputControlConstructor = InstanceType<any>;
 // type InputControlConstructor = {
-// 	new (): InputControlBase
+// 	new (): InputControl
 // };
 type DeviceReader = (device: any, index: number) => any
 
