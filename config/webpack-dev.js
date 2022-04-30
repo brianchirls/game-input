@@ -56,16 +56,13 @@ module.exports = (env, options) => merge(common(env, options), {
 		// 	'.github.com'
 		// ],
 		static: {
-			directory: path.resolve(__dirname, '../build/site')
+			directory: path.resolve(__dirname, '../build')
 		},
 		host,
 		port
 	},
-	infrastructureLogging: {
-		level: 'warn'
-	},
 	output: {
-		path: path.resolve(__dirname, '../build/site'),
+		path: path.resolve(__dirname, '../build'),
 		publicPath: '/'
 	},
 	plugins: PLUGINS.concat(getExamples(options.mode).map(({ name }) => {

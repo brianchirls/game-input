@@ -1,7 +1,7 @@
-import ButtonInputControl from '../../controls/ButtonInputControl';
-import AxisInputControl from '../../controls/AxisInputControl';
-import Vector2InputControl from '../../controls/Vector2InputControl';
-import boolAsNum from '../../util/boolAsNum';
+import ButtonInputControl from '../controls/ButtonInputControl';
+import AxisInputControl from '../controls/AxisInputControl';
+import Vector2InputControl from '../controls/Vector2InputControl';
+import boolAsNum from '../util/boolAsNum';
 import { PollingDevice, PollingDeviceOptions } from '../Device';
 
 const buttonDefs = [

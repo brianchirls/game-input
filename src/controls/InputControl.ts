@@ -5,34 +5,27 @@ import EventEmitter from '../util/EventEmitter';
 type InputControlEvents = {
 	change: unknown
 };
-export abstract class InputControlBase<T = any> extends EventEmitter<InputControlEvents> {
-	static defaultValue: any = 0;
-
-	name = '';
-	parent: InputControlBase = null;
-	enabled = true;
-	children = new Map<string, InputControl>();
-	device: any = null;
-	processors = [] as Processor<T>[];
-
-	abstract read(): T;
-	abstract find(path?: string): InputControlBase | null;
-	abstract magnitude(val?: T): number;
-	abstract active(): boolean;
-}
 
 export interface InputControlOptions<T> {
 	name?: string;
-	parent?: InputControlBase;
+	parent?: InputControl;
 	enabled?: boolean;
 	device?: any;
 
 	processors?: Processor<T>[];
 	children?: Map<string, InputControl> | [string, InputControl][] | { [k: string]: InputControl };
-	active?: (ic: InputControlBase<T>) => boolean;
+	active?: (ic: InputControl<T>) => boolean;
 }
 
-export default class InputControl<T = number> extends InputControlBase<T> {
+export default class InputControl<T = any> extends EventEmitter<InputControlEvents> {
+	static defaultValue: any = 0;
+
+	name = '';
+	parent: InputControl = null;
+	enabled = true;
+	children = new Map<string, InputControl>();
+	device: any = null;
+	processors = [] as Processor<T>[];
 
 	constructor(readRaw?: (() => T) | InputControlOptions<T>, options?: InputControlOptions<T>) {
 		super();
@@ -94,7 +87,7 @@ export default class InputControl<T = number> extends InputControlBase<T> {
 		};
 	}
 
-	find(path?: string): InputControlBase | null {
+	find(path?: string): InputControl | null {
 		if (!path) {
 			return this;
 		}
