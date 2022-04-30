@@ -1,4 +1,4 @@
-import StickInputControl, { StickInputControlOptions } from '../../controls/StickInputControl';
+import StickInputControl, { StickInputControlOptions } from '../controls/StickInputControl';
 import { Device, DeviceOptions } from '../Device';
 
 type VirtualJoystickMode = 'dynamic' | 'static';

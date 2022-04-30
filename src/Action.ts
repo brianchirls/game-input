@@ -1,5 +1,5 @@
 import runProcessors, { Processor } from './util/runProcessors';
-import { InputControlBase } from './controls/InputControl';
+import InputControl from './controls/InputControl';
 import EventEmitter from './util/EventEmitter';
 
 /*
@@ -17,17 +17,17 @@ type ActionEvents = {
 }
 
 interface ActionBindOptions<ValueType> {
-	control?: InputControlBase<ValueType>;
+	control?: InputControl<ValueType>;
 	processors?: Processor<ValueType>[];
 	autoUpdate?: boolean;
 }
 
 interface ActionBinding<ValueType> {
-	control: InputControlBase<ValueType>;
+	control: InputControl<ValueType>;
 	processors?: Processor<ValueType>[];
 }
 
-type Bindings<ValueType> = (InputControlBase | ActionBindOptions<ValueType>)[];
+type Bindings<ValueType> = (InputControl | ActionBindOptions<ValueType>)[];
 
 interface ActionOptions<ValueType> {
 	bindings?: Bindings<ValueType>;
@@ -46,8 +46,8 @@ export default class Action<ValueType = number> extends EventEmitter<ActionEvent
 	bindings: ActionBinding<ValueType>[];
 	processors: Processor<ValueType>[];
 	readonly value: ValueType;
-	readonly activeControl: InputControlBase<ValueType>;
-	bind: (control: InputControlBase<ValueType> | ActionBindOptions<ValueType>, options?: ActionBindOptions<ValueType>) => number;
+	readonly activeControl: InputControl<ValueType>;
+	bind: (control: InputControl<ValueType> | ActionBindOptions<ValueType>, options?: ActionBindOptions<ValueType>) => number;
 	unbind: (index: number) => void;
 	update: () => void;
 
@@ -78,14 +78,14 @@ export default class Action<ValueType = number> extends EventEmitter<ActionEvent
 		todo: we need better CRUD methods for bindings and processors
 		*/
 		this.bind = (control, options) => {
-			if (!options && !(control instanceof InputControlBase)) {
+			if (!options && !(control instanceof InputControl)) {
 				options = control;
 			}
 			if (options && options.control) {
 				control = options.control;
 			}
 
-			if (!(control instanceof InputControlBase)) {
+			if (!(control instanceof InputControl)) {
 				// could we do this by duck-typing?
 				throw new Error('Binding requires an InputControl');
 			}

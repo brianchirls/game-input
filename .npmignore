@@ -4,14 +4,14 @@ config
 /examples
 !examples/util/*.js
 /examples/util/all-examples.js
-build/examples
+build
 tests
 **/*.test.js
 node_modules
 babel.config.js
 gh-pages*
 .editorconfig
-.eslintrc.js
+.eslintrc.json
 .eslintignore
 .gitattributes
 .gitignore

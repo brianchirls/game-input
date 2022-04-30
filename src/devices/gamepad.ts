@@ -1,19 +1,19 @@
 import {
 	buttons,
 	sticks
-} from './controlMap';
-import ButtonInputControl from '../../controls/ButtonInputControl';
-import StickInputControl from '../../controls/StickInputControl';
-import AxisInputControl from '../../controls/AxisInputControl';
+} from './gamepad/controlMap';
+import ButtonInputControl from '../controls/ButtonInputControl';
+import StickInputControl from '../controls/StickInputControl';
+import AxisInputControl from '../controls/AxisInputControl';
 import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
 
-// todo: make this actually use InputControlBase
+// todo: make this actually use InputControl
 type InputControlConstructor = InstanceType<any>;
 // type InputControlConstructor = {
-// 	new (): InputControlBase
+// 	new (): InputControl
 // };
 type DeviceReader = (device: any, index: number) => any
 
