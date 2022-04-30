@@ -24,10 +24,10 @@
 			"types": "./dist/types/browser.d.ts"
 		},
 		"./*": {
-			"require": "./dist/cjs/*",
-			"import": "./dist/esm/*",
-			"default": "./dist/esm/*",
-			"types": "./dist/esm/*"
+			"require": "./dist/cjs/*.js",
+			"import": "./dist/esm/*.js",
+			"default": "./dist/esm/*.js",
+			"types": "./dist/esm/*.d.ts"
 		}
 	},
 	"files": [
@@ -52,13 +52,13 @@
 		"start": "cross-env NODE_ENV=development webpack serve --config ./config/webpack-dev.js --mode development --progress",
 
 		"build:cjs": "rm -rf dist/cjs/ && tsc --target ES6 --module commonjs --outDir ./dist/cjs --allowJs",
-		"build:esm": "rm -rf dist/cjs/ && tsc --target ES6 --module ES6 --outDir ./dist/esm --allowJs",
+		"build:esm": "rm -rf dist/esm/ && tsc --target ES6 --module ES6 --outDir ./dist/esm --allowJs",
 		"build:bundle": "webpack --config ./config/webpack.lib.js",
+		"build:lib": "npm run build:cjs && npm run build:esm && npm run build:bundle",
 
 		"build:site:dev": "cross-env NODE_ENV=development rm -rf build/ && webpack --config ./config/webpack-dev.js --mode development",
 		"build:site": "cross-env NODE_ENV=production rm -rf build/ && webpack --config ./config/webpack-prod.js --mode production",
-		"build:types": "tsc --declaration --emitDeclarationOnly",
-		"build": "npm run build:types && npm run build:lib && npm run build:site",
+		"build": "npm run build:lib && npm run build:site",
 		"deploy": "gh-pages -d ./build",
 		"check-type": "tsc --noEmit",
 		"test": "cross-env NODE_ENV=test jest --verbose --coverage && npx package-check",
