@@ -58,7 +58,7 @@
 		"build:site": "cross-env NODE_ENV=production rm -rf build/ && webpack --config ./config/webpack-prod.js --mode production",
 		"build": "npm run build:lib && npm run build:site",
 		"deploy": "gh-pages -d ./build",
-		"check-type": "tsc --noEmit",
+		"check-types": "tsc --noEmit",
 		"test": "cross-env NODE_ENV=test jest --verbose --coverage && npx package-check",
 		"test:debug": "cross-env NODE_ENV=test node --inspect node_modules/.bin/jest --runInBand",
 		"test:watch:debug": "cross-env NODE_ENV=test node --inspect node_modules/.bin/jest --runInBand --watch",
