@@ -2,7 +2,6 @@
 	"coverageDirectory": "reports/coverage",
 	"projects": [
 		{
-			"preset": "ts-jest",
 			"displayName": "test",
 			"clearMocks": true,
 			"roots": [
@@ -18,10 +17,6 @@
 				"<rootDir>/src/**/__tests__/**/*.{js,ts}",
 				"<rootDir>/src/**/*.{spec,test}.{js,ts}"
 			],
-			"testEnvironment": "node",
-			"transform": {
-			  "^.+\\.ts$": "ts-jest"
-			},
 			"transformIgnorePatterns": [
 				"[/\\\\]node_modules[/\\\\].+\\.(js|ts)$",
 				"^.+\\.module\\.(css|sass|scss)$"
@@ -34,9 +29,7 @@
 				"\\.(css|less)$": "<rootDir>/scripts/testMock.js"
 			},
 			"moduleFileExtensions": [
-				"web.js",
 				"js",
-				"web.ts",
 				"ts",
 				"json",
 				"node"

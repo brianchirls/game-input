@@ -1,6 +1,18 @@
-/* eslint-env node */
-const babelConfig = process.env.NODE_ENV === 'test' ?
-	require('./config/babel.node') :
-	require('./config/babel.browser');
-
-module.exports = babelConfig;
+module.exports = {
+	presets: [
+		['@babel/preset-typescript', { allowDeclareFields: true }],
+		[
+			'@babel/env',
+			{
+				targets: process.env.WEBPACK_SERVE ? {
+					esmodules: true
+				} : null
+			}
+		]
+	],
+	plugins: [
+		['@babel/plugin-transform-typescript', { allowDeclareFields: true }],
+		['@babel/plugin-proposal-class-properties'],
+		['@babel/plugin-transform-runtime']
+	]
+};
