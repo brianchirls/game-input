@@ -1,4 +1,4 @@
-import ButtonInputControl from '../controls/ButtonInputControl';
+import ButtonInputControl, { ButtonInputControlOptions } from '../controls/ButtonInputControl';
 import boolAsNum from '../util/boolAsNum';
 import { Device, DeviceOptions } from '../Device';
 
@@ -19,13 +19,35 @@ interface KeyboardDeviceOptions extends DeviceOptions {
 	keyCode: boolean;
 }
 
-interface GetControlOptions {
+export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOptions, 'device' | 'children'> {
+	/**
+	 * filter may be one of the following:
+	 * - string: [name of key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) on the keyboard to respond to
+	 * - array of strings: responds to any of the keys in the array
+	 * - function: a callback that gets called with a Set of active key names and
+	 * is expected to return a boolean, whether or not to respond to the keyboard event.
+	 */
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
 }
 
 export default class Keyboard extends Device {
-	declare getControl: (name: string, options?: GetControlOptions) => ButtonInputControl;
+	/**
+	 * Create a {@link ButtonInputControl | button control} for a single key or combination of keys.
+	 * Key names correspond to the [names used by DOM `KeyboardEvent.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
+	 *
+	 * @param name The name of the control. If no `filter` option is provided, this
+	 * also specifies which key on the keyboard to use.
+	 */
+	declare getControl: (name: string, options?: KeyboardGetControlOptions) => ButtonInputControl;
 
+	/**
+	 * Always true.
+	 */
+	declare readonly connected: boolean;
+
+	/**
+	 * @param options options
+	 */
 	constructor({
 		enabled = true,
 		keyCode = false
@@ -102,7 +124,8 @@ export default class Keyboard extends Device {
 						`key:${filter}` :
 						String(name || filter)
 			}, opts, {
-				device: this
+				device: this,
+				children: null
 			}));
 		};
 

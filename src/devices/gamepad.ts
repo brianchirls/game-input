@@ -2,10 +2,12 @@ import {
 	buttons,
 	sticks
 } from './gamepad/controlMap';
-import ButtonInputControl from '../controls/ButtonInputControl';
-import StickInputControl from '../controls/StickInputControl';
+import ButtonInputControl, { ButtonInputControlOptions } from '../controls/ButtonInputControl';
+import StickInputControl, { StickInputControlOptions } from '../controls/StickInputControl';
 import AxisInputControl from '../controls/AxisInputControl';
+import { InputControlOptions } from '../controls/InputControl';
 import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
+import { WildcardHandler } from 'mitt';
 
 const standardControlNames = new Set(buttons);
 sticks.forEach(n => standardControlNames.add(n));
@@ -27,19 +29,59 @@ const readers = new Map<InputControlConstructor, DeviceReader>([
 ]);
 
 type GamepadEvents = DeviceEvents & {
-	connected: unknown;
-	disconnected: unknown;
+	connected: undefined;
+	disconnected: undefined;
 }
 
 interface GamepadOptions extends PollingDeviceOptions {
 	index: number;
 }
 
+/**
+ * Emitted when a Gamepad device is connected.
+ * @event
+ */
+export type OnConnected = () => void;
+
+/**
+ * Available options depend on which control is requested.
+ */
+export type GamepadGetControlOptions = Omit<ButtonInputControlOptions | StickInputControlOptions | InputControlOptions<number>, 'device' | 'children'>;
+
 export default class Gamepad extends PollingDevice<GamepadEvents> {
-	controls: () => IterableIterator<string>;
-	update: () => void;
+	declare getControl: {
+		(name: 'leftStick' | 'rightStick', options?: GamepadGetControlOptions): StickInputControl;
+		(name: 'leftStickX' | 'leftStickY' | 'rightStickX' | 'rightStickY', options?: GamepadGetControlOptions): AxisInputControl;
+		(name: string, options?: GamepadGetControlOptions): ButtonInputControl;
+	};
+
+	/** [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) object */
 	readonly device: globalThis.Gamepad;
+
+	/**
+	 * A string containing some information about the controller, provided
+	 * by the browser. Empty if no Gamepad device has been connected.
+	 */
 	readonly id: string;
+
+	/**
+	 * returns an Iterable of available control names.
+	 */
+	controls: () => IterableIterator<string>;
+
+	update: () => void;
+
+	declare on: {
+		(type: 'connected', handler: OnConnected): void;
+
+		/**
+		 * Emitted when the Gamepad device is disconnected.
+		 * @event
+		 */
+		(type: 'disconnected', handler: () => void): void;
+
+		(type: '*', handler: WildcardHandler<GamepadEvents>): void;
+	};
 
 	constructor(options: Partial<GamepadOptions> = {}) {
 		const {
@@ -126,7 +168,7 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 			}
 		};
 
-		this.getControl = (name: string, options: any) => {
+		this.getControl = (name: string, options?: GamepadGetControlOptions) => {
 			const ControlConstructor = controlDefs.get(name);
 			if (!ControlConstructor) {
 				throw new Error('Control not found');
@@ -144,7 +186,8 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 			return new ControlConstructor(read, Object.assign({
 				name
 			}, options, {
-				device: this
+				device: this,
+				children: null
 			}));
 		};
 
@@ -164,7 +207,7 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 				get: () => lastDevice
 			},
 			id: {
-				get: () => lastDevice && lastDevice.id || null
+				get: () => lastDevice && lastDevice.id || ''
 			},
 			connected: {
 				get: () => !!lastDevice && lastDevice.connected

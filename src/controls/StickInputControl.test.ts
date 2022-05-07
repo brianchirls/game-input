@@ -1,7 +1,7 @@
 import ButtonInputControl from './ButtonInputControl';
 import StickInputControl from './StickInputControl';
 
-const buttonNames = ['left', 'right', 'up', 'down'];
+const buttonNames = ['left', 'right', 'up', 'down'] as const;
 
 function getButtons(control: StickInputControl) {
 	const obj = {} as { [x: string]: ButtonInputControl };
