@@ -14,7 +14,7 @@ export default class EventEmitter<Events extends EventsBase> {
 		<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;
 		(type: '*', handler: WildcardHandler<Events>): void;
 	};
-	emit: {
+	protected emit: {
 		<Key extends keyof Events>(type: Key, event: Events[Key]): void;
 		<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void;
 	};

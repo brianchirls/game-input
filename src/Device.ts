@@ -28,12 +28,12 @@ export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvent
 
 	/**
 	 * Devices that are not enabled will not emit any events, and read operations
-	 * will always return the default value. Typically 0.
+	 * will always return the default value, which is typically 0.
 	 */
 	enabled: boolean;
 
 	/**
-	 * Whether a devices is currently connected.
+	 * `true` if device is currently connected.
 	 */
 	readonly connected: boolean;
 }

@@ -8,7 +8,7 @@ import PressInteraction from '../src/interactions/PressInteraction';
 import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
 import VirtualJoystick from '../src/devices/virtualjoystick';
 import domView from '../src/devices/virtualjoystick/domView';
-import { AxisInputControl, StickInputControl } from '../src';
+import { StickInputControl } from '../src';
 
 // Devices
 const gamepad = new Gamepad();
@@ -29,7 +29,7 @@ const rightTouch = new VirtualJoystick({
 // Controls
 const leftStick = gamepad.getControl('leftStick') as StickInputControl;
 // const downButton = leftStick.find('down');
-const rightStickHoriz = gamepad.getControl('rightStick').find('x') as AxisInputControl;
+const rightStickHoriz = gamepad.getControl('rightStick').x;
 
 const kbdWASD = new DPadComposite({
 	up: kbd.getControl('KeyW'),
