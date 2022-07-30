@@ -4,7 +4,7 @@ export * from './';
 export { default as Gamepad } from './devices/gamepad';
 export { default as Keyboard } from './devices/keyboard';
 export { default as Pointer } from './devices/pointer';
-export { default as VirtualJoystick } from './devices/virtualjoystick';
+export { default as VirtualStick } from './devices/virtualstick';
 
 // controls
 export { default as InputControl } from './controls/InputControl';

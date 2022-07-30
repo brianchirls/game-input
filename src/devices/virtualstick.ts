@@ -1,14 +1,12 @@
 import StickInputControl, { StickInputControlOptions } from '../controls/StickInputControl';
 import { Device, DeviceOptions } from '../Device';
 
-type VirtualJoystickMode = 'dynamic' | 'static';
-
-interface VirtualJoystickOptions extends DeviceOptions {
+export interface VirtualStickOptions extends DeviceOptions {
 	element: HTMLElement;
 	radius: number;
 	x: number;
 	y: number;
-	mode: VirtualJoystickMode;
+	mode: 'dynamic' | 'static';
 	lockX: boolean;
 	lockY: boolean;
 	touch: boolean;
@@ -19,17 +17,23 @@ interface VirtualJoystickOptions extends DeviceOptions {
 	enabled: boolean;
 }
 
-export default class VirtualJoystick extends Device {
+/**
+ * An on-screen virtual stick device.
+ *
+ * A single stick control is provided per virtual device, regardless of
+ * the name given.
+ */
+export default class VirtualStick extends Device {
 	declare getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
 	x: number;
 	y: number;
 	radius: number;
 	readonly pointerType: string;
-	readonly mode: VirtualJoystickMode;
+	readonly mode: 'dynamic' | 'static';
 	readonly timestamp: number;
 	readonly element: HTMLElement;
 
-	constructor(options: Partial<VirtualJoystickOptions> = {}) {
+	constructor(options: Partial<VirtualStickOptions> = {}) {
 		super();
 
 		const {

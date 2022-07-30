@@ -6,8 +6,8 @@ import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
 import PressInteraction from '../src/interactions/PressInteraction';
 import ReleaseInteraction from '../src/interactions/ReleaseInteraction';
-import VirtualJoystick from '../src/devices/virtualjoystick';
-import domView from '../src/devices/virtualjoystick/domView';
+import VirtualStick from '../src/devices/virtualstick';
+import domView from '../src/devices/virtualstick/domView';
 import { StickInputControl } from '../src';
 
 // Devices
@@ -19,10 +19,10 @@ const pointer = new Pointer({
 	touch: false,
 	enabled: false
 });
-const leftTouch = new VirtualJoystick({
+const leftTouch = new VirtualStick({
 	filter: evt => evt.pageX < Math.max(200, window.innerWidth * 0.4)
 });
-const rightTouch = new VirtualJoystick({
+const rightTouch = new VirtualStick({
 	filter: evt => evt.pageX > window.innerWidth - Math.max(200, window.innerWidth * 0.4)
 });
 
@@ -43,15 +43,15 @@ const rotateArrowKeys = new AxisComposite({
 	positive: kbd.getControl('ArrowRight')
 });
 
-const leftTouchJoystick = leftTouch.getControl();
-const rightTouchJoystick = rightTouch.getControl();
+const leftTouchStick = leftTouch.getControl();
+const rightTouchStick = rightTouch.getControl();
 
 // Actions
 const moveAction = new Action<[number, number]>({
 	bindings: [
 		leftStick,
 		kbdWASD,
-		leftTouchJoystick,
+		leftTouchStick,
 		{
 			control: pointer.getControl('delta'),
 			processors: [
@@ -67,7 +67,7 @@ const rotateAction = new Action<number>({
 	bindings: [
 		rightStickHoriz,
 		rotateArrowKeys,
-		rightTouchJoystick.find('x'),
+		rightTouchStick.find('x'),
 		pointer.getControl('wheel')
 	]
 });
@@ -119,8 +119,8 @@ function update(t = performance.now()) {
 	requestAnimationFrame(update);
 }
 
-domView(leftTouchJoystick);
-domView(rightTouchJoystick);
+domView(leftTouchStick);
+domView(rightTouchStick);
 
 update();
 
@@ -133,7 +133,7 @@ const devices = [
 
 if (leftTouch.connected) {
 	devices.push([
-		'Virtual Joystick',
+		'Virtual Stick',
 		{
 			get enabled() {
 				return leftTouch.enabled;
