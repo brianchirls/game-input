@@ -93,12 +93,12 @@ describe('util', () => {
 
 			const dest = {
 				foo: ''
-			};
+			} as any;
 
 			copyOptions(dest, src);
 
 			expect(dest.foo).toEqual(src.foo);
-			expect(<any>dest.baz).toBeUndefined();
+			expect(dest.baz).toBeUndefined();
 		});
 
 		it('should not overwrite functions/methods', () => {
