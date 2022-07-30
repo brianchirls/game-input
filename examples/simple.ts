@@ -53,7 +53,7 @@ const rightTouchStick = rightTouch.getControl();
 /**
  * Actions
  */
-const moveAction = new Action<[number, number]>({
+const moveAction = new Action({
 	bindings: [
 		leftStick,
 		kbdWASD,
@@ -61,7 +61,7 @@ const moveAction = new Action<[number, number]>({
 	]
 });
 
-const rotateAction = new Action<number>({
+const rotateAction = new Action({
 	bindings: [
 		rightStickHoriz,
 		rotateArrowKeys,
