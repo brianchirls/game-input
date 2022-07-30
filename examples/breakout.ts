@@ -7,10 +7,7 @@ import VirtualStick from '../src/devices/virtualstick';
 import domView from '../src/devices/virtualstick/domView';
 
 import './breakout.css';
-
-
-const sceneWidth = 480;
-const sceneHeight = 320;
+import PressInteraction from '../src/interactions/PressInteraction';
 
 const canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
@@ -28,6 +25,58 @@ const startButton = document.createElement('button');
 startButton.id = 'start-button';
 startButton.innerText = 'Start Game';
 document.body.appendChild(startButton);
+
+/**
+ * Initialize Controls
+ */
+const gamepad = new Gamepad();
+// const pointer = new Pointer({
+// 	touch: false
+// });
+
+const kbd = new Keyboard({
+	keyCode: true
+});
+const arrowKeys = new AxisComposite({
+	negative: kbd.getControl('arrowleft'),
+	positive: kbd.getControl('arrowright')
+});
+const WASDKeys = new AxisComposite({
+	negative: kbd.getControl('KeyA'),
+	positive: kbd.getControl('KeyD')
+});
+
+const virtualStick = new VirtualStick({
+	lockY: true,
+	element: canvas
+}).getControl();
+domView(virtualStick);
+
+const moveAction = new Action({
+	bindings: [
+		gamepad.getControl('leftStick').x,
+		gamepad.getControl('rightStick').x,
+		arrowKeys,
+		WASDKeys,
+		virtualStick.x/*,
+		{
+			control: pointer.getControl('delta').find('x'),
+			processors: [
+				val => val / 10
+			]
+		}*/
+	]
+});
+
+const pressStart = new PressInteraction(
+	new Action([
+		gamepad.getControl('start'),
+		kbd.getControl('Enter')
+	])
+);
+
+const sceneWidth = 480;
+const sceneHeight = 320;
 
 const canvasX = (x: number) => x / sceneWidth * canvas.width;
 const canvasY = (y: number) => y / sceneHeight * canvas.height;
@@ -142,47 +191,6 @@ function draw() {
 	drawLives();
 }
 
-// controls
-const gamepad = new Gamepad();
-// const pointer = new Pointer({
-// 	touch: false
-// });
-
-const kbd = new Keyboard({
-	keyCode: true
-});
-const arrowKeys = new AxisComposite({
-	negative: kbd.getControl('arrowleft'),
-	positive: kbd.getControl('arrowright')
-});
-const WASDKeys = new AxisComposite({
-	negative: kbd.getControl('KeyA'),
-	positive: kbd.getControl('KeyD')
-});
-
-const virtualStick = new VirtualStick({
-	lockY: true,
-	element: canvas
-}).getControl();
-domView(virtualStick);
-
-const moveAction = new Action({
-	bindings: [
-		gamepad.getControl('leftStick').x,
-		gamepad.getControl('rightStick').x,
-		arrowKeys,
-		WASDKeys,
-		virtualStick.x/*,
-		{
-			control: pointer.getControl('delta').find('x'),
-			processors: [
-				val => val / 10
-			]
-		}*/
-	]
-});
-
-
 let last = performance.now();
 function update(t = performance.now()) {
 	const delta = t - last;
@@ -272,3 +280,9 @@ resize();
 initialize();
 
 update();
+
+pressStart.on('complete', () => {
+	if (!playing) {
+		startGame();
+	}
+});
