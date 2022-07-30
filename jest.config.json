@@ -1,5 +1,13 @@
 {
 	"coverageDirectory": "reports/coverage",
+	"coverageReporters": [
+		"clover",
+		"json",
+		"json-summary",
+		"lcov",
+		"text",
+		"text-summary"
+	],
 	"projects": [
 		{
 			"displayName": "test",
