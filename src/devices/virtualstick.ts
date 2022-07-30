@@ -2,19 +2,84 @@ import StickInputControl, { StickInputControlOptions } from '../controls/StickIn
 import { Device, DeviceOptions } from '../Device';
 
 export interface VirtualStickOptions extends DeviceOptions {
+	/**
+	 * HTML element on which pointer events are registered
+	 * default: `document.body`
+	 */
 	element: HTMLElement;
+
+	/**
+	 * radius: maximum distance from center point, at which the control is fully extended
+	 * default: `60`
+	 */
 	radius: number;
+
+	/**
+	 * horizontal position on screen of center point (pixels)
+	 * default: `0`
+	 */
 	x: number;
+
+	/**
+	  * vertical position on screen of center point (pixels)
+	  * default: `0`
+	  */
 	y: number;
+
+	/**
+	 * placement mode
+	 * - dynamic: center position is wherever the pointer started
+	 * - static: fixed center position, defined by `x` and `y`
+	 * default: `'dynamic'`
+	 */
 	mode: 'dynamic' | 'static';
+
+	/**
+	 * If true, x value will always be zero. Used for vertical sliders.
+	 * default: `false`
+	 */
 	lockX: boolean;
+
+	/**
+	 * If true, y value will always be zero. Used for horizontal sliders.
+	 * default: `false`
+	 */
 	lockY: boolean;
+
+	/**
+	 * whether to respond to touch pointer events
+	 * default: `true`
+	 * */
 	touch: boolean;
+
+	/**
+	 * whether to respond to pen pointer events
+	 * default: `true`
+	 * */
 	pen: boolean;
+
+	/**
+	 * whether to respond to mouse pointer events
+	 * default: `false`
+	 * */
 	mouse: boolean;
+
+	/**
+	 * A callback function that receives the `pointerdown` event
+	 * and returns a boolean to determine whether to initiate
+	 * the virtual stick.
+	 *
+	 * This may be used to restrict a virtual stick to a certain
+	 * area of the screen or apply other constraints.
+	 */
 	filter: (evt: PointerEvent) => boolean;
+
+	/**
+	 * whether to set CSS `touch-action` to `'none'` on the element.
+	 * This prevents other browser drag events, like text highlighting.
+	 * default: `true`
+	 */
 	touchActionStyle: boolean;
-	enabled: boolean;
 }
 
 /**
@@ -24,13 +89,48 @@ export interface VirtualStickOptions extends DeviceOptions {
  * the name given.
  */
 export default class VirtualStick extends Device {
+	/**
+	 * Will always return a `StickInputControl`.
+	 * Name set on the control but is otherwise ignored.
+	 */
 	declare getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
+
+	/**
+	 * horizontal position on screen of center point (pixels)
+	 */
 	x: number;
+
+	/**
+	 * vertical position on screen of center point (pixels)
+	 */
 	y: number;
+
+	/**
+	 * radius: maximum distance from center point, at which the control is fully extended
+	 */
 	radius: number;
+
+	/**
+	 * Type of pointer currently or most recently activating the virtual stick.
+	 * mouse, touch or pen
+	 */
 	readonly pointerType: string;
+
+	/**
+	 * placement mode
+	 * - dynamic: center position is wherever the pointer started
+	 * - static: fixed center position, defined by `x` and `y`
+	 */
 	readonly mode: 'dynamic' | 'static';
+
+	/**
+	 * time in milliseconds of the most recent change
+	 */
 	readonly timestamp: number;
+
+	/**
+	 * HTML element on which pointer events are registered
+	 */
 	readonly element: HTMLElement;
 
 	constructor(options: Partial<VirtualStickOptions> = {}) {
@@ -44,7 +144,7 @@ export default class VirtualStick extends Device {
 			touch = true,
 			pen = true,
 			mouse = false,
-			filter = null,
+			filter,
 			touchActionStyle = true
 		} = options;
 		let {
@@ -161,7 +261,9 @@ export default class VirtualStick extends Device {
 			};
 
 			return new StickInputControl(read, Object.assign(
-				{},
+				{
+					name
+				},
 				options,
 				{
 					device: this,
