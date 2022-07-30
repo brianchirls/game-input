@@ -12,6 +12,11 @@
 			"title": "Breakout Clone",
 			"entry": "breakout",
 			"category": "demos"
+		},
+		{
+			"title": "Accessible Menu",
+			"entry": "menu",
+			"category": "demos"
 		}
 	]
 }
