@@ -4,8 +4,13 @@
 	},
 	"examples": [
 		{
-			"title": "Simple",
+			"title": "Simple Movement",
 			"entry": "simple",
+			"category": "demos"
+		},
+		{
+			"title": "Breakout Clone",
+			"entry": "breakout",
 			"category": "demos"
 		}
 	]
