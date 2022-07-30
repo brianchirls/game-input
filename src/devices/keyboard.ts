@@ -8,7 +8,7 @@ Emit 'change' event only to controls relevant to changed key.
 Currently, we emit to every control, which is ineffecient.
 */
 
-interface KeyboardDeviceOptions extends DeviceOptions {
+export interface KeyboardDeviceOptions extends DeviceOptions {
 	/**
 	 * Optionally use layout-independent Key Code instead of
 	 * key value string. (default: `false`)
@@ -30,6 +30,9 @@ export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOption
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
 }
 
+/**
+ * A Keyboard device.
+ */
 export default class Keyboard extends Device {
 	/**
 	 * Create a {@link controls/ButtonInputControl.ButtonInputControl | button control} for a single key or combination of keys.

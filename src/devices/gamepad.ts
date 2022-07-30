@@ -34,7 +34,7 @@ type GamepadEvents = DeviceEvents & {
 	disconnected: undefined;
 }
 
-interface GamepadOptions extends ThrottledDeviceOptions {
+export interface GamepadOptions extends ThrottledDeviceOptions {
 	index: number;
 }
 

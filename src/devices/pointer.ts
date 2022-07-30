@@ -159,7 +159,7 @@ todo:
   or I guess that could be done by a Processor
 */
 
-interface PointerDeviceOptions extends ThrottledDeviceOptions {
+export interface PointerDeviceOptions extends ThrottledDeviceOptions {
 	element: HTMLElement;
 	touch: boolean;
 	pen: boolean;
