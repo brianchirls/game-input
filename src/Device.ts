@@ -46,7 +46,7 @@ export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvent
 
 export interface ThrottledDeviceOptions extends DeviceOptions {
 	/**
-	 * For {@link ThrottledDevice | throttled devices}, `updatePeriod` determines the minimal
+	 * For {@link Device.ThrottledDevice | throttled devices}, `updatePeriod` determines the minimal
 	 * length of time between samples. Shorter periods (and therefore higher frequency)
 	 * might improve responsiveness but may impact performance and limit accuracy
 	 * of "delta" values between samples.
@@ -56,7 +56,7 @@ export interface ThrottledDeviceOptions extends DeviceOptions {
 
 /**
  * An abstract class for devices whose input may be throttled to prevent changes
- * happening too frequently. Derived classes typically take {@link ThrottledDeviceOptions}
+ * happening too frequently. Derived classes typically take {@link Device.ThrottledDeviceOptions}
  * as a constructor argument.
  *
  * Extend this class to create new throttled devices.
