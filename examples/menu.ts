@@ -1,7 +1,7 @@
 import html from 'html-loader!./menu.html';
 import { Action } from '../src';
-import Gamepad from '../src/devices/gamepad';
-import Keyboard from '../src/devices/keyboard';
+import Gamepad from '../src/devices/Gamepad';
+import Keyboard from '../src/devices/Keyboard';
 import PressInteraction from '../src/interactions/PressInteraction';
 import './menu.css';
 

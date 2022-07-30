@@ -16,7 +16,7 @@ export type DeviceEvents = {
 };
 
 /**
- * An abstract class for hardware devices, such as {@link devices/keyboard.Keyboard}.
+ * An abstract class for hardware devices, such as {@link devices/Keyboard.Keyboard}.
  *
  * Extend this class to create new devices.
  */

@@ -1,10 +1,10 @@
 export * from './';
 
 // devices
-export { default as Gamepad } from './devices/gamepad';
-export { default as Keyboard } from './devices/keyboard';
-export { default as Pointer } from './devices/pointer';
-export { default as VirtualStick } from './devices/virtualstick';
+export { default as Gamepad } from './devices/Gamepad';
+export { default as Keyboard } from './devices/Keyboard';
+export { default as Pointer } from './devices/Pointer';
+export { default as VirtualStick } from './devices/VirtualStick';
 
 // controls
 export { default as InputControl } from './controls/InputControl';

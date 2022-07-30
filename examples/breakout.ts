@@ -1,9 +1,9 @@
-import Gamepad from '../src/devices/gamepad';
-// import Pointer from '../src/devices/pointer';
-import Keyboard from '../src/devices/keyboard';
+import Gamepad from '../src/devices/Gamepad';
+// import Pointer from '../src/devices/Pointer';
+import Keyboard from '../src/devices/Keyboard';
 import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
-import VirtualStick from '../src/devices/virtualstick';
+import VirtualStick from '../src/devices/VirtualStick';
 import domView from '../src/devices/virtualstick/domView';
 
 import './breakout.css';

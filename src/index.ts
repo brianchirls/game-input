@@ -3,9 +3,9 @@
 export { default as Action } from './Action';
 
 // devices
-// export { default as Gamepad } from './devices/gamepad';
-// export { default as Keyboard } from './devices/keyboard';
-// export { default as Pointer } from './devices/pointer';
+// export { default as Gamepad } from './devices/Gamepad';
+// export { default as Keyboard } from './devices/Keyboard';
+// export { default as Pointer } from './devices/Pointer';
 
 // controls
 export { default as InputControl } from './controls/InputControl';

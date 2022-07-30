@@ -1,10 +1,10 @@
 import html from 'html-loader!./simple.html';
-import Gamepad from '../src/devices/gamepad';
-import Keyboard from '../src/devices/keyboard';
+import Gamepad from '../src/devices/Gamepad';
+import Keyboard from '../src/devices/Keyboard';
 import DPadComposite from '../src/controls/DPadComposite';
 import AxisComposite from '../src/controls/AxisComposite';
 import Action from '../src/Action';
-import VirtualStick from '../src/devices/virtualstick';
+import VirtualStick from '../src/devices/VirtualStick';
 import domView from '../src/devices/virtualstick/domView';
 
 document.body.innerHTML = html;
