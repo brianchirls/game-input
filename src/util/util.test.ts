@@ -98,7 +98,7 @@ describe('util', () => {
 			copyOptions(dest, src);
 
 			expect(dest.foo).toEqual(src.foo);
-			expect((<any>dest).baz).toBeUndefined();
+			expect(<any>dest.baz).toBeUndefined();
 		});
 
 		it('should not overwrite functions/methods', () => {
