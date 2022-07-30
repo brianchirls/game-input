@@ -1,0 +1,41 @@
+<style>
+	#thing {
+		position: absolute;
+		width: 60px;
+		height: 90px;
+		margin: -30px -45px;
+	}
+
+	#controls {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		border: 1px solid white;
+		background-color: rgba(0, 0, 0, 0.6);
+		color: rgb(255, 255, 255);
+		display: flex;
+		flex-direction: column;
+		padding: 20px;
+	}
+
+	#instructions {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		/* width: 0; */
+		padding: 1em;
+		background-color: rgba(125, 125, 125, 0.5);
+	}
+</style>
+<svg id="thing" viewbox="0 0 40 60">
+	<polygon points="20,0 0,60 40,60" style="fill: rebeccapurple;"/>
+</svg>
+<div id="instructions">
+	<p>Move: left gamepad stick, WASD keys or left virtual stick</p>
+	<p>Rotate: right gamepad stick, left/right arrow keys or right virtual stick</p>
+</div>
+<!-- <div id="controls">
+	<label><input type="checkbox" id="gamepad"> Gamepad</label>
+	<label><input type="checkbox"> Keyboard</label>
+	<label><input type="checkbox"> Virtual Stick</label>
+</div> -->
