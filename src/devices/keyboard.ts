@@ -32,7 +32,7 @@ export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOption
 
 export default class Keyboard extends Device {
 	/**
-	 * Create a {@link ButtonInputControl | button control} for a single key or combination of keys.
+	 * Create a {@link controls/ButtonInputControl.ButtonInputControl | button control} for a single key or combination of keys.
 	 * Key names correspond to the [names used by DOM `KeyboardEvent.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
 	 *
 	 * @param name The name of the control. If no `filter` option is provided, this
