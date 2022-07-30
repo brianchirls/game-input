@@ -2,7 +2,7 @@ import ButtonInputControl from '../controls/ButtonInputControl';
 import AxisInputControl from '../controls/AxisInputControl';
 import Vector2InputControl from '../controls/Vector2InputControl';
 import boolAsNum from '../util/boolAsNum';
-import { PollingDevice, PollingDeviceOptions } from '../Device';
+import { ThrottledDevice, ThrottledDeviceOptions } from '../Device';
 
 const buttonDefs = [
 	{
@@ -138,7 +138,7 @@ todo:
   or I guess that could be done by a Processor
 */
 
-interface PointerDeviceOptions extends PollingDeviceOptions {
+interface PointerDeviceOptions extends ThrottledDeviceOptions {
 	element: HTMLElement;
 	touch: boolean;
 	pen: boolean;
@@ -146,7 +146,7 @@ interface PointerDeviceOptions extends PollingDeviceOptions {
 	touchActionStyle: boolean;
 }
 
-export default class Pointer extends PollingDevice {
+export default class Pointer extends ThrottledDevice {
 	readonly pointerType: 'pen' | 'mouse' | 'touch' | '';
 
 	constructor(options: Partial<PointerDeviceOptions> = {}) {

@@ -1,12 +1,13 @@
 import {
 	buttons,
+	buttonIndexes,
 	sticks
 } from './gamepad/controlMap';
 import ButtonInputControl, { ButtonInputControlOptions } from '../controls/ButtonInputControl';
 import StickInputControl, { StickInputControlOptions } from '../controls/StickInputControl';
 import AxisInputControl from '../controls/AxisInputControl';
 import { InputControlOptions } from '../controls/InputControl';
-import { DeviceEvents, PollingDevice, PollingDeviceOptions } from '../Device';
+import { DeviceEvents, PollingDevice, ThrottledDeviceOptions } from '../Device';
 import { WildcardHandler } from 'mitt';
 
 const standardControlNames = new Set(buttons);
@@ -33,7 +34,7 @@ type GamepadEvents = DeviceEvents & {
 	disconnected: undefined;
 }
 
-interface GamepadOptions extends PollingDeviceOptions {
+interface GamepadOptions extends ThrottledDeviceOptions {
 	index: number;
 }
 
@@ -48,11 +49,25 @@ export type OnConnected = () => void;
  */
 export type GamepadGetControlOptions = Omit<ButtonInputControlOptions | StickInputControlOptions | InputControlOptions<number>, 'device' | 'children'>;
 
+/**
+ * A Device driven by the [Web Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API).
+ *
+ * Currently a [Standard Gamepad mapping](https://w3c.github.io/gamepad/#dfn-standard-gamepad) is assumed.
+ *
+ * Note that since the Gamepad API does not currently support change events,
+ * this is a polling device and therefore requires calling `.update()` repeatedly
+ * to update values and emit change events.
+ */
 export default class Gamepad extends PollingDevice<GamepadEvents> {
 	declare getControl: {
+		/** Two-dimensional stick inputs */
 		(name: 'leftStick' | 'rightStick', options?: GamepadGetControlOptions): StickInputControl;
+
+		/** One-dimensional, single axis of each stick */
 		(name: 'leftStickX' | 'leftStickY' | 'rightStickX' | 'rightStickY', options?: GamepadGetControlOptions): AxisInputControl;
-		(name: string, options?: GamepadGetControlOptions): ButtonInputControl;
+
+		/** Buttons. Some provide partial, "analog" values while others are either pressed or not. */
+		(name: keyof typeof buttonIndexes, options?: GamepadGetControlOptions): ButtonInputControl;
 	};
 
 	/** [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad) object */
@@ -68,8 +83,6 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 	 * returns an Iterable of available control names.
 	 */
 	controls: () => IterableIterator<string>;
-
-	update: () => void;
 
 	declare on: {
 		(type: 'connected', handler: OnConnected): void;

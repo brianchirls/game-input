@@ -1,7 +1,7 @@
 import InputControl from './controls/InputControl';
 import EventEmitter from './util/EventEmitter';
 
-export interface DeviceOptions {
+export type DeviceOptions = {
 	/**
 	 * Determines initial value for `.enabled`, whether devices is initially
 	 * enabled upon creation.
@@ -9,17 +9,22 @@ export interface DeviceOptions {
 	 * default: true
 	 */
 	enabled?: boolean;
-}
+};
 
 export type DeviceEvents = {
 	change: unknown;
 };
 
+/**
+ * An abstract class for hardware devices, such as {@link devices/keyboard.Keyboard}.
+ *
+ * Extend this class to create new devices.
+ */
 export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvents> extends EventEmitter<DeviceEventsType> {
 	/**
 	 * Create a new InputControl object attached to the device.
 	 */
-	getControl: (name: string, options?: any) => InputControl<any>;
+	getControl: (name: any, options?: any) => InputControl<any>;
 
 	/**
 	 * Remove any event listeners and free up any resources.
@@ -38,9 +43,10 @@ export abstract class Device<DeviceEventsType extends DeviceEvents = DeviceEvent
 	readonly connected: boolean;
 }
 
-export interface PollingDeviceOptions extends DeviceOptions {
+
+export interface ThrottledDeviceOptions extends DeviceOptions {
 	/**
-	 * For devices that poll hardware, `updatePeriod` determines the minimal
+	 * For {@link ThrottledDevice | throttled devices}, `updatePeriod` determines the minimal
 	 * length of time between samples. Shorter periods (and therefore higher frequency)
 	 * might improve responsiveness but may impact performance and limit accuracy
 	 * of "delta" values between samples.
@@ -48,11 +54,32 @@ export interface PollingDeviceOptions extends DeviceOptions {
 	updatePeriod?: number;
 }
 
-export abstract class PollingDevice<DeviceEventsType extends DeviceEvents = DeviceEvents> extends Device<DeviceEventsType> {
+/**
+ * An abstract class for devices whose input may be throttled to prevent changes
+ * happening too frequently. Derived classes typically take {@link ThrottledDeviceOptions}
+ * as a constructor argument.
+ *
+ * Extend this class to create new throttled devices.
+ */
+export abstract class ThrottledDevice<DeviceEventsType extends DeviceEvents = DeviceEvents> extends Device<DeviceEventsType> {
 	/**
 	 * The time (DOMHighResTimeStamp) of the last input read from the device hardware,
 	 * in milliseconds, representing time since "time origin," or the beginning of
 	 * the document's lifetime.
 	 */
 	readonly timestamp: number;
+}
+
+/**
+ * An abstract class for devices that require polling, since the underlying hardware
+ * API may not provide any events triggered by value changes.
+ *
+ * Extend this class to create new polling devices.
+ */
+export abstract class PollingDevice<DeviceEventsType extends DeviceEvents = DeviceEvents> extends ThrottledDevice<DeviceEventsType> {
+	/**
+	 * The `update` method must be called during the game loop, typically `requestAnimationFrame`
+	 * for the device to emit changes and update read values.
+	 */
+	declare update: () => void;
 }
