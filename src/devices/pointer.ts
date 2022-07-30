@@ -160,11 +160,27 @@ todo:
 */
 
 export interface PointerDeviceOptions extends ThrottledDeviceOptions {
-	element: HTMLElement;
-	touch: boolean;
-	pen: boolean;
-	mouse: boolean;
-	touchActionStyle: boolean;
+	element?: HTMLElement;
+
+	/**
+	 * whether to respond to touch pointer events
+	 * default: `true`
+	 * */
+	touch?: boolean;
+
+	/**
+	  * whether to respond to pen pointer events
+	  * default: `true`
+	  * */
+	pen?: boolean;
+
+	/**
+	  * whether to respond to mouse pointer events
+	  * default: `false`
+	  * */
+	mouse?: boolean;
+
+	touchActionStyle?: boolean;
 }
 
 /**
@@ -194,7 +210,7 @@ export default class Pointer extends ThrottledDevice {
 		(name: 'wheel', options?: Vector2InputControlOptions): Vector2InputControl;
 	};
 
-	constructor(options: Partial<PointerDeviceOptions> = {}) {
+	constructor(options: PointerDeviceOptions = {}) {
 		super();
 
 		const {

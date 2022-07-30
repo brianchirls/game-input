@@ -35,7 +35,7 @@ type GamepadEvents = DeviceEvents & {
 }
 
 export interface GamepadOptions extends ThrottledDeviceOptions {
-	index: number;
+	index?: number;
 }
 
 /**
@@ -96,7 +96,7 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 		(type: '*', handler: WildcardHandler<GamepadEvents>): void;
 	};
 
-	constructor(options: Partial<GamepadOptions> = {}) {
+	constructor(options: GamepadOptions = {}) {
 		const {
 			updatePeriod = 1000 / 120,
 			index = 0

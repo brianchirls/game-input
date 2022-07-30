@@ -6,25 +6,25 @@ export interface VirtualStickOptions extends DeviceOptions {
 	 * HTML element on which pointer events are registered
 	 * default: `document.body`
 	 */
-	element: HTMLElement;
+	element?: HTMLElement;
 
 	/**
 	 * radius: maximum distance from center point, at which the control is fully extended
 	 * default: `60`
 	 */
-	radius: number;
+	radius?: number;
 
 	/**
 	 * horizontal position on screen of center point (pixels)
 	 * default: `0`
 	 */
-	x: number;
+	x?: number;
 
 	/**
 	  * vertical position on screen of center point (pixels)
 	  * default: `0`
 	  */
-	y: number;
+	y?: number;
 
 	/**
 	 * placement mode
@@ -32,37 +32,37 @@ export interface VirtualStickOptions extends DeviceOptions {
 	 * - static: fixed center position, defined by `x` and `y`
 	 * default: `'dynamic'`
 	 */
-	mode: 'dynamic' | 'static';
+	mode?: 'dynamic' | 'static';
 
 	/**
 	 * If true, x value will always be zero. Used for vertical sliders.
 	 * default: `false`
 	 */
-	lockX: boolean;
+	lockX?: boolean;
 
 	/**
 	 * If true, y value will always be zero. Used for horizontal sliders.
 	 * default: `false`
 	 */
-	lockY: boolean;
+	lockY?: boolean;
 
 	/**
 	 * whether to respond to touch pointer events
 	 * default: `true`
 	 * */
-	touch: boolean;
+	touch?: boolean;
 
 	/**
 	 * whether to respond to pen pointer events
 	 * default: `true`
 	 * */
-	pen: boolean;
+	pen?: boolean;
 
 	/**
 	 * whether to respond to mouse pointer events
 	 * default: `false`
 	 * */
-	mouse: boolean;
+	mouse?: boolean;
 
 	/**
 	 * A callback function that receives the `pointerdown` event
@@ -72,14 +72,14 @@ export interface VirtualStickOptions extends DeviceOptions {
 	 * This may be used to restrict a virtual stick to a certain
 	 * area of the screen or apply other constraints.
 	 */
-	filter: (evt: PointerEvent) => boolean;
+	filter?: (evt: PointerEvent) => boolean;
 
 	/**
 	 * whether to set CSS `touch-action` to `'none'` on the element.
 	 * This prevents other browser drag events, like text highlighting.
 	 * default: `true`
 	 */
-	touchActionStyle: boolean;
+	touchActionStyle?: boolean;
 }
 
 /**
@@ -133,7 +133,7 @@ export default class VirtualStick extends Device {
 	 */
 	readonly element: HTMLElement;
 
-	constructor(options: Partial<VirtualStickOptions> = {}) {
+	constructor(options: VirtualStickOptions = {}) {
 		super();
 
 		const {
