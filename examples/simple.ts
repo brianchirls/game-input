@@ -69,7 +69,7 @@ const rotateAction = new Action<number>({
 	]
 });
 
-const thing = document.getElementById('thing') as HTMLElement;
+const thing = document.getElementById('thing');
 
 const speed = 300 / 1000; // pixels per 1000ms
 const rotSpeed = 420 / 1000; // degrees per 1000ms
