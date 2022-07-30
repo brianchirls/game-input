@@ -1,38 +1,58 @@
-import ButtonInputControl from '../controls/ButtonInputControl';
+import ButtonInputControl, { ButtonInputControlOptions } from '../controls/ButtonInputControl';
 import AxisInputControl from '../controls/AxisInputControl';
-import Vector2InputControl from '../controls/Vector2InputControl';
+import Vector2InputControl, { Vector2InputControlOptions } from '../controls/Vector2InputControl';
 import boolAsNum from '../util/boolAsNum';
 import { ThrottledDevice, ThrottledDeviceOptions } from '../Device';
+import { InputControlOptions } from '../controls/InputControl';
 
-const buttonDefs = [
-	{
-		mouse: 'leftMouseButton',
-		touch: 'touch',
-		pen: 'penTip'
+const buttonNameDefs = {
+	leftMouseButton: {
+		device: 'mouse',
+		index: 0
 	},
-	{
-		mouse: 'middleMouseButton'
+	touch: {
+		device: 'touch',
+		index: 0
 	},
-	{
-		mouse: 'rightMouseButton',
-		pen: 'penBarrelButton'
+	penTip: {
+		device: 'pen',
+		index: 0
 	},
-	{
-		mouse: 'mouseBackButton'
+	middleMouseButton: {
+		device: 'mouse',
+		index: 1
 	},
-	{
-		mouse: 'mouseForwardButton'
+	rightMouseButton: {
+		device: 'mouse',
+		index: 2
 	},
-	{
-		pen: 'penEraser'
+	penBarrelButton: {
+		device: 'pen',
+		index: 2
+	},
+	mouseBackButton: {
+		device: 'mouse',
+		index: 3
+	},
+	mouseForwardButton: {
+		device: 'mouse',
+		index: 4
+	},
+	penEraser: {
+		device: 'pen',
+		index: 5
 	}
-];
+};
 
-const buttonNames = new Set();
-buttonDefs.forEach(def => {
-	for (const buttonName of Object.values(def)) {
-		buttonNames.add(buttonName);
+const buttonDefs = [];
+
+const buttonNames = new Set(Object.keys(buttonNameDefs));
+buttonNames.forEach(name => {
+	const { device, index } = buttonNameDefs[name];
+	if (!buttonDefs[index]) {
+		buttonDefs[index] = {};
 	}
+	buttonDefs[index][device] = name;
 });
 
 function getButtonName(evt: PointerEvent, buttonIndex = evt.button) {
@@ -110,16 +130,17 @@ const controlDefs = {
 					(evt.screenY - previousEvent.screenY) / dt
 				];
 			}
-	},
-	pressure: {
-		constructor: AxisInputControl,
-		reader: evt => evt.pressure || 0
 	}
-} as {
-	[k: string]: {
-		constructor: InstanceType<any>,
-		reader: (evt: PointerEvent, previousEvent?: PointerEvent, defaultValue?: [number, number]) => [number, number] | number
-	}
+} as const;
+
+const pressure = {
+	constructor: AxisInputControl,
+	reader: (evt: PointerEvent) => evt.pressure || 0
+};
+
+type ControlDef = {
+	constructor: InstanceType<any>,
+	reader: (evt: PointerEvent, previousEvent?: PointerEvent, defaultValue?: [number, number]) => [number, number] | number
 };
 
 /*
@@ -146,8 +167,32 @@ interface PointerDeviceOptions extends ThrottledDeviceOptions {
 	touchActionStyle: boolean;
 }
 
+/**
+ * A Pointer device driven by the [Pointer Events API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)
+ * and supporting multiple pointer types: mouse, touch or pen.
+ *
+ * Input is throttled to the `updatePeriod` given the constructor options,
+ * which defaults to 1 / 60th of a second.
+ *
+ * Currently, only a single pointer is handled at a time, i.e. the first finger
+ * to touch.
+ */
 export default class Pointer extends ThrottledDevice {
 	readonly pointerType: 'pen' | 'mouse' | 'touch' | '';
+
+	declare getControl: {
+		/** Two-dimensional vectors */
+		(name: keyof typeof controlDefs, options?: Vector2InputControlOptions): Vector2InputControl;
+
+		/** Pointer device buttons */
+		(name: keyof typeof buttonNameDefs, options?: ButtonInputControlOptions): ButtonInputControl;
+
+		/** Normalized pressure of the [pointer](https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pressure) input */
+		(name: 'pressure', options?: InputControlOptions<number>): AxisInputControl;
+
+		/** Two-dimensional change in pointer 'wheel', typically on a mouse or touchpad */
+		(name: 'wheel', options?: Vector2InputControlOptions): Vector2InputControl;
+	};
 
 	constructor(options: Partial<PointerDeviceOptions> = {}) {
 		super();
@@ -247,7 +292,7 @@ export default class Pointer extends ThrottledDevice {
 		}
 
 		this.getControl = (name: string, options = {}) => {
-			const controlSpec = controlDefs[name];
+			const controlSpec = name === 'pressure' ? pressure : controlDefs[name] as ControlDef;
 			if (controlSpec) {
 				const {
 					constructor: ControlConstructor,
