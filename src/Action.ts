@@ -14,9 +14,9 @@ type ActionEvents = {
 	change: unknown;
 	enable: unknown;
 	disable: unknown;
-}
+};
 
-interface ActionBindOptions<ValueType> {
+export interface ActionBindOptions<ValueType> {
 	control?: InputControl<ValueType>;
 	processors?: Processor<ValueType>[];
 	autoUpdate?: boolean;
@@ -29,7 +29,7 @@ interface ActionBinding<ValueType> {
 
 type Bindings<ValueType> = (InputControl | ActionBindOptions<ValueType>)[];
 
-interface ActionOptions<ValueType> {
+export interface ActionOptions<ValueType> {
 	bindings?: Bindings<ValueType>;
 	processors?: Processor<ValueType>[];
 	name?: string;
