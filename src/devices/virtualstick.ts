@@ -213,12 +213,23 @@ export default class VirtualStick extends Device {
 			}
 		};
 
-		function pointerUp(evt: PointerEvent) {
+		const pointerUp = (evt: PointerEvent) => {
 			if (startEvent && startEvent.pointerId === evt.pointerId) {
 				lastEvent = evt;
 				startEvent = null;
+
+				/*
+				Revert back to zero when we let go. Ideally, this would fall linearly
+				over time, but that's complicated. It would require an update in the
+				animation loop and a configuration value for falloff rate.
+				*/
+				if (deltaX || deltaY) {
+					deltaX = 0;
+					deltaY = 0;
+					this.emit('change');
+				}
 			}
-		}
+		};
 
 		const styleElement = touchActionStyle && element.style ? element : document.body;
 
