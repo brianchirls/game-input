@@ -7,7 +7,11 @@ module.exports = {
 	entry: path.resolve(projectDirectory, 'src/browser.ts'),
 	output: {
 		path: path.join(__dirname, '../dist'),
-		filename: 'browser.js'
+		filename: 'browser.js',
+		library: {
+			name: 'GameInput',
+			type: 'umd2'
+		}
 	},
 	resolve: {
 		// Add `.ts` as a resolvable extension.
