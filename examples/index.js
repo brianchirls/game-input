@@ -28,7 +28,7 @@ function selectExample(key) {
 
 // select initial example from URL hash
 function loadExampleFromHash() {
-	const key = window.location.hash.substr(1);
+	const key = window.location.hash.substring(1) || 'simple';
 	const ex = key && findExample(key) || null;
 	if (ex) {
 		iframe.src = `../examples/${key}.html`;
