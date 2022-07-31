@@ -1,0 +1,12 @@
+{
+	"compileOnSave": false,
+	"compilerOptions": {
+		"types": [],
+		"typeRoots": [
+			"node_modules/@types"
+		]
+	},
+	"exclude": [
+		"node_modules"
+	]
+}
