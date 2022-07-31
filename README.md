@@ -11,6 +11,12 @@ Built-in support for the following device types:
 - Pointer (mouse, touch, pen)
 - On-screen virtual stick
 
+## Examples
+
+- [Simple Movement](http://localhost:1000/examples/simple.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/simple.ts))
+- [Accessible Menu Navigation](http://localhost:1000/examples/menu.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/menu.ts))
+- [Breakout Clone](http://localhost:1000/examples/breakout.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/breakout.ts))
+
 ## Installation
 
 Install via [npm](https://npmjs.com).
