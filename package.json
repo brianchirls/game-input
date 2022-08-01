@@ -1,6 +1,6 @@
 {
 	"name": "@brianchirls/game-input",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "",
 	"repository": {
 		"type": "git",
@@ -14,7 +14,7 @@
 	"module": "dist/esm/index.js",
 	"browser": "dist/esm/browser.js",
 	"unpkg": "dist/browser.js",
-	"types": "./types/browser.d.ts",
+	"types": "./dist/types/browser.d.ts",
 	"exports": {
 		".": {
 			"node": "./dist/cjs/index.js",
@@ -24,16 +24,21 @@
 			"types": "./dist/types/browser.d.ts"
 		},
 		"./*": {
-			"require": "./dist/cjs/*.js",
+			"types": "./dist/types/*.d.ts",
 			"import": "./dist/esm/*.js",
-			"default": "./dist/esm/*.js",
-			"types": "./dist/esm/*.d.ts"
+			"require": "./dist/cjs/*.js",
+			"default": "./dist/cjs/*.js"
 		}
 	},
+	"typesVersions": {
+	  "*": {
+		"*": [
+		  "./dist/types/*"
+		]
+	  }
+	},
 	"files": [
-		"dist/*",
-		"src/**/*.js",
-		"src/**/*.ts"
+		"dist/*"
 	],
 	"keywords": [
 		"game",
