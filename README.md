@@ -13,9 +13,9 @@ Built-in support for the following device types:
 
 ## Examples
 
-- [Simple Movement](http://localhost:1000/examples/simple.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/simple.ts))
-- [Accessible Menu Navigation](http://localhost:1000/examples/menu.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/menu.ts))
-- [Breakout Clone](http://localhost:1000/examples/breakout.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/breakout.ts))
+- [Simple Movement](https://brianchirls.github.io/game-input/examples/simple.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/simple.ts))
+- [Accessible Menu Navigation](https://brianchirls.github.io/game-input/examples/menu.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/menu.ts))
+- [Breakout Clone](https://brianchirls.github.io/game-input/examples/breakout.html) ([code](https://github.com/brianchirls/game-input/blob/main/examples/breakout.ts))
 
 ## Installation
 
