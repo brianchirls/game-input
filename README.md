@@ -19,21 +19,46 @@ Built-in support for the following device types:
 
 ## Installation
 
+### npm
+
 Install via [npm](https://npmjs.com).
 
 ```sh
-$ npm install @brianchirls/game-input
+npm install @brianchirls/game-input
+```
+
+And import each class individually
+
+```javascript
+import Gamepad from '@brianchirls/game-input/devices/Gamepad';
+import Action from '@brianchirls/game-input/Action';
+
+```
+
+### CDN
+
+Or load directly from CDN
+```html
+<script src="https://unpkg.com/@brianchirls/game-input"></script>
+```
+
+And access classes on the global `GameInput` object.
+
+```javascript
+const myGamepad = new GameInput.Gamepad();
 ```
 
 ## Basic Example
 
 ```typescript
+import Gamepad from '@brianchirls/game-input/devices/Gamepad';
+import Keyboard from '@brianchirls/game-input/devices/Keyboard';
+import DPadComposite from '@brianchirls/game-input/controls/DPadComposite';
+import Action from '@brianchirls/game-input/Action';
 
 /**
  * devices
  */
-import Gamepad from '../src/devices/Gamepad';
-import Keyboard from '../src/devices/Keyboard';
 
 const gamepad = new Gamepad();
 const keyboard = new Keyboard();
@@ -45,7 +70,6 @@ const keyboard = new Keyboard();
 const leftStick = gamepad.getControl('leftStick');
 
 // It takes four keys to go in four directions
-import DPadComposite from '../src/controls/DPadComposite';
 const kbdWASD = new DPadComposite({
 	up: kbd.getControl('KeyW'),
 	left: kbd.getControl('KeyA'),
@@ -58,7 +82,6 @@ const kbdWASD = new DPadComposite({
  * The action will respond to whichever control is used.
  */
 
-import Action from '../src/Action';
 const moveAction = new Action({
 	bindings: [
 		leftStick,
@@ -76,7 +99,7 @@ function update() {
 
 	const [x, y] = moveAction.value;
 
-	// ...
+	// ... game logic goes here ...
 
 	requestAnimationFrame(update);
 }
