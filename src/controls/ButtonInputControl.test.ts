@@ -47,4 +47,14 @@ describe('ButtonInputControl', () => {
 		inputControl.enabled = false;
 		expect(inputControl.pressed()).toBe(false);
 	});
+
+	it('should not overwrite options set by InputControl', () => {
+		const control = new ButtonInputControl(
+			() => 1,
+			<any>{
+				children: 'foo'
+			}
+		);
+		expect(control.children).toBeInstanceOf(Map);
+	});
 });

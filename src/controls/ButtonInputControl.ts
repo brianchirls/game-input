@@ -1,5 +1,4 @@
 import AxisInputControl from './AxisInputControl';
-import copyOptions from '../util/copyOptions';
 import { InputControlOptions } from './InputControl';
 
 export interface ButtonInputControlOptions extends InputControlOptions<number> {
@@ -16,7 +15,9 @@ export default class ButtonInputControl extends AxisInputControl {
 		}
 
 		super(read, options);
-		copyOptions(this, options);
+		if (options?.pressPoint !== undefined) {
+			this.pressPoint = options?.pressPoint;
+		}
 	}
 
 	pressed(value = this.magnitude()) {
