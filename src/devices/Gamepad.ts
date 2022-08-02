@@ -85,6 +85,10 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 	controls: () => IterableIterator<string>;
 
 	declare on: {
+		/**
+		 * Emitted when the Gamepad device is connected.
+		 * @event
+		 */
 		(type: 'connected', handler: OnConnected): void;
 
 		/**
@@ -92,6 +96,12 @@ export default class Gamepad extends PollingDevice<GamepadEvents> {
 		 * @event
 		 */
 		(type: 'disconnected', handler: () => void): void;
+
+		/**
+		 * Emitted when any value changes.
+		 * @event
+		 */
+		(type: 'change', handler: () => void): void;
 
 		(type: '*', handler: WildcardHandler<GamepadEvents>): void;
 	};
