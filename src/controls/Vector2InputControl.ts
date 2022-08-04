@@ -24,7 +24,7 @@ export default class Vector2InputControl extends InputControl<[number, number]> 
 			...opts
 		} = options || {};
 
-		super(read, opts);
+		super(<(() => [number, number])>read, opts);
 
 		this.vector2 = this.read;
 		this.x = new AxisInputControl(
