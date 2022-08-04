@@ -1,6 +1,7 @@
 import ButtonInputControl, { ButtonInputControlOptions } from '../controls/ButtonInputControl';
 import boolAsNum from '../util/boolAsNum';
-import { Device, DeviceOptions } from '../Device';
+import { Device, DeviceEvents, DeviceOptions } from '../Device';
+import { WildcardHandler } from 'mitt';
 
 /*
 todo:
@@ -16,7 +17,7 @@ export interface KeyboardDeviceOptions extends DeviceOptions {
 	 * Key Codes:
 	 * https://www.w3.org/TR/uievents-code/#code-value-tables
 	 */
-	keyCode: boolean;
+	keyCode?: boolean;
 }
 
 export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOptions, 'device' | 'children'> {
@@ -30,10 +31,15 @@ export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOption
 	filter?: string | string[] | ((keys: Set<string>) => boolean)
 }
 
+type KeyboardEvents = DeviceEvents & {
+	enable: undefined;
+	disable: undefined;
+}
+
 /**
  * A Keyboard device.
  */
-export default class Keyboard extends Device {
+export default class Keyboard extends Device<KeyboardEvents> {
 	/**
 	 * Create a {@link controls/ButtonInputControl.ButtonInputControl | button control} for a single key or combination of keys.
 	 * Key names correspond to the [names used by DOM `KeyboardEvent.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values).
@@ -43,35 +49,54 @@ export default class Keyboard extends Device {
 	 */
 	declare getControl: (name: string, options?: KeyboardGetControlOptions) => ButtonInputControl;
 
+	declare on: {
+		/**
+		 * Emitted when the Device is set to enabled
+		 * @event
+		 */
+		(type: 'enable', handler: () => void): void;
+
+		/**
+		 * Emitted when the Device is set to disabled
+		 * @event
+		 */
+		(type: 'disable', handler: () => void): void;
+
+		/**
+		 * Emitted when any value changes.
+		 * @event
+		 */
+		(type: 'change', handler: () => void): void;
+
+		(type: '*', handler: WildcardHandler<KeyboardEvents>): void;
+	};
+
 	/**
 	 * Always true.
 	 */
 	declare readonly connected: boolean;
 
 	/**
-	 * @param options options
+	 * @param keyboardOptions options
 	 */
-	constructor({
-		enabled = true,
-		keyCode = false
-	} = {} as KeyboardDeviceOptions) {
+	constructor(keyboardOptions?: KeyboardDeviceOptions) {
 		super();
+
+		let destroyed = false;
+		let enabled = false;
+		const { keyCode = false } = keyboardOptions || {};
 
 		const keysDown = new Set<string>();
 
 		const onKeyDown = (evt: KeyboardEvent) => {
 			const key = (keyCode ? evt.code : evt.key).toLowerCase();
 			keysDown.add(key);
-			if (enabled) {
-				this.emit('change');
-			}
+			this.emit('change');
 		};
 		const onKeyUp = (evt: KeyboardEvent) => {
 			const key = (keyCode ? evt.code : evt.key).toLowerCase();
 			keysDown.delete(key);
-			if (enabled) {
-				this.emit('change');
-			}
+			this.emit('change');
 		};
 
 		function readAnyKey() {
@@ -90,18 +115,28 @@ export default class Keyboard extends Device {
 			return keys.some(readSingleKey);
 		}
 
-		function enable() {
-			enabled = true;
-			window.addEventListener('keydown', onKeyDown);
-			window.addEventListener('keyup', onKeyUp);
-		}
+		const enable = (emitEvent = false) => {
+			if (!enabled) {
+				enabled = true;
+				window.addEventListener('keydown', onKeyDown);
+				window.addEventListener('keyup', onKeyUp);
+				if (emitEvent) {
+					this.emit('enable');
+				}
+			}
+		};
 
-		function disable() {
-			enabled = false;
-			keysDown.clear();
-			window.removeEventListener('keydown', onKeyDown);
-			window.removeEventListener('keyup', onKeyUp);
-		}
+		const disable = (emitEvent = false) => {
+			if (enabled) {
+				enabled = false;
+				keysDown.clear();
+				window.removeEventListener('keydown', onKeyDown);
+				window.removeEventListener('keyup', onKeyUp);
+				if (emitEvent) {
+					this.emit('disable');
+				}
+			}
+		};
 
 		this.getControl = (name: string, options = {}) => {
 			const {
@@ -121,18 +156,21 @@ export default class Keyboard extends Device {
 			}
 
 			return new ButtonInputControl(boolAsNum(read), Object.assign({
-				name: typeof name === 'string' && options.filter ?
-					name :
-					typeof filter === 'string' ?
+				name: options.filter ?
+					String(name || filter) :
+					typeof filter === 'string' && filter ?
 						`key:${filter}` :
-						String(name || filter)
+						String(name || filter || 'any key')
 			}, opts, {
 				device: this,
 				children: null
 			}));
 		};
 
+		const destroyEventEmitter = this.destroy;
 		this.destroy = () => {
+			destroyed = true;
+			destroyEventEmitter();
 			disable();
 		};
 
@@ -147,18 +185,16 @@ export default class Keyboard extends Device {
 			enabled: {
 				get: () => enabled,
 				set(val) {
-					if (!!val !== !!enabled) {
-						if (val) {
-							enable();
-						} else {
-							disable();
-						}
+					if (val && !destroyed) {
+						enable(true);
+					} else {
+						disable(true);
 					}
 				}
 			}
 		});
 
-		if (enabled) {
+		if (keyboardOptions?.enabled !== false) {
 			enable();
 		}
 	}
