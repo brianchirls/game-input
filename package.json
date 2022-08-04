@@ -31,11 +31,11 @@
 		}
 	},
 	"typesVersions": {
-	  "*": {
-		"*": [
-		  "./dist/types/*"
-		]
-	  }
+		"*": {
+			"*": [
+				"./dist/types/*"
+			]
+		}
 	},
 	"files": [
 		"dist/*"
