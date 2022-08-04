@@ -256,4 +256,31 @@ describe('InputControl', () => {
 			expect(active).toHaveBeenCalledTimes(3);
 		});
 	});
+
+	describe('destroy', () => {
+		it('should remove event listeners', () => {
+			const inputControl = new InputControl();
+			const onChange = jest.fn();
+			inputControl.on('change', onChange);
+
+			inputControl.destroy();
+
+			inputControl.emit('change');
+			expect(onChange).not.toHaveBeenCalled();
+		});
+
+		it('should destroy children', () => {
+			const children = {
+				foo: new InputControl()
+			};
+			children.foo.destroy = jest.fn(children.foo.destroy);
+			const inputControl = new InputControl({
+				children
+			});
+
+			inputControl.destroy();
+
+			expect(children.foo.destroy).toHaveBeenCalled();
+		});
+	});
 });

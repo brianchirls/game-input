@@ -14,9 +14,19 @@ export interface InputControlOptions<T> {
 
 	processors?: Processor<T>[];
 	children?: Map<string, InputControl> | [string, InputControl][] | { [k: string]: InputControl };
+
+	/**
+	 * callback function to check control's state and determine
+	 * whether it's currently "active".
+	 *
+	 * By default, a control is active if the magnitude of the current
+	 * value is greater than zero.
+	 */
 	active?: (ic: InputControl<T>) => boolean;
 }
-
+/**
+ * Base class from which all controls are derived.
+ */
 export default class InputControl<T = any> extends EventEmitter<InputControlEvents> {
 	static defaultValue: any = 0;
 
@@ -27,6 +37,18 @@ export default class InputControl<T = any> extends EventEmitter<InputControlEven
 	device: any = null;
 	processors = [] as Processor<T>[];
 
+	/**
+	 * InputControl constructor
+	 * @param readRaw (optional) callback function to read unprocessed value. overrides read method
+	 * @param options options object
+	 */
+	constructor(readRaw?: (() => T), options?: InputControlOptions<T>)
+
+	/**
+	 * InputControl constructor
+	 * @param options options object
+	 */
+	constructor(options?: InputControlOptions<T>)
 	constructor(readRaw?: (() => T) | InputControlOptions<T>, options?: InputControlOptions<T>) {
 		super();
 
@@ -87,6 +109,11 @@ export default class InputControl<T = any> extends EventEmitter<InputControlEven
 		};
 	}
 
+	/**
+	 * Find a descendent control
+	 * @param path slash ('/') delimited list of keys to follow through descendent controls
+	 * @returns a descendent control. null it not found
+	 */
 	find(path?: string): InputControl | null {
 		if (!path) {
 			return this;
@@ -104,10 +131,19 @@ export default class InputControl<T = any> extends EventEmitter<InputControlEven
 		return this.children.get(path) || null;
 	}
 
+	/**
+	 * @returns The control's current value
+	 */
 	read(): T {
 		return Object.getPrototypeOf(this).constructor.defaultValue;
 	}
 
+	/**
+	 * Determines the magnitude of the given value
+	 *
+	 * @param val (optional) defaults to control's current value
+	 * @returns the magnitude of the given value
+	 */
 	magnitude(val = this.read()) {
 		return typeof val === 'number' ? Math.abs(val) : 0;
 	}
