@@ -25,19 +25,19 @@ describe('Keyboard', () => {
 	describe('getControl', () => {
 		it('should return a ButtonInputControl', () => {
 			const keyboard = new Keyboard();
-			const control = keyboard.getControl('a');
+			const control = keyboard.getControl('KeyA');
 			expect(control).toBeInstanceOf(ButtonInputControl);
 		});
 
 		it('should set device property on control', () => {
 			const keyboard = new Keyboard();
-			const control = keyboard.getControl('a');
+			const control = keyboard.getControl('KeyA');
 			expect(control.device).toBe(keyboard);
 		});
 
 		it('should pass options to control constructor', () => {
 			const keyboard = new Keyboard();
-			const control = keyboard.getControl('a', {
+			const control = keyboard.getControl('KeyA', {
 				pressPoint: 0.7,
 				name: 'controlName'
 			});
@@ -47,7 +47,7 @@ describe('Keyboard', () => {
 
 		it('should set have no children, even if in options', () => {
 			const keyboard = new Keyboard();
-			const control = keyboard.getControl('a', <any>{
+			const control = keyboard.getControl('KeyA', <any>{
 				children: [
 					new ButtonInputControl(() => 0)
 				]
@@ -58,13 +58,13 @@ describe('Keyboard', () => {
 		describe.each([
 			[
 				'name is key, no filter', // test title
-				'w', // name argument
+				'KeyW', // name argument
 				undefined, // options argument
 				{ // expected keys
 					w: true,
 					x: false
 				},
-				'key:w' // expected name
+				'key:KeyW' // expected name
 			],
 			[
 				'no name or filter - any key',
@@ -79,7 +79,7 @@ describe('Keyboard', () => {
 			[
 				'filter is string, different from name',
 				'w key',
-				{ filter: 'w' },
+				{ filter: 'KeyW' },
 				{
 					w: true,
 					x: false
@@ -89,7 +89,7 @@ describe('Keyboard', () => {
 			[
 				'filter is function',
 				'w key',
-				{ filter: (set: Set<string>) => set.has('w') },
+				{ filter: (set: Set<string>) => set.has('KeyW') },
 				{
 					w: true,
 					x: false
@@ -99,7 +99,7 @@ describe('Keyboard', () => {
 			[
 				'filter is array',
 				'w or b key',
-				{ filter: ['w', 'b'] },
+				{ filter: ['KeyW', 'KeyW'] },
 				{
 					w: true,
 					x: false
@@ -203,9 +203,9 @@ describe('Keyboard', () => {
 
 		it('should set value with key code', () => {
 			const keyboard = new Keyboard({
-				keyCode: true
+				keyCode: false
 			});
-			const control = keyboard.getControl('keyw');
+			const control = keyboard.getControl('w');
 
 			window.dispatchEvent(new KeyboardEvent('keydown', {
 				code: 'KeyW',
@@ -218,11 +218,11 @@ describe('Keyboard', () => {
 			keyboard.destroy();
 		});
 
-		it('should release with key code', () => {
+		it('should release with key value', () => {
 			const keyboard = new Keyboard({
-				keyCode: true
+				keyCode: false
 			});
-			const control = keyboard.getControl('keyw');
+			const control = keyboard.getControl('w');
 
 			window.dispatchEvent(new KeyboardEvent('keydown', {
 				code: 'KeyW',

@@ -3,19 +3,16 @@ import boolAsNum from '../util/boolAsNum';
 import { Device, DeviceEvents, DeviceOptions } from '../Device';
 import { WildcardHandler } from 'mitt';
 
-/*
-todo:
-Emit 'change' event only to controls relevant to changed key.
-Currently, we emit to every control, which is ineffecient.
-*/
-
 export interface KeyboardDeviceOptions extends DeviceOptions {
 	/**
 	 * Optionally use layout-independent Key Code instead of
-	 * key value string. (default: `false`)
+	 * key value string. (default: `true`)
 	 *
 	 * Key Codes:
 	 * https://www.w3.org/TR/uievents-code/#code-value-tables
+	 *
+	 * If false, use key values:
+	 * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
 	 */
 	keyCode?: boolean;
 }
@@ -23,7 +20,7 @@ export interface KeyboardDeviceOptions extends DeviceOptions {
 export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOptions, 'device' | 'children'> {
 	/**
 	 * filter may be one of the following:
-	 * - string: [name of key](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values) on the keyboard to respond to
+	 * - string: name of code (or key value)
 	 * - array of strings: responds to any of the keys in the array
 	 * - function: a callback that gets called with a Set of active key names and
 	 * is expected to return a boolean, whether or not to respond to the keyboard event.
@@ -84,18 +81,20 @@ export default class Keyboard extends Device<KeyboardEvents> {
 
 		let destroyed = false;
 		let enabled = false;
-		const { keyCode = false } = keyboardOptions || {};
+		const keyCode = keyboardOptions?.keyCode !== false;
 
 		const keysDown = new Set<string>();
 
 		const onKeyDown = (evt: KeyboardEvent) => {
-			const key = (keyCode ? evt.code : evt.key).toLowerCase();
+			const key = keyCode ? evt.code : evt.key;
 			keysDown.add(key);
+			keysDown.add(key.toLowerCase());
 			this.emit('change');
 		};
 		const onKeyUp = (evt: KeyboardEvent) => {
-			const key = (keyCode ? evt.code : evt.key).toLowerCase();
+			const key = keyCode ? evt.code : evt.key;
 			keysDown.delete(key);
+			keysDown.delete(key.toLowerCase());
 			this.emit('change');
 		};
 
