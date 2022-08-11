@@ -47,8 +47,7 @@ const WASDKeys = new AxisComposite({
 });
 
 const virtualStick = new VirtualStick({
-	lockY: true,
-	element: canvas
+	lockY: true
 }).getControl();
 domView(virtualStick);
 
