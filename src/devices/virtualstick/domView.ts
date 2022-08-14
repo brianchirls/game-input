@@ -1,10 +1,19 @@
 import { StickInputControl } from '../..';
+import VirtualStick from '../VirtualStick';
 
-export default function domView(control: StickInputControl, options: { innerRadius?: number; parentElement?: HTMLElement; } = {}) {
+export default function domView(
+	control: StickInputControl,
+	options: {
+		innerRadius?: number;
+		parentElement?: HTMLElement;
+		offsetElement?: HTMLElement;
+	} = {}
+) {
 	const { device } = control;
 	const {
 		innerRadius = Math.max(24, device.radius / 4),
-		parentElement = document.body
+		parentElement = document.body,
+		offsetElement = device instanceof VirtualStick ? device.element : document.body
 	} = options;
 
 	const outer = document.createElement('div');
@@ -39,8 +48,9 @@ export default function domView(control: StickInputControl, options: { innerRadi
 
 		if (control.device?.mode === 'static' || control.active()) {
 			const outerSize = device.radius * 2;
-			const ox = device.x - device.radius;
-			const oy = device.y - device.radius;
+			const rect = offsetElement.getBoundingClientRect();
+			const ox = device.x - device.radius + rect.x;
+			const oy = device.y - device.radius + rect.y;
 
 			outer.style.left = ox + 'px';
 			outer.style.top = oy + 'px';
@@ -49,8 +59,11 @@ export default function domView(control: StickInputControl, options: { innerRadi
 
 			const innerSize = innerRadius * 2;
 
-			inner.style.left = device.x + x * device.radius - innerRadius + 'px';
-			inner.style.top = device.y - y * device.radius - innerRadius + 'px';
+			const ix = device.x + x * device.radius - innerRadius + rect.x;
+			const iy = device.y - y * device.radius - innerRadius + rect.y;
+
+			inner.style.left = ix + 'px';
+			inner.style.top = iy + 'px';
 			inner.style.width = inner.style.height = innerSize + 'px';
 			inner.style.opacity = '1';
 		} else {

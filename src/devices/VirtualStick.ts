@@ -177,9 +177,10 @@ export default class VirtualStick extends Device {
 			if (!startEvent &&
 				allowedPointerTypes[evt.pointerType] && (!filter || filter(evt))) {
 
+				const rect = element.getBoundingClientRect();
 				if (isStatic) {
-					const dx = evt.offsetX - x;
-					const dy = evt.offsetY - y;
+					const dx = evt.clientX - rect.x - x;
+					const dy = evt.clientY - rect.y - y;
 					if (Math.hypot(dx, dy) > radius) {
 						return;
 					}
@@ -187,8 +188,8 @@ export default class VirtualStick extends Device {
 					startX = x;
 					startY = y;
 				} else {
-					startX = evt.offsetX;
-					startY = evt.offsetY;
+					startX = evt.clientX - rect.x;
+					startY = evt.clientY - rect.y;
 				}
 
 				startEvent = evt;
@@ -201,8 +202,9 @@ export default class VirtualStick extends Device {
 				lastEvent = evt;
 
 				// calculate and set x/y
-				const dx = lockX ? 0 : evt.offsetX - startX;
-				const dy = lockY ? 0 : evt.offsetY - startY;
+				const rect = element.getBoundingClientRect();
+				const dx = lockX ? 0 : evt.clientX - rect.x - startX;
+				const dy = lockY ? 0 : evt.clientY - rect.y - startY;
 				const length = Math.hypot(dx, dy);
 
 				const divisor = Math.max(length, radius);
