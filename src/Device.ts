@@ -13,6 +13,7 @@ export type DeviceOptions = {
 
 export type DeviceEvents = {
 	change: unknown;
+	[k: string]: unknown;
 };
 
 /**

@@ -29,8 +29,8 @@ export interface KeyboardGetControlOptions extends Omit<ButtonInputControlOption
 }
 
 type KeyboardEvents = DeviceEvents & {
-	enable: undefined;
-	disable: undefined;
+	enable: unknown;
+	disable: unknown;
 }
 
 /**
@@ -154,7 +154,7 @@ export default class Keyboard extends Device<KeyboardEvents> {
 				}
 			}
 
-			return new ButtonInputControl(boolAsNum(read), Object.assign({
+			return new ButtonInputControl<Keyboard>(boolAsNum(read), Object.assign({
 				name: options.filter ?
 					String(name || filter) :
 					typeof filter === 'string' && filter ?

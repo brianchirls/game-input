@@ -82,6 +82,10 @@ export interface VirtualStickOptions extends DeviceOptions {
 	touchActionStyle?: boolean;
 }
 
+export class VirtualStickInputControl extends StickInputControl {
+	declare device: VirtualStick;
+}
+
 /**
  * An on-screen virtual stick device.
  *
@@ -93,7 +97,7 @@ export default class VirtualStick extends Device {
 	 * Will always return a `StickInputControl`.
 	 * Name set on the control but is otherwise ignored.
 	 */
-	declare getControl: (name?: string, options?: StickInputControlOptions) => StickInputControl;
+	declare getControl: (name?: string, options?: StickInputControlOptions) => VirtualStickInputControl;
 
 	/**
 	 * horizontal position on screen of center point (pixels)
@@ -273,7 +277,7 @@ export default class VirtualStick extends Device {
 					StickInputControl.defaultValue;
 			};
 
-			return new StickInputControl(read, Object.assign(
+			return new VirtualStickInputControl(read, Object.assign(
 				{
 					name
 				},

@@ -1,8 +1,7 @@
-import { StickInputControl } from '../..';
-import VirtualStick from '../VirtualStick';
+import VirtualStick, { VirtualStickInputControl } from '../VirtualStick';
 
 export default function domView(
-	control: StickInputControl,
+	control: VirtualStickInputControl,
 	options: {
 		innerRadius?: number;
 		parentElement?: HTMLElement;

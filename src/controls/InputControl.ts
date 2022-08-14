@@ -1,16 +1,17 @@
 import runProcessors, { Processor } from '../util/runProcessors';
 import copyOptions from '../util/copyOptions';
 import EventEmitter from '../util/EventEmitter';
+import { Device } from '../Device';
 
 type InputControlEvents = {
 	change: unknown
 };
 
-export interface InputControlOptions<T> {
+export interface InputControlOptions<T, DeviceType extends Device = Device<any>> {
 	name?: string;
 	parent?: InputControl;
 	enabled?: boolean;
-	device?: any;
+	device?: DeviceType;
 
 	processors?: Processor<T>[];
 	children?: Map<string, InputControl> | [string, InputControl][] | { [k: string]: InputControl };
@@ -27,14 +28,14 @@ export interface InputControlOptions<T> {
 /**
  * Base class from which all controls are derived.
  */
-export default class InputControl<T = any> extends EventEmitter<InputControlEvents> {
+export default class InputControl<T = any, DeviceType extends Device = Device<any>> extends EventEmitter<InputControlEvents> {
 	static defaultValue: any = 0;
 
 	name = '';
 	parent: InputControl = null;
 	enabled = true;
 	children = new Map<string, InputControl>();
-	device: any = null;
+	device: DeviceType = null;
 	processors = [] as Processor<T>[];
 
 	/**
