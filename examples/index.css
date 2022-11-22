@@ -71,6 +71,7 @@ h1 {
 	display: flex;
 	flex: 1 1 auto;
 	flex-direction: row;
+	height: 100%;
 }
 
 .sidebar-wrapper {
