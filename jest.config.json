@@ -8,18 +8,18 @@
 		"text",
 		"text-summary"
 	],
+	"collectCoverageFrom": [
+		"src/**/*.{js,ts}",
+		"!src/index.{js,ts}",
+		"!src/browser.{js,ts}",
+		"!**/tests/**"
+	],
 	"projects": [
 		{
 			"displayName": "test",
 			"clearMocks": true,
 			"roots": [
 				"<rootDir>/src"
-			],
-			"collectCoverageFrom": [
-				"src/**/*.{js,ts}",
-				"!src/index.{js,ts}",
-				"!src/browser.{js,ts}",
-				"!**/tests/**"
 			],
 			"testMatch": [
 				"<rootDir>/src/**/__tests__/**/*.{js,ts}",

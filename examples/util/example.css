@@ -1,4 +1,4 @@
-@import '~purecss/build/base.css';
+@import url('~purecss/build/base.css');
 
 body {
 	position: absolute;

@@ -1,4 +1,4 @@
-@import '~purecss/build/base.css';
+@import url('~purecss/build/base.css');
 
 :root {
 	--border-style: 1px solid #e8e8e8;
